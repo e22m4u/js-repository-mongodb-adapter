@@ -1,6 +1,6 @@
 {
   "name": "@e22m4u/repository-mongodb-adapter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "MongoDB адаптер для @e22m4u/repository",
   "type": "module",
   "main": "src/index.js",
