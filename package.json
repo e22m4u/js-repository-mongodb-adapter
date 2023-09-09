@@ -33,7 +33,7 @@
   "license": "MIT",
   "homepage": "https://github.com/e22m4u/repository-mongodb-adapter",
   "dependencies": {
-    "mongodb": "^5.8.1"
+    "mongodb": "5.8.1"
   },
   "peerDependencies": {
     "@e22m4u/repository": "^0.0.18"
