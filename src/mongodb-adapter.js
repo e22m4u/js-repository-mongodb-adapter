@@ -278,7 +278,7 @@ export class MongodbAdapter extends Adapter {
     if (idColName !== 'id' && idColName !== '_id')
       throw new InvalidArgumentError(
         'MongoDB is not supporting custom names of the primary key. ' +
-          'Do use "id" as a primary key instead of %s.',
+          'Do use "id" as a primary key instead of %v.',
         idColName,
       );
     if (idColName in tableData && idColName !== '_id') {
@@ -309,7 +309,7 @@ export class MongodbAdapter extends Adapter {
       if (idColName !== 'id' && idColName !== '_id')
         throw new InvalidArgumentError(
           'MongoDB is not supporting custom names of the primary key. ' +
-            'Do use "id" as a primary key instead of %s.',
+            'Do use "id" as a primary key instead of %v.',
           idColName,
         );
       if (idColName !== '_id') {
@@ -375,7 +375,7 @@ export class MongodbAdapter extends Adapter {
     return fields.reduce((acc, field) => {
       if (!field || typeof field !== 'string')
         throw new InvalidArgumentError(
-          'A field name must be a non-empty String, but %s given.',
+          'A field name must be a non-empty String, but %v given.',
           field,
         );
       let colName = this._getColName(modelName, field);
@@ -395,7 +395,7 @@ export class MongodbAdapter extends Adapter {
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== 'string')
       throw new InvalidArgumentError(
-        'A property name must be a non-empty String, but %s given.',
+        'A property name must be a non-empty String, but %v given.',
         propName,
       );
     const utils = this.get(ModelDefinitionUtils);
@@ -430,7 +430,7 @@ export class MongodbAdapter extends Adapter {
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== 'string')
         throw new InvalidArgumentError(
-          'A field order must be a non-empty String, but %s given.',
+          'A field order must be a non-empty String, but %v given.',
           order,
         );
       const direction = order.match(/\s+(A|DE)SC$/);
@@ -616,7 +616,7 @@ export class MongodbAdapter extends Adapter {
           const flags = cond.flags || undefined;
           if (flags && typeof flags !== 'string')
             throw new InvalidArgumentError(
-              'RegExp flags must be a String, but %s given.',
+              'RegExp flags must be a String, but %v given.',
               cond.flags,
             );
           query[key] = {$regex: stringToRegexp(cond.regexp, flags)};
@@ -646,9 +646,9 @@ export class MongodbAdapter extends Adapter {
       if (pkType !== DataType.STRING && pkType !== DataType.ANY)
         throw new InvalidArgumentError(
           'MongoDB unable to generate primary keys of %s. ' +
-            'Do provide your own value for the %s property ' +
+            'Do provide your own value for the %v property ' +
             'or set property type to String.',
-          new String(capitalize(pkType)),
+          capitalize(pkType),
           idPropName,
         );
       delete modelData[idPropName];
@@ -682,7 +682,7 @@ export class MongodbAdapter extends Adapter {
     const table = this._getCollection(modelName);
     const {modifiedCount} = await table.replaceOne({_id: id}, tableData);
     if (modifiedCount < 1)
-      throw new InvalidArgumentError('Identifier %s is not found.', String(id));
+      throw new InvalidArgumentError('Identifier %v is not found.', String(id));
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields,
@@ -709,7 +709,7 @@ export class MongodbAdapter extends Adapter {
     const table = this._getCollection(modelName);
     const {modifiedCount} = await table.updateOne({_id: id}, {$set: tableData});
     if (modifiedCount < 1)
-      throw new InvalidArgumentError('Identifier %s is not found.', String(id));
+      throw new InvalidArgumentError('Identifier %v is not found.', String(id));
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields,
@@ -757,7 +757,7 @@ export class MongodbAdapter extends Adapter {
     );
     const patchedData = await table.findOne({_id: id}, {projection});
     if (!patchedData)
-      throw new InvalidArgumentError('Identifier %s is not found.', String(id));
+      throw new InvalidArgumentError('Identifier %v is not found.', String(id));
     return this._fromDatabase(modelName, patchedData);
   }
 

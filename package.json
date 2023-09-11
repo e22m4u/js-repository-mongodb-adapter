@@ -36,7 +36,8 @@
     "mongodb": "5.8.1"
   },
   "peerDependencies": {
-    "@e22m4u/repository": "^0.0.18"
+    "@e22m4u/format": "*",
+    "@e22m4u/repository": "^0.0.21"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",

@@ -6,22 +6,22 @@ import {InvalidArgumentError} from '@e22m4u/repository';
 export function createMongodbUrl(options = {}) {
   if (!options || typeof options !== 'object' || Array.isArray(options))
     throw new InvalidArgumentError(
-      'The first argument of "createMongodbUrl" must be an Object, but %s given.',
+      'The first argument of "createMongodbUrl" must be an Object, but %v given.',
       options,
     );
   if (options.protocol && typeof options.protocol !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "protocol" must be a string, but %s given.',
+      'MongoDB option "protocol" must be a string, but %v given.',
       options.protocol,
     );
   if (options.hostname && typeof options.hostname !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "hostname" must be a String, but %s given.',
+      'MongoDB option "hostname" must be a String, but %v given.',
       options.hostname,
     );
   if (options.host && typeof options.host !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "host" must be a String, but %s given.',
+      'MongoDB option "host" must be a String, but %v given.',
       options.host,
     );
   if (
@@ -30,23 +30,23 @@ export function createMongodbUrl(options = {}) {
     typeof options.port !== 'string'
   ) {
     throw new InvalidArgumentError(
-      'MongoDB option "port" must be a Number or a String, but %s given.',
+      'MongoDB option "port" must be a Number or a String, but %v given.',
       options.port,
     );
   }
   if (options.database && typeof options.database !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "database" must be a String, but %s given.',
+      'MongoDB option "database" must be a String, but %v given.',
       options.database,
     );
   if (options.db && typeof options.db !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "db" must be a String, but %s given.',
+      'MongoDB option "db" must be a String, but %v given.',
       options.db,
     );
   if (options.username && typeof options.username !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "username" must be a String, but %s given.',
+      'MongoDB option "username" must be a String, but %v given.',
       options.username,
     );
   if (
@@ -55,7 +55,7 @@ export function createMongodbUrl(options = {}) {
     typeof options.password !== 'number'
   ) {
     throw new InvalidArgumentError(
-      'MongoDB option "password" must be a String or a Number, but %s given.',
+      'MongoDB option "password" must be a String or a Number, but %v given.',
       options.password,
     );
   }
@@ -65,7 +65,7 @@ export function createMongodbUrl(options = {}) {
     typeof options.pass !== 'number'
   ) {
     throw new InvalidArgumentError(
-      'MongoDB option "pass" must be a String or a Number, but %s given.',
+      'MongoDB option "pass" must be a String or a Number, but %v given.',
       options.pass,
     );
   }
