@@ -2,8 +2,8 @@ import {expect} from 'chai';
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
 import {format} from '@e22m4u/format';
+import {Service} from '@e22m4u/service';
 import {Schema} from '@e22m4u/repository';
-import {Service} from '@e22m4u/repository';
 import {DataType} from '@e22m4u/repository';
 import {createMongodbUrl} from './utils/index.js';
 import {MongodbAdapter} from './mongodb-adapter.js';
@@ -21,10 +21,10 @@ const ADAPTERS_STACK = [];
 
 function createSchema() {
   const schema = new Schema();
-  const adapter = new MongodbAdapter(schema._services, CONFIG);
+  const adapter = new MongodbAdapter(schema.container, CONFIG);
   ADAPTERS_STACK.push(adapter);
   schema.defineDatasource({name: 'mongodb', adapter: 'mongodb'});
-  schema.get(AdapterRegistry)._adapters['mongodb'] = adapter;
+  schema.getService(AdapterRegistry)._adapters['mongodb'] = adapter;
   return schema;
 }
 
@@ -44,7 +44,7 @@ describe('MongodbAdapter', function () {
 
   it('able to connect and disconnect', async function () {
     const S = new Service();
-    const adapter = new MongodbAdapter(S._services, CONFIG);
+    const adapter = new MongodbAdapter(S.container, CONFIG);
     await adapter.connect();
     expect(adapter.connected).to.be.true;
     await adapter.disconnect();

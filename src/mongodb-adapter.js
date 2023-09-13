@@ -1,11 +1,12 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
-import {isObjectId} from './utils/index.js';
 import {Adapter} from '@e22m4u/repository';
 import {DataType} from '@e22m4u/repository';
+import {isObjectId} from './utils/index.js';
 import {capitalize} from '@e22m4u/repository';
 import {isIsoDate} from './utils/is-iso-date.js';
+import {ServiceContainer} from '@e22m4u/service';
 import {createMongodbUrl} from './utils/index.js';
 import {stringToRegexp} from '@e22m4u/repository';
 import {transformValuesDeep} from './utils/index.js';
@@ -134,12 +135,12 @@ export class MongodbAdapter extends Adapter {
   /**
    * Constructor.
    *
-   * @param services
+   * @param {ServiceContainer} container
    * @param settings
    */
-  constructor(services, settings) {
+  constructor(container, settings) {
     settings = Object.assign({}, DEFAULT_SETTINGS, settings || {});
-    super(services, settings);
+    super(container, settings);
     settings.protocol = settings.protocol || 'mongodb';
     settings.hostname = settings.hostname || settings.host || '127.0.0.1';
     settings.port = settings.port || 27017;
@@ -221,7 +222,7 @@ export class MongodbAdapter extends Adapter {
    * @param modelName
    */
   _getIdPropName(modelName) {
-    return this.get(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
+    return this.getService(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
       modelName,
     );
   }
@@ -232,7 +233,9 @@ export class MongodbAdapter extends Adapter {
    * @param modelName
    */
   _getIdColName(modelName) {
-    return this.get(ModelDefinitionUtils).getPrimaryKeyAsColumnName(modelName);
+    return this.getService(ModelDefinitionUtils).getPrimaryKeyAsColumnName(
+      modelName,
+    );
   }
 
   /**
@@ -270,7 +273,7 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _toDatabase(modelName, modelData) {
-    const tableData = this.get(
+    const tableData = this.getService(
       ModelDefinitionUtils,
     ).convertPropertyNamesToColumnNames(modelName, modelData);
 
@@ -318,7 +321,7 @@ export class MongodbAdapter extends Adapter {
       }
     }
 
-    const modelData = this.get(
+    const modelData = this.getService(
       ModelDefinitionUtils,
     ).convertColumnNamesToPropertyNames(modelName, tableData);
 
@@ -340,7 +343,7 @@ export class MongodbAdapter extends Adapter {
     let collection = this._collections.get(modelName);
     if (collection) return collection;
     const tableName =
-      this.get(ModelDefinitionUtils).getTableNameByModelName(modelName);
+      this.getService(ModelDefinitionUtils).getTableNameByModelName(modelName);
     collection = this._client.db(this.settings.database).collection(tableName);
     this._collections.set(modelName, collection);
     return collection;
@@ -354,7 +357,7 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _getIdType(modelName) {
-    const utils = this.get(ModelDefinitionUtils);
+    const utils = this.getService(ModelDefinitionUtils);
     const pkPropName = utils.getPrimaryKeyAsPropertyName(modelName);
     return utils.getDataTypeByPropertyName(modelName, pkPropName);
   }
@@ -398,7 +401,7 @@ export class MongodbAdapter extends Adapter {
         'A property name must be a non-empty String, but %v given.',
         propName,
       );
-    const utils = this.get(ModelDefinitionUtils);
+    const utils = this.getService(ModelDefinitionUtils);
     let colName = propName;
     try {
       colName = utils.getColumnNameByPropertyName(modelName, propName);
@@ -425,7 +428,7 @@ export class MongodbAdapter extends Adapter {
     if (!clause) return;
     clause = Array.isArray(clause) ? clause : [clause];
     if (!clause.length) return;
-    const utils = this.get(ModelDefinitionUtils);
+    const utils = this.getService(ModelDefinitionUtils);
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== 'string')
