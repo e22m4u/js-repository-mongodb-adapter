@@ -3,11 +3,11 @@ import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
 import {format} from '@e22m4u/format';
 import {Service} from '@e22m4u/service';
-import {Schema} from '@e22m4u/repository';
 import {DataType} from '@e22m4u/repository';
 import {createMongodbUrl} from './utils/index.js';
-import {MongodbAdapter} from './mongodb-adapter.js';
 import {AdapterRegistry} from '@e22m4u/repository';
+import {MongodbAdapter} from './mongodb-adapter.js';
+import {RepositoriesSchema} from '@e22m4u/repository';
 import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/repository';
 
 const CONFIG = {
@@ -20,7 +20,7 @@ const MDB_CLIENT = new MongoClient(createMongodbUrl(CONFIG));
 const ADAPTERS_STACK = [];
 
 function createSchema() {
-  const schema = new Schema();
+  const schema = new RepositoriesSchema();
   const adapter = new MongodbAdapter(schema.container, CONFIG);
   ADAPTERS_STACK.push(adapter);
   schema.defineDatasource({name: 'mongodb', adapter: 'mongodb'});

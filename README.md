@@ -27,9 +27,9 @@ npm install @e22m4u/repository-mongodb-adapter
 Пример:
 
 ```js
-import {Schema} from '@e22m4u/repository';
+import {RepositoriesSchema} from '@e22m4u/repository';
 
-const schema = new Schema();
+const schema = new RepositoriesSchema();
 
 // объявление источника
 schema.defineDatasource({
