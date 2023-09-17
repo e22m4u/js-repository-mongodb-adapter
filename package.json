@@ -38,7 +38,7 @@
   "peerDependencies": {
     "@e22m4u/format": "*",
     "@e22m4u/service": "*",
-    "@e22m4u/repository": "^0.0.25"
+    "@e22m4u/repository": "^0.0.26"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
