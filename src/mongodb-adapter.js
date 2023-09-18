@@ -1,19 +1,19 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
-import {Adapter} from '@e22m4u/repository';
-import {DataType} from '@e22m4u/repository';
 import {isObjectId} from './utils/index.js';
-import {capitalize} from '@e22m4u/repository';
+import {Adapter} from '@e22m4u/node-repository';
+import {DataType} from '@e22m4u/node-repository';
 import {isIsoDate} from './utils/is-iso-date.js';
 import {ServiceContainer} from '@e22m4u/service';
 import {createMongodbUrl} from './utils/index.js';
-import {stringToRegexp} from '@e22m4u/repository';
+import {capitalize} from '@e22m4u/node-repository';
 import {transformValuesDeep} from './utils/index.js';
-import {selectObjectKeys} from '@e22m4u/repository';
-import {ModelDefinitionUtils} from '@e22m4u/repository';
-import {InvalidArgumentError} from '@e22m4u/repository';
-import {InvalidOperatorValueError} from '@e22m4u/repository';
+import {stringToRegexp} from '@e22m4u/node-repository';
+import {selectObjectKeys} from '@e22m4u/node-repository';
+import {ModelDefinitionUtils} from '@e22m4u/node-repository';
+import {InvalidArgumentError} from '@e22m4u/node-repository';
+import {InvalidOperatorValueError} from '@e22m4u/node-repository';
 
 /**
  * Mongodb option names.

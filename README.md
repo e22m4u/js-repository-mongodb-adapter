@@ -1,15 +1,15 @@
-## @e22m4u/repository-mongodb-adapter
+## @e22m4u/node-repository-mongodb-adapter
 
-MongoDB адаптер для [@e22m4u/repository](https://www.npmjs.com/package/@e22m4u/repository)  
+MongoDB адаптер для [@e22m4u/node-repository](https://www.npmjs.com/package/@e22m4u/node-repository)  
 
 ## Установка
 
 
 ```bash
-npm install @e22m4u/repository-mongodb-adapter
+npm install @e22m4u/node-repository-mongodb-adapter
 ```
 
-*требует пакет [repository](https://www.npmjs.com/package/@e22m4u/repository)*
+*требует пакет [repository](https://www.npmjs.com/package/@e22m4u/node-repository)*
 
 ## Параметры
 
@@ -27,7 +27,7 @@ npm install @e22m4u/repository-mongodb-adapter
 Пример:
 
 ```js
-import {Schema} from '@e22m4u/repository';
+import {Schema} from '@e22m4u/node-repository';
 
 const schema = new Schema();
 

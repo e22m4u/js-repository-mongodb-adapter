@@ -3,12 +3,12 @@ import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
 import {format} from '@e22m4u/format';
 import {Service} from '@e22m4u/service';
-import {Schema} from '@e22m4u/repository';
-import {DataType} from '@e22m4u/repository';
+import {Schema} from '@e22m4u/node-repository';
+import {DataType} from '@e22m4u/node-repository';
 import {createMongodbUrl} from './utils/index.js';
-import {AdapterRegistry} from '@e22m4u/repository';
 import {MongodbAdapter} from './mongodb-adapter.js';
-import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/repository';
+import {AdapterRegistry} from '@e22m4u/node-repository';
+import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/node-repository';
 
 const CONFIG = {
   host: process.env.MONGODB_HOST || 'localhost',

@@ -1,4 +1,4 @@
-import {InvalidArgumentError} from '@e22m4u/repository';
+import {InvalidArgumentError} from '@e22m4u/node-repository';
 
 /**
  * Transform values deep.

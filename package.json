@@ -1,7 +1,7 @@
 {
-  "name": "@e22m4u/repository-mongodb-adapter",
+  "name": "@e22m4u/node-repository-mongodb-adapter",
   "version": "0.0.9",
-  "description": "MongoDB адаптер для @e22m4u/repository",
+  "description": "MongoDB адаптер для @e22m4u/node-repository",
   "type": "module",
   "main": "src/index.js",
   "engines": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/e22m4u/repository-mongodb-adapter.git"
+    "url": "https://github.com/e22m4u/node-repository-mongodb-adapter.git"
   },
   "keywords": [
     "MongoDB",
@@ -31,14 +31,14 @@
   ],
   "author": "e22m4u <e22m4u@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/e22m4u/repository-mongodb-adapter",
+  "homepage": "https://github.com/e22m4u/node-repository-mongodb-adapter",
   "dependencies": {
     "mongodb": "5.8.1"
   },
   "peerDependencies": {
     "@e22m4u/format": "*",
     "@e22m4u/service": "*",
-    "@e22m4u/repository": "^0.0.26"
+    "@e22m4u/node-repository": "^0.0.27"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
