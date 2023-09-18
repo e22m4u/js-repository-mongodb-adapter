@@ -9,7 +9,7 @@ MongoDB адаптер для [@e22m4u/node-repository](https://www.npmjs.com/pa
 npm install @e22m4u/node-repository-mongodb-adapter
 ```
 
-*требует пакет [repository](https://www.npmjs.com/package/@e22m4u/node-repository)*
+*требует пакет [node-repository](https://www.npmjs.com/package/@e22m4u/node-repository)*
 
 ## Параметры
 
