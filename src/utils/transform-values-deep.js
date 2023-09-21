@@ -9,7 +9,7 @@ import {InvalidArgumentError} from '@e22m4u/node-repository';
  */
 export function transformValuesDeep(value, transformer) {
   if (!transformer || typeof transformer !== 'function')
-    throw InvalidArgumentError(
+    throw new InvalidArgumentError(
       'The second argument of "transformValuesDeep" ' +
         'must be a Function, but %s given.',
       transformer,
