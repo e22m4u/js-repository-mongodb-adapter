@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {format} from '@e22m4u/format';
+import {format} from '@e22m4u/util-format';
 import {createMongodbUrl} from './create-mongodb-url.js';
 
 describe('createMongodbUrl', function () {
