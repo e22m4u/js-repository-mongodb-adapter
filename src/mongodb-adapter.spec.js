@@ -1,14 +1,14 @@
 import {expect} from 'chai';
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
-import {Service} from '@e22m4u/service';
-import {format} from '@e22m4u/util-format';
-import {Schema} from '@e22m4u/node-repository';
-import {DataType} from '@e22m4u/node-repository';
+import {format} from '@e22m4u/js-format';
+import {Service} from '@e22m4u/js-service';
+import {Schema} from '@e22m4u/js-repository';
+import {DataType} from '@e22m4u/js-repository';
 import {createMongodbUrl} from './utils/index.js';
 import {MongodbAdapter} from './mongodb-adapter.js';
-import {AdapterRegistry} from '@e22m4u/node-repository';
-import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/node-repository';
+import {AdapterRegistry} from '@e22m4u/js-repository';
+import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/js-repository';
 
 const CONFIG = {
   host: process.env.MONGODB_HOST || 'localhost',

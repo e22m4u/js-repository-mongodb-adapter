@@ -1,4 +1,4 @@
-import {InvalidArgumentError} from '@e22m4u/node-repository';
+import {InvalidArgumentError} from '@e22m4u/js-repository';
 
 /**
  * Generate the mongodb URL from the options.
