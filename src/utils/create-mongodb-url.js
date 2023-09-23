@@ -11,7 +11,7 @@ export function createMongodbUrl(options = {}) {
     );
   if (options.protocol && typeof options.protocol !== 'string')
     throw new InvalidArgumentError(
-      'MongoDB option "protocol" must be a string, but %v given.',
+      'MongoDB option "protocol" must be a String, but %v given.',
       options.protocol,
     );
   if (options.hostname && typeof options.hostname !== 'string')
