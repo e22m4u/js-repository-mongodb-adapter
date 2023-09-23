@@ -1,12 +1,10 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
-import {EventEmitter} from 'events';
-import {waitAsync} from './utils/index.js';
+import {isIsoDate} from './utils/index.js';
 import {isObjectId} from './utils/index.js';
 import {Adapter} from '@e22m4u/js-repository';
 import {DataType} from '@e22m4u/js-repository';
-import {isIsoDate} from './utils/is-iso-date.js';
 import {capitalize} from '@e22m4u/js-repository';
 import {createMongodbUrl} from './utils/index.js';
 import {ServiceContainer} from '@e22m4u/js-service';
@@ -71,49 +69,13 @@ const MONGODB_OPTION_NAMES = [
 ];
 
 /**
- * Mongo client events.
- * 5.8.1
- *
- * @type {string[]}
- */
-const MONGO_CLIENT_EVENTS = [
-  'connectionPoolCreated',
-  'connectionPoolReady',
-  'connectionPoolCleared',
-  'connectionPoolClosed',
-  'connectionCreated',
-  'connectionReady',
-  'connectionClosed',
-  'connectionCheckOutStarted',
-  'connectionCheckOutFailed',
-  'connectionCheckedOut',
-  'connectionCheckedIn',
-  'commandStarted',
-  'commandSucceeded',
-  'commandFailed',
-  'serverOpening',
-  'serverClosed',
-  'serverDescriptionChanged',
-  'topologyOpening',
-  'topologyClosed',
-  'topologyDescriptionChanged',
-  'error',
-  'timeout',
-  'close',
-  'serverHeartbeatStarted',
-  'serverHeartbeatSucceeded',
-  'serverHeartbeatFailed',
-];
-
-/**
  * Default settings.
  *
- * @type {{connectTimeoutMS: number}}
+ * @type {object}
  */
 const DEFAULT_SETTINGS = {
-  reconnectInterval: 2000, // adapter specific option
-  connectTimeoutMS: 2000,
-  serverSelectionTimeoutMS: 2000,
+  //  connectTimeoutMS: 2500,
+  //  serverSelectionTimeoutMS: 2500,
 };
 
 /**
@@ -123,9 +85,19 @@ export class MongodbAdapter extends Adapter {
   /**
    * Mongodb instance.
    *
+   * @type {MongoClient}
    * @private
    */
   _client;
+
+  /**
+   * Client.
+   *
+   * @returns {MongoClient}
+   */
+  get client() {
+    return this._client;
+  }
 
   /**
    * Collections.
@@ -134,63 +106,6 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _collections = new Map();
-
-  /**
-   * Connected.
-   *
-   * @type {boolean}
-   * @private
-   */
-  _connected = false;
-
-  /**
-   * Connected.
-   *
-   * @return {boolean}
-   */
-  get connected() {
-    return this._connected;
-  }
-
-  /**
-   * Connecting.
-   *
-   * @type {boolean}
-   * @private
-   */
-  _connecting = false;
-
-  /**
-   * Connecting.
-   *
-   * @return {boolean}
-   */
-  get connecting() {
-    return this._connecting;
-  }
-
-  /**
-   * Event emitter.
-   *
-   * @private
-   */
-  _emitter;
-
-  /**
-   * Event emitter.
-   *
-   * @returns {EventEmitter}
-   */
-  get emitter() {
-    if (this._emitter) return this._emitter;
-    this._emitter = new EventEmitter();
-    const emit = this._emitter.emit;
-    this._emitter.emit = function (name, ...args) {
-      emit.call(this, '*', name, ...args);
-      return emit.call(this, name, ...args);
-    };
-    return this._emitter;
-  }
 
   /**
    * Constructor.
@@ -205,90 +120,9 @@ export class MongodbAdapter extends Adapter {
     settings.port = settings.port || 27017;
     settings.database = settings.database || settings.db || 'database';
     super(container, settings);
-  }
-
-  /**
-   * Connect.
-   *
-   * @return {Promise<*|undefined>}
-   * @private
-   */
-  async connect() {
-    if (this._connecting) {
-      await waitAsync(500);
-      return this.connect();
-    }
-
-    if (this._connected) return;
-    this._connecting = true;
-
     const options = selectObjectKeys(this.settings, MONGODB_OPTION_NAMES);
     const url = createMongodbUrl(this.settings);
-
-    // console.log(`Connecting to ${url}`);
-    if (this._client) {
-      this._client.removeAllListeners();
-      this._client.close(true);
-    }
     this._client = new MongoClient(url, options);
-    for (const event of MONGO_CLIENT_EVENTS) {
-      const listener = (...args) => this.emitter.emit(event, ...args);
-      this._client.on(event, listener);
-    }
-
-    const {reconnectInterval} = this.settings;
-    const connectFn = async () => {
-      if (this._connecting === false) return;
-      this.emitter.emit('connecting');
-      try {
-        await this._client.connect();
-      } catch (e) {
-        this.emitter.emit('error', e);
-        console.error(e);
-        // console.log('MongoDB connection failed!');
-        // console.log(`Reconnecting after ${reconnectInterval} ms.`);
-        await waitAsync(reconnectInterval);
-        return connectFn();
-      }
-      // console.log('MongoDB is connected.');
-      this._connected = true;
-      this._connecting = false;
-      reconnectOnClose();
-      this.emitter.emit('connected');
-    };
-
-    const reconnectOnClose = () =>
-      this._client.once('serverClosed', event => {
-        this.emitter.emit('disconnected', event);
-        if (this._connected) {
-          this._connected = false;
-          this._connecting = true;
-          // console.log('MongoDB lost connection!');
-          // console.log(event);
-          // console.log(`Reconnecting after ${reconnectInterval} ms.`);
-          setTimeout(() => connectFn(), reconnectInterval);
-        } else {
-          // console.log('MongoDB connection closed.');
-        }
-      });
-
-    return connectFn();
-  }
-
-  /**
-   * Disconnect.
-   *
-   * @return {Promise<undefined>}
-   */
-  async disconnect() {
-    this._connected = false;
-    this._connecting = false;
-    if (this._client) {
-      const client = this._client;
-      this._client = undefined;
-      await client.close();
-      client.removeAllListeners();
-    }
   }
 
   /**
@@ -323,19 +157,6 @@ export class MongodbAdapter extends Adapter {
   _coerceId(value) {
     if (value == null) return value;
     if (isObjectId(value)) return new ObjectId(value);
-    return value;
-  }
-
-  /**
-   * Coerce iso date.
-   *
-   * @param value
-   * @return {*|Date}
-   * @private
-   */
-  _coerceIsoDate(value) {
-    if (value === null) return value;
-    if (isIsoDate(value)) return new Date(value);
     return value;
   }
 
@@ -419,7 +240,7 @@ export class MongodbAdapter extends Adapter {
     if (collection) return collection;
     const tableName =
       this.getService(ModelDefinitionUtils).getTableNameByModelName(modelName);
-    collection = this._client.db(this.settings.database).collection(tableName);
+    collection = this.client.db(this.settings.database).collection(tableName);
     this._collections.set(modelName, collection);
     return collection;
   }
@@ -716,7 +537,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<object>}
    */
   async create(modelName, modelData, filter = undefined) {
-    await this.connect();
     const idPropName = this._getIdPropName(modelName);
     const idValue = modelData[idPropName];
     if (idValue == null) {
@@ -752,7 +572,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<object>}
    */
   async replaceById(modelName, id, modelData, filter = undefined) {
-    await this.connect();
     id = this._coerceId(id);
     const idPropName = this._getIdPropName(modelName);
     modelData[idPropName] = id;
@@ -779,7 +598,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<object>}
    */
   async patchById(modelName, id, modelData, filter = undefined) {
-    await this.connect();
     id = this._coerceId(id);
     const idPropName = this._getIdPropName(modelName);
     delete modelData[idPropName];
@@ -804,7 +622,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<object[]>}
    */
   async find(modelName, filter = undefined) {
-    await this.connect();
     filter = filter || {};
     const query = this._buildQuery(modelName, filter.where);
     const sort = this._buildSort(modelName, filter.order);
@@ -826,7 +643,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<object>}
    */
   async findById(modelName, id, filter = undefined) {
-    await this.connect();
     id = this._coerceId(id);
     const table = this._getCollection(modelName);
     const projection = this._buildProjection(
@@ -847,7 +663,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<number>}
    */
   async delete(modelName, where = undefined) {
-    await this.connect();
     const table = this._getCollection(modelName);
     const query = this._buildQuery(modelName, where);
     const {deletedCount} = await table.deleteMany(query);
@@ -862,7 +677,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<boolean>}
    */
   async deleteById(modelName, id) {
-    await this.connect();
     id = this._coerceId(id);
     const table = this._getCollection(modelName);
     const {deletedCount} = await table.deleteOne({_id: id});
@@ -877,7 +691,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<boolean>}
    */
   async exists(modelName, id) {
-    await this.connect();
     id = this._coerceId(id);
     const table = this._getCollection(modelName);
     const result = await table.findOne({_id: id}, {});
@@ -892,7 +705,6 @@ export class MongodbAdapter extends Adapter {
    * @return {Promise<number>}
    */
   async count(modelName, where = undefined) {
-    await this.connect();
     const query = this._buildQuery(modelName, where);
     const table = this._getCollection(modelName);
     return await table.count(query);
