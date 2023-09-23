@@ -5,7 +5,7 @@ import {InvalidArgumentError} from '@e22m4u/js-repository';
  *
  * @example
  * ```ts
- * await wait(1000); // 1sec
+ * await waitAsync(1000); // 1sec
  * ```
  *
  * @param {number} ms Milliseconds
@@ -14,7 +14,7 @@ import {InvalidArgumentError} from '@e22m4u/js-repository';
 export function waitAsync(ms) {
   if (typeof ms !== 'number')
     throw new InvalidArgumentError(
-      'The first argument of "waitAsync" must be' + ' a Number, but %v given.',
+      'The first argument of "waitAsync" must be a Number, but %v given.',
       ms,
     );
   return new Promise(r => setTimeout(() => r(), ms));
