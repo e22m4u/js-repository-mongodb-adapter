@@ -42,12 +42,20 @@ describe('MongodbAdapter', function () {
     await MDB_CLIENT.close(true);
   });
 
-  it('able to connect and disconnect', async function () {
+  it('sets the "connected" and "connecting" statuses', async function () {
     const S = new Service();
     const adapter = new MongodbAdapter(S.container, CONFIG);
-    await adapter.connect();
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.false;
+    const promise = adapter.connect();
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.true;
+    await promise;
     expect(adapter.connected).to.be.true;
+    expect(adapter.connecting).to.be.false;
     await adapter.disconnect();
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.false;
   });
 
   describe('create', function () {
