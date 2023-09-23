@@ -1,6 +1,7 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
+import {EventEmitter} from 'events';
 import {waitAsync} from './utils/index.js';
 import {isObjectId} from './utils/index.js';
 import {Adapter} from '@e22m4u/js-repository';
@@ -70,6 +71,41 @@ const MONGODB_OPTION_NAMES = [
 ];
 
 /**
+ * Mongo client events.
+ * 5.8.1
+ *
+ * @type {string[]}
+ */
+const MONGO_CLIENT_EVENTS = [
+  'connectionPoolCreated',
+  'connectionPoolReady',
+  'connectionPoolCleared',
+  'connectionPoolClosed',
+  'connectionCreated',
+  'connectionReady',
+  'connectionClosed',
+  'connectionCheckOutStarted',
+  'connectionCheckOutFailed',
+  'connectionCheckedOut',
+  'connectionCheckedIn',
+  'commandStarted',
+  'commandSucceeded',
+  'commandFailed',
+  'serverOpening',
+  'serverClosed',
+  'serverDescriptionChanged',
+  'topologyOpening',
+  'topologyClosed',
+  'topologyDescriptionChanged',
+  'error',
+  'timeout',
+  'close',
+  'serverHeartbeatStarted',
+  'serverHeartbeatSucceeded',
+  'serverHeartbeatFailed',
+];
+
+/**
  * Default settings.
  *
  * @type {{connectTimeoutMS: number}}
@@ -134,6 +170,29 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
+   * Event emitter.
+   *
+   * @private
+   */
+  _emitter;
+
+  /**
+   * Event emitter.
+   *
+   * @returns {EventEmitter}
+   */
+  get emitter() {
+    if (this._emitter) return this._emitter;
+    this._emitter = new EventEmitter();
+    const emit = this._emitter.emit;
+    this._emitter.emit = function (name, ...args) {
+      emit.call(this, '*', name, ...args);
+      return emit.call(this, name, ...args);
+    };
+    return this._emitter;
+  }
+
+  /**
    * Constructor.
    *
    * @param {ServiceContainer} container
@@ -167,52 +226,69 @@ export class MongodbAdapter extends Adapter {
     const url = createMongodbUrl(this.settings);
 
     // console.log(`Connecting to ${url}`);
+    if (this._client) {
+      this._client.removeAllListeners();
+      this._client.close(true);
+    }
     this._client = new MongoClient(url, options);
+    for (const event of MONGO_CLIENT_EVENTS) {
+      const listener = (...args) => this.emitter.emit(event, ...args);
+      this._client.on(event, listener);
+    }
 
     const {reconnectInterval} = this.settings;
     const connectFn = async () => {
+      if (this._connecting === false) return;
+      this.emitter.emit('connecting');
       try {
         await this._client.connect();
       } catch (e) {
+        this.emitter.emit('error', e);
         console.error(e);
         // console.log('MongoDB connection failed!');
         // console.log(`Reconnecting after ${reconnectInterval} ms.`);
-        await new Promise(r => setTimeout(() => r(), reconnectInterval));
+        await waitAsync(reconnectInterval);
         return connectFn();
       }
       // console.log('MongoDB is connected.');
       this._connected = true;
       this._connecting = false;
+      reconnectOnClose();
+      this.emitter.emit('connected');
     };
 
-    await connectFn();
+    const reconnectOnClose = () =>
+      this._client.once('serverClosed', event => {
+        this.emitter.emit('disconnected', event);
+        if (this._connected) {
+          this._connected = false;
+          this._connecting = true;
+          // console.log('MongoDB lost connection!');
+          // console.log(event);
+          // console.log(`Reconnecting after ${reconnectInterval} ms.`);
+          setTimeout(() => connectFn(), reconnectInterval);
+        } else {
+          // console.log('MongoDB connection closed.');
+        }
+      });
 
-    this._client.once('serverClosed', event => {
-      if (this._connected) {
-        this._connected = false;
-        // console.log('MongoDB lost connection!');
-        console.log(event);
-        // console.log(`Reconnecting after ${reconnectInterval} ms.`);
-        setTimeout(() => connectFn(), reconnectInterval);
-      } else {
-        // console.log('MongoDB connection closed.');
-      }
-    });
+    return connectFn();
   }
 
   /**
    * Disconnect.
    *
-   * @return {Promise<*|undefined>}
+   * @return {Promise<undefined>}
    */
   async disconnect() {
-    if (this._connecting) {
-      await waitAsync(500);
-      return this.disconnect();
-    }
-    if (!this._connected) return;
     this._connected = false;
-    if (this._client) await this._client.close();
+    this._connecting = false;
+    if (this._client) {
+      const client = this._client;
+      this._client = undefined;
+      await client.close();
+      client.removeAllListeners();
+    }
   }
 
   /**

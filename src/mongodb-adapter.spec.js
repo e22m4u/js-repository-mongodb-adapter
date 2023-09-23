@@ -1,3 +1,5 @@
+import net from 'net';
+import chai from 'chai';
 import {expect} from 'chai';
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
@@ -9,6 +11,7 @@ import {createMongodbUrl} from './utils/index.js';
 import {MongodbAdapter} from './mongodb-adapter.js';
 import {AdapterRegistry} from '@e22m4u/js-repository';
 import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/js-repository';
+const sandbox = chai.spy.sandbox();
 
 const CONFIG = {
   host: process.env.MONGODB_HOST || 'localhost',
@@ -32,6 +35,7 @@ describe('MongodbAdapter', function () {
   this.timeout(15000);
 
   afterEach(async function () {
+    sandbox.restore();
     await MDB_CLIENT.db(CONFIG.database).dropDatabase();
   });
 
@@ -42,20 +46,149 @@ describe('MongodbAdapter', function () {
     await MDB_CLIENT.close(true);
   });
 
-  it('sets the "connected" and "connecting" statuses', async function () {
+  it('updates "connected" and "connecting" properties', async function () {
     const S = new Service();
+    const events = [];
     const adapter = new MongodbAdapter(S.container, CONFIG);
+    adapter.emitter.addListener('*', name => events.push(name));
     expect(adapter.connected).to.be.false;
     expect(adapter.connecting).to.be.false;
+    expect(events).to.be.empty;
     const promise = adapter.connect();
     expect(adapter.connected).to.be.false;
     expect(adapter.connecting).to.be.true;
+    expect(events).to.include('serverOpening');
+    expect(events).to.not.include('connectionPoolReady');
+    expect(events).to.not.include('serverClosed');
     await promise;
     expect(adapter.connected).to.be.true;
     expect(adapter.connecting).to.be.false;
+    expect(events).to.include('connectionPoolReady');
+    expect(events).to.not.include('serverClosed');
     await adapter.disconnect();
     expect(adapter.connected).to.be.false;
     expect(adapter.connecting).to.be.false;
+    expect(events).to.include('serverClosed');
+  });
+
+  it('emits "connecting", "connected" and "disconnected" events', async function () {
+    const S = new Service();
+    const events = [];
+    const adapter = new MongodbAdapter(S.container, CONFIG);
+    adapter.emitter.addListener('*', name => events.push(name));
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.false;
+    expect(events).to.be.empty;
+    const promise = adapter.connect();
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.true;
+    expect(events).to.include('connecting');
+    expect(events).to.not.include('connected');
+    expect(events).to.not.include('disconnected');
+    await promise;
+    expect(adapter.connected).to.be.true;
+    expect(adapter.connecting).to.be.false;
+    expect(events).to.include('connected');
+    expect(events).to.not.include('disconnected');
+    await adapter.disconnect();
+    expect(adapter.connected).to.be.false;
+    expect(adapter.connecting).to.be.false;
+    expect(events).to.include('disconnected');
+  });
+
+  it('reconnects on server selection error', function (done) {
+    const S = new Service();
+    const server = net.createServer();
+    let startupCounter = 0;
+    server.listen(0, 'localhost', 2, () => {
+      startupCounter++;
+      expect(startupCounter).to.be.eq(1);
+      const {address, port} = server.address();
+      const attemptsLimit = 3;
+      const serverSelectionTimeoutMS = 50;
+      const adapter = new MongodbAdapter(S.container, {
+        port,
+        host: address,
+        reconnectInterval: 0,
+        serverSelectionTimeoutMS,
+      });
+      let attempts = 0;
+      const startTime = new Date();
+      adapter.emitter.addListener('connecting', () => {
+        ++attempts;
+        if (attempts !== attemptsLimit) return;
+        const duration = new Date() - startTime;
+        const accuracy = 10;
+        server.close();
+        adapter.disconnect();
+        expect(adapter.connect).to.have.been.called.once;
+        const attemptMs = duration / (attemptsLimit - 1);
+        expect(attemptMs).to.be.gte(serverSelectionTimeoutMS - accuracy);
+        expect(attemptMs).to.be.lte(serverSelectionTimeoutMS + accuracy);
+        done();
+      });
+      adapter.emitter.addListener('error', error => {
+        expect(error.message).to.be.eq(
+          'Server selection timed out after 50 ms',
+        );
+      });
+      sandbox.on(adapter, 'connect');
+      adapter.connect();
+    });
+  });
+
+  it('reconnects on implicit disconnect', function (done) {
+    const S = new Service();
+    const reconnectsLimit = 2;
+    const reconnectInterval = 50;
+    const adapter = new MongodbAdapter(S.container, {
+      ...CONFIG,
+      reconnectInterval,
+    });
+    let startTime;
+    let connects = 0;
+    let reconnects = 0;
+    adapter.emitter.on('connected', () => {
+      ++connects;
+      if (connects === 1) {
+        adapter._client.close();
+        return;
+      }
+      ++reconnects;
+      if (startTime == null) startTime = new Date();
+      if (reconnects < reconnectsLimit) {
+        adapter._client.close();
+        return;
+      }
+      const duration = new Date() - startTime;
+      const accuracy = 10;
+      adapter.disconnect();
+      expect(adapter.connect).to.have.been.called.once;
+      const attemptMs = duration / (reconnectsLimit - 1);
+      expect(attemptMs).to.be.gt(reconnectInterval - accuracy);
+      expect(attemptMs).to.be.lt(reconnectInterval + accuracy);
+      expect(connects).to.be.eq(reconnectsLimit + 1);
+      done();
+    });
+    sandbox.on(adapter, 'connect');
+    adapter.connect();
+  });
+
+  it('does not reconnect on explicit disconnect', function (done) {
+    const S = new Service();
+    const reconnectInterval = 0;
+    const adapter = new MongodbAdapter(S.container, {
+      ...CONFIG,
+      reconnectInterval,
+    });
+    adapter.emitter.once('connected', () => {
+      adapter.emitter.once('connecting', () => {
+        throw new Error('Unexpected reconnection');
+      });
+      adapter.emitter.once('disconnected', () => setTimeout(() => done(), 50));
+      adapter.disconnect();
+    });
+    adapter.connect();
   });
 
   describe('create', function () {
