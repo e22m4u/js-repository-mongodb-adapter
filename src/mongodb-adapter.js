@@ -1,6 +1,7 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
+import {waitAsync} from './utils/index.js';
 import {isObjectId} from './utils/index.js';
 import {Adapter} from '@e22m4u/js-repository';
 import {DataType} from '@e22m4u/js-repository';
@@ -155,8 +156,7 @@ export class MongodbAdapter extends Adapter {
    */
   async connect() {
     if (this._connecting) {
-      const tryAgainAfter = 500;
-      await new Promise(r => setTimeout(() => r(), tryAgainAfter));
+      await waitAsync(500);
       return this.connect();
     }
 
@@ -207,8 +207,7 @@ export class MongodbAdapter extends Adapter {
    */
   async disconnect() {
     if (this._connecting) {
-      const tryAgainAfter = 500;
-      await new Promise(r => setTimeout(() => r(), tryAgainAfter));
+      await waitAsync(500);
       return this.disconnect();
     }
     if (!this._connected) return;
