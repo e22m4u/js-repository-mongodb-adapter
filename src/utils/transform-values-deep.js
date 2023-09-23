@@ -11,7 +11,7 @@ export function transformValuesDeep(value, transformer) {
   if (!transformer || typeof transformer !== 'function')
     throw new InvalidArgumentError(
       'The second argument of "transformValuesDeep" ' +
-        'must be a Function, but %s given.',
+        'must be a Function, but %v given.',
       transformer,
     );
   if (Array.isArray(value)) {
