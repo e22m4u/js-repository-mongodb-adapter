@@ -140,11 +140,11 @@ export class MongodbAdapter extends Adapter {
    */
   constructor(container, settings) {
     settings = Object.assign({}, DEFAULT_SETTINGS, settings || {});
-    super(container, settings);
     settings.protocol = settings.protocol || 'mongodb';
     settings.hostname = settings.hostname || settings.host || '127.0.0.1';
     settings.port = settings.port || 27017;
-    settings.database = settings.database || settings.db || 'test';
+    settings.database = settings.database || settings.db || 'database';
+    super(container, settings);
   }
 
   /**
