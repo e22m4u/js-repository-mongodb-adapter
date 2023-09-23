@@ -10,6 +10,15 @@ describe('isIsoDate', function () {
     expect(isIsoDate(null)).to.be.false;
   });
 
+  it('returns false for invalid values', function () {
+    expect(isIsoDate(10)).to.be.false;
+    expect(isIsoDate([])).to.be.false;
+    expect(isIsoDate({})).to.be.false;
+    expect(isIsoDate(new Map())).to.be.false;
+    expect(isIsoDate(NaN)).to.be.false;
+    expect(isIsoDate(Infinity)).to.be.false;
+  });
+
   it('returns true for the Date instance', function () {
     expect(isIsoDate(new Date())).to.be.true;
   });
