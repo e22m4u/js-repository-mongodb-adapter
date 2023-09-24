@@ -36,9 +36,10 @@ schema.defineDatasource({
   name: 'myMongo', // название источника
   adapter: 'mongodb', // имя адаптера
   // параметры
-  host: '192.128.0.2',
+  host: '127.0.0.1',
   port: 27017,
-})
+  database: 'myDatabase',
+});
 
 // объявление модели
 schema.defineModel({
@@ -64,7 +65,7 @@ console.log(user);
 
 ## Тесты
 
-Запуск контейнера `mongodb_c` скриптом `setup.sh`
+Запуск контейнера `mongo:latest` скриптом `setup.sh`
 
 ```bash
 ./setup.sh
