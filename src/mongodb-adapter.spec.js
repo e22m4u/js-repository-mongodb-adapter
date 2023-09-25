@@ -287,6 +287,29 @@ describe('MongodbAdapter', function () {
         expect(res2).to.be.eql({foo: -1});
         expect(res3).to.be.eql({foo: 1});
       });
+
+      it('converts the given property name to the column name', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              columnName: 'bar',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('model', 'foo');
+        const res2 = A._buildSort('model', 'foo DESC');
+        const res3 = A._buildSort('model', 'foo ASC');
+        expect(res1).to.be.eql({bar: 1});
+        expect(res2).to.be.eql({bar: -1});
+        expect(res3).to.be.eql({bar: 1});
+      });
     });
 
     describe('multiple fields', function () {
@@ -337,6 +360,33 @@ describe('MongodbAdapter', function () {
         expect(res1).to.be.eql({foo: 1, bar: 1});
         expect(res2).to.be.eql({foo: -1, bar: 1});
         expect(res3).to.be.eql({foo: 1, bar: -1});
+      });
+
+      it('converts the given property names to column names', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              columnName: 'bar',
+            },
+            baz: {
+              type: DataType.STRING,
+              columnName: 'qux',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('model', ['foo', 'baz']);
+        const res2 = A._buildSort('model', ['foo DESC', 'baz ASC']);
+        const res3 = A._buildSort('model', ['foo ASC', 'baz DESC']);
+        expect(res1).to.be.eql({bar: 1, qux: 1});
+        expect(res2).to.be.eql({bar: -1, qux: 1});
+        expect(res3).to.be.eql({bar: 1, qux: -1});
       });
     });
   });
