@@ -267,14 +267,15 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _buildProjection(modelName, fields) {
-    if (!fields) return;
-    fields = Array.isArray(fields) ? fields : [fields];
+    if (fields == null) return;
+    if (Array.isArray(fields) === false) fields = [fields];
     if (!fields.length) return;
     if (fields.indexOf('_id') === -1) fields.push('_id');
     return fields.reduce((acc, field) => {
       if (!field || typeof field !== 'string')
         throw new InvalidArgumentError(
-          'A field name must be a non-empty String, but %v given.',
+          'The provided option "fields" should be a non-empty String ' +
+            'or an Array of non-empty String, but %v given.',
           field,
         );
       let colName = this._getColName(modelName, field);

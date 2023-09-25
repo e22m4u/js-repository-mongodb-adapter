@@ -41,6 +41,193 @@ describe('MongodbAdapter', function () {
     await MDB_CLIENT.close(true);
   });
 
+  describe('_buildProjection', function () {
+    describe('single field', function () {
+      it('returns undefined if the second argument is undefined', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', undefined);
+        expect(res).to.be.undefined;
+      });
+
+      it('returns undefined if the second argument is null', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', null);
+        expect(res).to.be.undefined;
+      });
+
+      it('requires the second argument to be a non-empty string', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const throwable = v => () => A._buildProjection('model', v);
+        const error = v =>
+          format(
+            'The provided option "fields" should be a non-empty String ' +
+              'or an Array of non-empty String, but %s given.',
+            v,
+          );
+        expect(throwable('')).to.throw(error('""'));
+        expect(throwable(10)).to.throw(error('10'));
+        expect(throwable(0)).to.throw(error('0'));
+        expect(throwable(true)).to.throw(error('true'));
+        expect(throwable(false)).to.throw(error('false'));
+        expect(throwable({})).to.throw(error('Object'));
+        expect(throwable('bar')()).to.be.eql({_id: 1, bar: 1});
+        expect(throwable(undefined)()).to.be.undefined;
+        expect(throwable(null)()).to.be.undefined;
+      });
+
+      it('converts the given property name to the column name', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              columnName: 'bar',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', 'foo');
+        expect(res).to.be.eql({_id: 1, bar: 1});
+      });
+
+      it('includes "_id" field to the projection', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', 'foo');
+        expect(res).to.be.eql({_id: 1, foo: 1});
+      });
+
+      it('includes "_id" as a column name of the given property', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              primaryKey: true,
+              columnName: '_id',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', 'foo');
+        expect(res).to.be.eql({_id: 1});
+      });
+    });
+
+    describe('multiple fields', function () {
+      it('returns undefined if the second argument is an empty array', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', []);
+        expect(res).to.be.undefined;
+      });
+
+      it('requires the second argument to be an array of non-empty strings', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const throwable = v => () => A._buildProjection('model', v);
+        const error = v =>
+          format(
+            'The provided option "fields" should be a non-empty String ' +
+              'or an Array of non-empty String, but %s given.',
+            v,
+          );
+        expect(throwable([''])).to.throw(error('""'));
+        expect(throwable([10])).to.throw(error('10'));
+        expect(throwable([0])).to.throw(error('0'));
+        expect(throwable([true])).to.throw(error('true'));
+        expect(throwable([false])).to.throw(error('false'));
+        expect(throwable([{}])).to.throw(error('Object'));
+        expect(throwable([undefined])).to.throw(error('undefined'));
+        expect(throwable([null])).to.throw(error('null'));
+        expect(throwable([])()).to.be.undefined;
+        expect(throwable(['bar'])()).to.be.eql({_id: 1, bar: 1});
+      });
+
+      it('converts the given property names to column names', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              columnName: 'bar',
+            },
+            baz: {
+              type: DataType.STRING,
+              columnName: 'qux',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', ['foo', 'baz']);
+        expect(res).to.be.eql({_id: 1, bar: 1, qux: 1});
+      });
+
+      it('includes "_id" field to the projection', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', ['foo', 'bar']);
+        expect(res).to.be.eql({_id: 1, foo: 1, bar: 1});
+      });
+
+      it('includes "_id" as a column name of the given property', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'model',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.STRING,
+              primaryKey: true,
+              columnName: '_id',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('model', ['foo', 'bar']);
+        expect(res).to.be.eql({_id: 1, bar: 1});
+      });
+    });
+  });
+
   describe('create', function () {
     it('generates a new identifier when a value of a primary key is not provided', async function () {
       const schema = createSchema();
