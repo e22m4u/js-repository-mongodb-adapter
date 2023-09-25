@@ -228,6 +228,119 @@ describe('MongodbAdapter', function () {
     });
   });
 
+  describe('_buildSort', function () {
+    describe('single field', function () {
+      it('returns undefined if the second argument is undefined', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', undefined);
+        expect(res).to.be.undefined;
+      });
+
+      it('returns undefined if the second argument is null', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', null);
+        expect(res).to.be.undefined;
+      });
+
+      it('requires the second argument to be a non-empty string', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const throwable = v => () => A._buildSort('model', v);
+        const error = v =>
+          format(
+            'The provided option "order" should be a non-empty String ' +
+              'or an Array of non-empty String, but %s given.',
+            v,
+          );
+        expect(throwable('')).to.throw(error('""'));
+        expect(throwable(10)).to.throw(error('10'));
+        expect(throwable(0)).to.throw(error('0'));
+        expect(throwable(true)).to.throw(error('true'));
+        expect(throwable(false)).to.throw(error('false'));
+        expect(throwable({})).to.throw(error('Object'));
+        expect(throwable('bar')()).to.be.eql({bar: 1});
+        expect(throwable(undefined)()).to.be.undefined;
+        expect(throwable(null)()).to.be.undefined;
+      });
+
+      it('recognizes direction by the given direction flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('model', 'foo');
+        const res2 = A._buildSort('model', 'foo DESC');
+        const res3 = A._buildSort('model', 'foo ASC');
+        expect(res1).to.be.eql({foo: 1});
+        expect(res2).to.be.eql({foo: -1});
+        expect(res3).to.be.eql({foo: 1});
+      });
+    });
+
+    describe('multiple fields', function () {
+      it('returns undefined if the second argument is an empty array', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', []);
+        expect(res).to.be.undefined;
+      });
+
+      it('requires the second argument to be an array of non-empty strings', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const throwable = v => () => A._buildSort('model', v);
+        const error = v =>
+          format(
+            'The provided option "order" should be a non-empty String ' +
+              'or an Array of non-empty String, but %s given.',
+            v,
+          );
+        expect(throwable([''])).to.throw(error('""'));
+        expect(throwable([10])).to.throw(error('10'));
+        expect(throwable([0])).to.throw(error('0'));
+        expect(throwable([true])).to.throw(error('true'));
+        expect(throwable([false])).to.throw(error('false'));
+        expect(throwable([{}])).to.throw(error('Object'));
+        expect(throwable([undefined])).to.throw(error('undefined'));
+        expect(throwable([null])).to.throw(error('null'));
+        expect(throwable([])()).to.be.undefined;
+        expect(throwable(['bar', 'baz'])()).to.be.eql({bar: 1, baz: 1});
+      });
+
+      it('recognizes direction by the given direction flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('model', ['foo', 'bar']);
+        const res2 = A._buildSort('model', ['foo DESC', 'bar ASC']);
+        const res3 = A._buildSort('model', ['foo ASC', 'bar DESC']);
+        expect(res1).to.be.eql({foo: 1, bar: 1});
+        expect(res2).to.be.eql({foo: -1, bar: 1});
+        expect(res3).to.be.eql({foo: 1, bar: -1});
+      });
+    });
+  });
+
   describe('create', function () {
     it('generates a new identifier when a value of a primary key is not provided', async function () {
       const schema = createSchema();

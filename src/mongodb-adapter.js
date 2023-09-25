@@ -322,24 +322,25 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _buildSort(modelName, clause) {
-    if (!clause) return;
-    clause = Array.isArray(clause) ? clause : [clause];
+    if (clause == null) return;
+    if (Array.isArray(clause) === false) clause = [clause];
     if (!clause.length) return;
     const utils = this.getService(ModelDefinitionUtils);
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== 'string')
         throw new InvalidArgumentError(
-          'A field order must be a non-empty String, but %v given.',
+          'The provided option "order" should be a non-empty String ' +
+            'or an Array of non-empty String, but %v given.',
           order,
         );
       const direction = order.match(/\s+(A|DE)SC$/);
-      let key = order.replace(/\s+(A|DE)SC$/, '').trim();
-      if (key === idPropName) {
-        key = '_id';
+      let field = order.replace(/\s+(A|DE)SC$/, '').trim();
+      if (field === idPropName) {
+        field = '_id';
       } else {
         try {
-          key = utils.getColumnNameByPropertyName(modelName, key);
+          field = utils.getColumnNameByPropertyName(modelName, field);
         } catch (error) {
           if (
             !(error instanceof InvalidArgumentError) ||
@@ -349,7 +350,7 @@ export class MongodbAdapter extends Adapter {
           }
         }
       }
-      acc[key] = direction && direction[1] === 'DE' ? -1 : 1;
+      acc[field] = direction && direction[1] === 'DE' ? -1 : 1;
       return acc;
     }, {});
   }
