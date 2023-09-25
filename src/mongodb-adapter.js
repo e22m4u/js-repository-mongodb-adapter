@@ -579,8 +579,8 @@ export class MongodbAdapter extends Adapter {
     modelData[idPropName] = id;
     const tableData = this._toDatabase(modelName, modelData);
     const table = this._getCollection(modelName);
-    const {modifiedCount} = await table.replaceOne({_id: id}, tableData);
-    if (modifiedCount < 1)
+    const {matchedCount} = await table.replaceOne({_id: id}, tableData);
+    if (matchedCount < 1)
       throw new InvalidArgumentError('Identifier %v is not found.', String(id));
     const projection = this._buildProjection(
       modelName,
@@ -605,8 +605,8 @@ export class MongodbAdapter extends Adapter {
     delete modelData[idPropName];
     const tableData = this._toDatabase(modelName, modelData);
     const table = this._getCollection(modelName);
-    const {modifiedCount} = await table.updateOne({_id: id}, {$set: tableData});
-    if (modifiedCount < 1)
+    const {matchedCount} = await table.updateOne({_id: id}, {$set: tableData});
+    if (matchedCount < 1)
       throw new InvalidArgumentError('Identifier %v is not found.', String(id));
     const projection = this._buildProjection(
       modelName,

@@ -1299,6 +1299,21 @@ describe('MongodbAdapter', function () {
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, fooCol: 15, barCol: 25, bazCol: 35});
     });
+
+    it('does not throws an error if nothing changed', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const created = await rep.create({foo: 10});
+      const id = created[DEF_PK];
+      const replaced = await rep.replaceById(id, {foo: 10});
+      expect(replaced).to.be.eql({[DEF_PK]: id, foo: 10});
+      const oid = new ObjectId(id);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 10});
+    });
   });
 
   describe('patchById', function () {
@@ -1650,6 +1665,21 @@ describe('MongodbAdapter', function () {
         .collection('model')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, fooCol: 15, barCol: 25, bazCol: 35});
+    });
+
+    it('does not throws an error if nothing changed', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const created = await rep.create({foo: 10});
+      const id = created[DEF_PK];
+      const patched = await rep.patchById(id, {foo: 10});
+      expect(patched).to.be.eql({[DEF_PK]: id, foo: 10});
+      const oid = new ObjectId(id);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
   });
 
