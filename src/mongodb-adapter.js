@@ -364,8 +364,13 @@ export class MongodbAdapter extends Adapter {
    * @private
    */
   _buildQuery(modelName, clause) {
+    if (clause == null) return;
+    if (typeof clause !== 'object' || Array.isArray(clause))
+      throw new InvalidArgumentError(
+        'The provided option "where" should be an Object, but %v given.',
+        clause,
+      );
     const query = {};
-    if (!clause || typeof clause !== 'object') return query;
     const idPropName = this._getIdPropName(modelName);
     Object.keys(clause).forEach(key => {
       let cond = clause[key];

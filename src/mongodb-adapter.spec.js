@@ -433,6 +433,66 @@ describe('MongodbAdapter', function () {
     });
   });
 
+  describe('_buildQuery', function () {
+    it('requires the second argument to be an object', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const throwable = v => () => A._buildQuery('model', v);
+      const error = v =>
+        format(
+          'The provided option "where" should be an Object, but %s given.',
+          v,
+        );
+      expect(throwable('str')).to.throw(error('"str"'));
+      expect(throwable('')).to.throw(error('""'));
+      expect(throwable(10)).to.throw(error('10'));
+      expect(throwable(0)).to.throw(error('0'));
+      expect(throwable(true)).to.throw(error('true'));
+      expect(throwable(false)).to.throw(error('false'));
+      expect(throwable({foo: 'bar'})()).to.be.eql({foo: 'bar'});
+      expect(throwable({})()).to.be.eql({});
+      expect(throwable(undefined)()).to.be.undefined;
+      expect(throwable(null)()).to.be.undefined;
+    });
+
+    it('converts the property names to column names', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            columnName: 'bar',
+          },
+          baz: {
+            type: DataType.STRING,
+            columnName: 'qux',
+          },
+        },
+      });
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', {foo: 'a1', baz: null});
+      expect(res).to.be.eql({bar: 'a1', qux: null});
+    });
+
+    it('converts strings of the ObjectId to instances', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const oid1 = new ObjectId();
+      const oid2 = new ObjectId();
+      const id1 = String(oid1);
+      const id2 = String(oid2);
+      const res = A._buildQuery('model', {foo: id1, bar: id2});
+      expect(res.foo).to.be.instanceof(ObjectId);
+      expect(res.bar).to.be.instanceof(ObjectId);
+      expect(res.foo).to.be.eql(oid1);
+      expect(res.bar).to.be.eql(oid2);
+    });
+  });
+
   describe('create', function () {
     it('generates a new identifier when a value of a primary key is not provided', async function () {
       const schema = createSchema();
