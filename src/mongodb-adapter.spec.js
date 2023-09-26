@@ -274,18 +274,34 @@ describe('MongodbAdapter', function () {
         expect(throwable(null)()).to.be.undefined;
       });
 
-      it('recognizes direction by the given direction flag', async function () {
+      it('uses ascending direction by default', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
         const A = await schema
           .getService(AdapterRegistry)
           .getAdapter('mongodb');
-        const res1 = A._buildSort('model', 'foo');
-        const res2 = A._buildSort('model', 'foo DESC');
-        const res3 = A._buildSort('model', 'foo ASC');
-        expect(res1).to.be.eql({foo: 1});
-        expect(res2).to.be.eql({foo: -1});
-        expect(res3).to.be.eql({foo: 1});
+        const res = A._buildSort('model', 'foo');
+        expect(res).to.be.eql({foo: 1});
+      });
+
+      it('uses descending direction by the "DESC" flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', 'foo DESC');
+        expect(res).to.be.eql({foo: -1});
+      });
+
+      it('uses ascending direction by the "ASC" flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', 'foo ASC');
+        expect(res).to.be.eql({foo: 1});
       });
 
       it('converts the given property name to the column name', async function () {
@@ -348,18 +364,44 @@ describe('MongodbAdapter', function () {
         expect(throwable(['bar', 'baz'])()).to.be.eql({bar: 1, baz: 1});
       });
 
-      it('recognizes direction by the given direction flag', async function () {
+      it('uses ascending direction by default', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
         const A = await schema
           .getService(AdapterRegistry)
           .getAdapter('mongodb');
-        const res1 = A._buildSort('model', ['foo', 'bar']);
-        const res2 = A._buildSort('model', ['foo DESC', 'bar ASC']);
-        const res3 = A._buildSort('model', ['foo ASC', 'bar DESC']);
-        expect(res1).to.be.eql({foo: 1, bar: 1});
-        expect(res2).to.be.eql({foo: -1, bar: 1});
-        expect(res3).to.be.eql({foo: 1, bar: -1});
+        const res = A._buildSort('model', ['foo', 'bar']);
+        expect(res).to.be.eql({foo: 1, bar: 1});
+      });
+
+      it('uses descending direction by the "DESC" flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', ['foo DESC', 'bar DESC']);
+        expect(res).to.be.eql({foo: -1, bar: -1});
+      });
+
+      it('uses ascending direction by the "ASC" flag', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', ['foo ASC', 'bar ASC']);
+        expect(res).to.be.eql({foo: 1, bar: 1});
+      });
+
+      it('uses multiple directions by the multiple fields', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildSort('model', ['foo', 'bar DESC', 'baz ASC']);
+        expect(res).to.be.eql({foo: 1, bar: -1, baz: 1});
       });
 
       it('converts the given property names to column names', async function () {
