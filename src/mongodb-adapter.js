@@ -376,8 +376,12 @@ export class MongodbAdapter extends Adapter {
       let cond = clause[key];
       // and/or/nor clause
       if (key === 'and' || key === 'or' || key === 'nor') {
-        if (Array.isArray(cond))
-          cond = cond.map(c => this._buildQuery(modelName, c));
+        if (cond == null) return;
+        if (!Array.isArray(cond))
+          throw new InvalidOperatorValueError(key, 'an Array', cond);
+        if (cond.length === 0) return;
+        cond = cond.map(c => this._buildQuery(modelName, c));
+        cond = cond.filter(c => c != null);
         query['$' + key] = cond;
         return;
       }
@@ -532,7 +536,7 @@ export class MongodbAdapter extends Adapter {
       // unknown
       query[key] = cond;
     });
-    return query;
+    return Object.keys(query).length ? query : undefined;
   }
 
   /**

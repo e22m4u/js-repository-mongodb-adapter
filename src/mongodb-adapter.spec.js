@@ -7,6 +7,7 @@ import {DataType} from '@e22m4u/js-repository';
 import {createMongodbUrl} from './utils/index.js';
 import {MongodbAdapter} from './mongodb-adapter.js';
 import {AdapterRegistry} from '@e22m4u/js-repository';
+import {InvalidOperatorValueError} from '@e22m4u/js-repository';
 import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/js-repository';
 
 const CONFIG = {
@@ -451,7 +452,7 @@ describe('MongodbAdapter', function () {
       expect(throwable(true)).to.throw(error('true'));
       expect(throwable(false)).to.throw(error('false'));
       expect(throwable({foo: 'bar'})()).to.be.eql({foo: 'bar'});
-      expect(throwable({})()).to.be.eql({});
+      expect(throwable({})()).to.be.undefined;
       expect(throwable(undefined)()).to.be.undefined;
       expect(throwable(null)()).to.be.undefined;
     });
@@ -490,6 +491,60 @@ describe('MongodbAdapter', function () {
       expect(res.bar).to.be.instanceof(ObjectId);
       expect(res.foo).to.be.eql(oid1);
       expect(res.bar).to.be.eql(oid2);
+    });
+
+    it('adds "$" prefix to the "and", "or" and "nor" operator keys', async function () {
+      const input = {
+        and: [{foo: 'a1'}],
+        or: [{foo: 'a2'}],
+        nor: [{foo: 'a3'}],
+      };
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({
+        $and: [{foo: 'a1'}],
+        $or: [{foo: 'a2'}],
+        $nor: [{foo: 'a3'}],
+      });
+    });
+
+    it('does not include an empty array of "and", "or" and "nor" operators', async function () {
+      const input1 = {foo: 'a1', and: [], or: [], nor: []};
+      const input2 = {foo: 'a2', and: undefined, or: undefined, nor: undefined};
+      const input3 = {foo: 'a3', and: null, or: null, nor: null};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: 'a1'});
+      expect(res2).to.be.eql({foo: 'a2'});
+      expect(res3).to.be.eql({foo: 'a3'});
+    });
+
+    it('operators "and", "or" and "nor" are require an array of objects', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const throwable = (k, v) => () => A._buildQuery('model', {[k]: v});
+      const error = (k, v) => {
+        const e = new InvalidOperatorValueError(k, 'an Array', v);
+        return e.message;
+      };
+      const testOf = v => {
+        expect(throwable('and', v)).to.throw(error('and', v));
+        expect(throwable('or', v)).to.throw(error('or', v));
+        expect(throwable('nor', v)).to.throw(error('nor', v));
+      };
+      testOf('str');
+      testOf('');
+      testOf(10);
+      testOf(0);
+      testOf(true);
+      testOf(false);
     });
   });
 
