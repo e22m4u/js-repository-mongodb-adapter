@@ -478,42 +478,74 @@ describe('MongodbAdapter', function () {
       expect(res).to.be.eql({bar: 'a1', qux: null});
     });
 
-    it('converts strings of the ObjectId to instances', async function () {
+    it('throws an error when using "$" character', async function () {
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const oid1 = new ObjectId();
-      const oid2 = new ObjectId();
-      const id1 = String(oid1);
-      const id2 = String(oid2);
-      const res = A._buildQuery('model', {foo: id1, bar: id2});
-      expect(res.foo).to.be.instanceof(ObjectId);
-      expect(res.bar).to.be.instanceof(ObjectId);
-      expect(res.foo).to.be.eql(oid1);
-      expect(res.bar).to.be.eql(oid2);
+      const throwable = () => A._buildQuery('model', {$and: []});
+      expect(throwable).to.throw(
+        'The symbol "$" is not supported, but "$and" given.',
+      );
     });
 
-    it('adds "$" prefix to the "and", "or" and "nor" operator keys', async function () {
-      const input = {
-        and: [{foo: 'a1'}],
-        or: [{foo: 'a2'}],
-        nor: [{foo: 'a3'}],
+    it('the "and" operator requires an array of objects', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const throwable = v => () => A._buildQuery('model', {and: v});
+      const error = v => {
+        v = v.replace(/"/g, '$');
+        const e = new InvalidOperatorValueError('and', 'an Array', v);
+        return e.message.replace(/"/g, '').replace(/\$/g, '"');
       };
+      expect(throwable('str')).to.throw(error('"str"'));
+      expect(throwable('')).to.throw(error('""'));
+      expect(throwable(10)).to.throw(error('10'));
+      expect(throwable(0)).to.throw(error('0'));
+      expect(throwable(true)).to.throw(error('true'));
+      expect(throwable(false)).to.throw(error('false'));
+    });
+
+    it('the "or" operator requires an array of objects', async function () {
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const res = A._buildQuery('model', input);
-      expect(res).to.be.eql({
-        $and: [{foo: 'a1'}],
-        $or: [{foo: 'a2'}],
-        $nor: [{foo: 'a3'}],
-      });
+      const throwable = v => () => A._buildQuery('model', {or: v});
+      const error = v => {
+        v = v.replace(/"/g, '$');
+        const e = new InvalidOperatorValueError('or', 'an Array', v);
+        return e.message.replace(/"/g, '').replace(/\$/g, '"');
+      };
+      expect(throwable('str')).to.throw(error('"str"'));
+      expect(throwable('')).to.throw(error('""'));
+      expect(throwable(10)).to.throw(error('10'));
+      expect(throwable(0)).to.throw(error('0'));
+      expect(throwable(true)).to.throw(error('true'));
+      expect(throwable(false)).to.throw(error('false'));
     });
 
-    it('does not include an empty array of "and", "or" and "nor" operators', async function () {
-      const input1 = {foo: 'a1', and: [], or: [], nor: []};
-      const input2 = {foo: 'a2', and: undefined, or: undefined, nor: undefined};
-      const input3 = {foo: 'a3', and: null, or: null, nor: null};
+    it('the "nor" operator requires an array of objects', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const throwable = v => () => A._buildQuery('model', {nor: v});
+      const error = v => {
+        v = v.replace(/"/g, '$');
+        const e = new InvalidOperatorValueError('nor', 'an Array', v);
+        return e.message.replace(/"/g, '').replace(/\$/g, '"');
+      };
+      expect(throwable('str')).to.throw(error('"str"'));
+      expect(throwable('')).to.throw(error('""'));
+      expect(throwable(10)).to.throw(error('10'));
+      expect(throwable(0)).to.throw(error('0'));
+      expect(throwable(true)).to.throw(error('true'));
+      expect(throwable(false)).to.throw(error('false'));
+    });
+
+    it('does not include an empty value of "and" operator', async function () {
+      const input1 = {foo: 'a1', and: []};
+      const input2 = {foo: 'a2', and: undefined};
+      const input3 = {foo: 'a3', and: null};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
@@ -525,26 +557,356 @@ describe('MongodbAdapter', function () {
       expect(res3).to.be.eql({foo: 'a3'});
     });
 
-    it('operators "and", "or" and "nor" are require an array of objects', async function () {
+    it('does not include an empty value of "or" operator', async function () {
+      const input1 = {foo: 'a1', or: []};
+      const input2 = {foo: 'a2', or: undefined};
+      const input3 = {foo: 'a3', or: null};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const throwable = (k, v) => () => A._buildQuery('model', {[k]: v});
-      const error = (k, v) => {
-        const e = new InvalidOperatorValueError(k, 'an Array', v);
-        return e.message;
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: 'a1'});
+      expect(res2).to.be.eql({foo: 'a2'});
+      expect(res3).to.be.eql({foo: 'a3'});
+    });
+
+    it('does not include an empty value of "nor" operator', async function () {
+      const input1 = {foo: 'a1', nor: []};
+      const input2 = {foo: 'a2', nor: undefined};
+      const input3 = {foo: 'a3', nor: null};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: 'a1'});
+      expect(res2).to.be.eql({foo: 'a2'});
+      expect(res3).to.be.eql({foo: 'a3'});
+    });
+
+    it('converts the "and" operator to "$and"', async function () {
+      const input = {and: [{foo: 'bar'}, {baz: 'qux'}]};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({$and: [{foo: 'bar'}, {baz: 'qux'}]});
+    });
+
+    it('converts the "or" operator to "$or"', async function () {
+      const input = {or: [{foo: 'bar'}, {baz: 'qux'}]};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({$or: [{foo: 'bar'}, {baz: 'qux'}]});
+    });
+
+    it('converts the "nor" operator to "$nor"', async function () {
+      const input = {nor: [{foo: 'bar'}, {baz: 'qux'}]};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({$nor: [{foo: 'bar'}, {baz: 'qux'}]});
+    });
+
+    it('converts the "eq" operator to "$eq"', async function () {
+      const input = {foo: {eq: 'bar'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$eq: 'bar'}});
+    });
+
+    it('converts the "neq" operator to "$ne"', async function () {
+      const input = {foo: {neq: 'bar'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$ne: 'bar'}});
+    });
+
+    it('converts the "gt" operator to "$gt"', async function () {
+      const input = {foo: {gt: 5}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$gt: 5}});
+    });
+
+    it('converts the "lt" operator to "$lt"', async function () {
+      const input = {foo: {lt: 5}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$lt: 5}});
+    });
+
+    it('converts the "gte" operator to "$gte"', async function () {
+      const input = {foo: {gte: 5}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$gte: 5}});
+    });
+
+    it('converts the "lte" operator to "$lte"', async function () {
+      const input = {foo: {lte: 5}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$lte: 5}});
+    });
+
+    it('converts the "inq" operator to "$in"', async function () {
+      const input = {foo: {inq: [1, 2, 3]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$in: [1, 2, 3]}});
+    });
+
+    it('converts the "nin" operator to "$nin"', async function () {
+      const input = {foo: {nin: ['a', 'b', 'c']}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$nin: ['a', 'b', 'c']}});
+    });
+
+    it('converts the "between" operator to "$gte" and "$lte"', async function () {
+      const input = {foo: {between: [1, 10]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      const expected = {foo: {$gte: 1, $lte: 10}};
+      expect(res).to.be.eql(expected);
+    });
+
+    it('converts the "exists" operator to "$exists"', async function () {
+      const input1 = {foo: {exists: true}};
+      const input2 = {foo: {exists: false}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      expect(res1).to.be.eql({foo: {$exists: true}});
+      expect(res2).to.be.eql({foo: {$exists: false}});
+    });
+
+    it('converts the "like" operator to "$regex"', async function () {
+      const input = {foo: {like: 'test'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$regex: /test/}});
+    });
+
+    it('converts the "nlike" operator to "$not"', async function () {
+      const input = {foo: {nlike: 'test'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$not: /test/}});
+    });
+
+    it('converts the "ilike" operator to "$regex" with "i" flag', async function () {
+      const input = {foo: {ilike: 'test'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$regex: /test/i}});
+    });
+
+    it('converts the "nilike" operator to "$not" with "i" flag', async function () {
+      const input = {foo: {nilike: 'test'}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql({foo: {$not: /test/i}});
+    });
+
+    it('converts property value to an instance of ObjectId', async function () {
+      const oid = new ObjectId();
+      const id = String(oid);
+      const input = {foo: id};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res.foo).to.be.instanceof(ObjectId);
+      expect(res.foo).to.be.eql(oid);
+    });
+
+    it('the "eq" operator converts ObjectId string to an instance', async function () {
+      const oid = new ObjectId();
+      const id = oid.toString();
+      const input = {foo: {eq: id}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$eq: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(ObjectId);
+      expect(res).to.be.eql(oid);
+    });
+
+    it('the "neq" operator converts ObjectId string to an instance', async function () {
+      const oid = new ObjectId();
+      const id = oid.toString();
+      const input = {foo: {neq: id}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$ne: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(ObjectId);
+      expect(res).to.be.eql(oid);
+    });
+
+    it('the "inq" operator converts ObjectId string to an instance', async function () {
+      const oid = new ObjectId();
+      const id = oid.toString();
+      const input = {foo: {inq: [id]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$in: res},
+      } = A._buildQuery('model', input);
+      expect(res[0]).to.be.instanceOf(ObjectId);
+      expect(res[0]).to.be.eql(oid);
+    });
+
+    it('the "nin" operator converts ObjectId string to an instance', async function () {
+      const oid = new ObjectId();
+      const id = oid.toString();
+      const input = {foo: {nin: [id]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$nin: res},
+      } = A._buildQuery('model', input);
+      expect(res[0]).to.be.instanceOf(ObjectId);
+      expect(res[0]).to.be.eql(oid);
+    });
+
+    it('combines the given operators by the "and" clause', async function () {
+      const input = {
+        foo: {
+          eq: 'bar',
+          neq: 'baz',
+          gt: 5,
+          lt: 10,
+          gte: 6,
+          lte: 9,
+          inq: ['qux'],
+          nin: ['qwe'],
+          between: [100, 200],
+          exists: true,
+          like: 'asd',
+          nlike: 'zxc',
+          ilike: 'rty',
+          nilike: 'fgh',
+          regexp: 'vbn',
+          flags: 'i',
+        },
       };
-      const testOf = v => {
-        expect(throwable('and', v)).to.throw(error('and', v));
-        expect(throwable('or', v)).to.throw(error('or', v));
-        expect(throwable('nor', v)).to.throw(error('nor', v));
+      const expected = {
+        $and: [
+          {foo: {$eq: 'bar'}},
+          {foo: {$ne: 'baz'}},
+          {foo: {$gt: 5}},
+          {foo: {$lt: 10}},
+          {foo: {$gte: 6}},
+          {foo: {$lte: 9}},
+          {foo: {$in: ['qux']}},
+          {foo: {$nin: ['qwe']}},
+          {foo: {$gte: 100, $lte: 200}},
+          {foo: {$exists: true}},
+          {foo: {$regex: /asd/}},
+          {foo: {$not: /zxc/}},
+          {foo: {$regex: /rty/i}},
+          {foo: {$not: /fgh/i}},
+          {foo: {$regex: /vbn/i}},
+        ],
       };
-      testOf('str');
-      testOf('');
-      testOf(10);
-      testOf(0);
-      testOf(true);
-      testOf(false);
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql(expected);
+    });
+
+    it('combines the given operators by the existing "and" clause', async function () {
+      const input = {
+        and: [{featured: true}, {removed: false}],
+        foo: {
+          eq: 'bar',
+          neq: 'baz',
+          gt: 5,
+          lt: 10,
+          gte: 6,
+          lte: 9,
+          inq: ['qux'],
+          nin: ['qwe'],
+          between: [100, 200],
+          exists: true,
+          like: 'asd',
+          nlike: 'zxc',
+          ilike: 'rty',
+          nilike: 'fgh',
+          regexp: 'vbn',
+          flags: 'i',
+        },
+      };
+      const expected = {
+        $and: [
+          {featured: true},
+          {removed: false},
+          {foo: {$eq: 'bar'}},
+          {foo: {$ne: 'baz'}},
+          {foo: {$gt: 5}},
+          {foo: {$lt: 10}},
+          {foo: {$gte: 6}},
+          {foo: {$lte: 9}},
+          {foo: {$in: ['qux']}},
+          {foo: {$nin: ['qwe']}},
+          {foo: {$gte: 100, $lte: 200}},
+          {foo: {$exists: true}},
+          {foo: {$regex: /asd/}},
+          {foo: {$not: /zxc/}},
+          {foo: {$regex: /rty/i}},
+          {foo: {$not: /fgh/i}},
+          {foo: {$regex: /vbn/i}},
+        ],
+      };
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res).to.be.eql(expected);
     });
   });
 

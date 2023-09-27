@@ -373,6 +373,11 @@ export class MongodbAdapter extends Adapter {
     const query = {};
     const idPropName = this._getIdPropName(modelName);
     Object.keys(clause).forEach(key => {
+      if (String(key).indexOf('$') !== -1)
+        throw new InvalidArgumentError(
+          'The symbol "$" is not supported, but %v given.',
+          key,
+        );
       let cond = clause[key];
       // and/or/nor clause
       if (key === 'and' || key === 'or' || key === 'nor') {
@@ -382,7 +387,9 @@ export class MongodbAdapter extends Adapter {
         if (cond.length === 0) return;
         cond = cond.map(c => this._buildQuery(modelName, c));
         cond = cond.filter(c => c != null);
-        query['$' + key] = cond;
+        const opKey = '$' + key;
+        query[opKey] = query[opKey] ?? [];
+        query[opKey] = [...query[opKey], ...cond];
         return;
       }
       // id
@@ -403,29 +410,30 @@ export class MongodbAdapter extends Adapter {
       }
       // operator
       if (cond && cond.constructor && cond.constructor.name === 'Object') {
+        const opConds = [];
         // eq
         if ('eq' in cond) {
-          query[key] = this._coerceId(cond.eq);
+          opConds.push({$eq: this._coerceId(cond.eq)});
         }
         // neq
         if ('neq' in cond) {
-          query[key] = {$ne: this._coerceId(cond.neq)};
+          opConds.push({$ne: this._coerceId(cond.neq)});
         }
         // gt
         if ('gt' in cond) {
-          query[key] = {$gt: cond.gt};
+          opConds.push({$gt: cond.gt});
         }
         // lt
         if ('lt' in cond) {
-          query[key] = {$lt: cond.lt};
+          opConds.push({$lt: cond.lt});
         }
         // gte
         if ('gte' in cond) {
-          query[key] = {$gte: cond.gte};
+          opConds.push({$gte: cond.gte});
         }
         // lte
         if ('lte' in cond) {
-          query[key] = {$lte: cond.lte};
+          opConds.push({$lte: cond.lte});
         }
         // inq
         if ('inq' in cond) {
@@ -435,7 +443,7 @@ export class MongodbAdapter extends Adapter {
               'an Array of possible values',
               cond.inq,
             );
-          query[key] = {$in: cond.inq.map(v => this._coerceId(v))};
+          opConds.push({$in: cond.inq.map(v => this._coerceId(v))});
         }
         // nin
         if ('nin' in cond) {
@@ -445,7 +453,7 @@ export class MongodbAdapter extends Adapter {
               'an Array of possible values',
               cond,
             );
-          query[key] = {$nin: cond.nin.map(v => this._coerceId(v))};
+          opConds.push({$nin: cond.nin.map(v => this._coerceId(v))});
         }
         // between
         if ('between' in cond) {
@@ -455,7 +463,7 @@ export class MongodbAdapter extends Adapter {
               'an Array of 2 elements',
               cond.between,
             );
-          query[key] = {$gte: cond.between[0], $lte: cond.between[1]};
+          opConds.push({$gte: cond.between[0], $lte: cond.between[1]});
         }
         // exists
         if ('exists' in cond) {
@@ -465,7 +473,7 @@ export class MongodbAdapter extends Adapter {
               'a Boolean',
               cond.exists,
             );
-          query[key] = {$exists: cond.exists};
+          opConds.push({$exists: cond.exists});
         }
         // like
         if ('like' in cond) {
@@ -475,7 +483,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.like,
             );
-          query[key] = {$regex: stringToRegexp(cond.like)};
+          opConds.push({$regex: stringToRegexp(cond.like)});
         }
         // nlike
         if ('nlike' in cond) {
@@ -485,7 +493,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.nlike,
             );
-          query[key] = {$not: stringToRegexp(cond.nlike)};
+          opConds.push({$not: stringToRegexp(cond.nlike)});
         }
         // ilike
         if ('ilike' in cond) {
@@ -495,7 +503,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.ilike,
             );
-          query[key] = {$regex: stringToRegexp(cond.ilike, 'i')};
+          opConds.push({$regex: stringToRegexp(cond.ilike, 'i')});
         }
         // nilike
         if ('nilike' in cond) {
@@ -509,7 +517,7 @@ export class MongodbAdapter extends Adapter {
               cond.nilike,
             );
           }
-          query[key] = {$not: stringToRegexp(cond.nilike, 'i')};
+          opConds.push({$not: stringToRegexp(cond.nilike, 'i')});
         }
         // regexp and flags (optional)
         if ('regexp' in cond) {
@@ -529,7 +537,15 @@ export class MongodbAdapter extends Adapter {
               'RegExp flags must be a String, but %v given.',
               cond.flags,
             );
-          query[key] = {$regex: stringToRegexp(cond.regexp, flags)};
+          opConds.push({$regex: stringToRegexp(cond.regexp, flags)});
+        }
+        // adds a single operator condition
+        if (opConds.length === 1) {
+          query[key] = opConds[0];
+          // adds multiple operator conditions
+        } else if (opConds.length > 1) {
+          query['$and'] = query['$and'] ?? [];
+          opConds.forEach(c => query['$and'].push({[key]: c}));
         }
         return;
       }
