@@ -161,6 +161,20 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
+   * Coerce date.
+   *
+   * @param value
+   * @returns {Date|*}
+   * @private
+   */
+  _coerceDate(value) {
+    if (value == null) return value;
+    if (value instanceof Date) return value;
+    if (isIsoDate(value)) return new Date(value);
+    return value;
+  }
+
+  /**
    * To database.
    *
    * @param {string} modelName
@@ -401,6 +415,7 @@ export class MongodbAdapter extends Adapter {
       // string
       if (typeof cond === 'string') {
         query[key] = this._coerceId(cond);
+        query[key] = this._coerceDate(query[key]);
         return;
       }
       // ObjectId
@@ -413,27 +428,35 @@ export class MongodbAdapter extends Adapter {
         const opConds = [];
         // eq
         if ('eq' in cond) {
-          opConds.push({$eq: this._coerceId(cond.eq)});
+          let eq = this._coerceId(cond.eq);
+          eq = this._coerceDate(eq);
+          opConds.push({$eq: eq});
         }
         // neq
         if ('neq' in cond) {
-          opConds.push({$ne: this._coerceId(cond.neq)});
+          let neq = this._coerceId(cond.neq);
+          neq = this._coerceDate(neq);
+          opConds.push({$ne: neq});
         }
         // gt
         if ('gt' in cond) {
-          opConds.push({$gt: cond.gt});
+          const gt = this._coerceDate(cond.gt);
+          opConds.push({$gt: gt});
         }
         // lt
         if ('lt' in cond) {
-          opConds.push({$lt: cond.lt});
+          const lt = this._coerceDate(cond.lt);
+          opConds.push({$lt: lt});
         }
         // gte
         if ('gte' in cond) {
-          opConds.push({$gte: cond.gte});
+          const gte = this._coerceDate(cond.gte);
+          opConds.push({$gte: gte});
         }
         // lte
         if ('lte' in cond) {
-          opConds.push({$lte: cond.lte});
+          const lte = this._coerceDate(cond.lte);
+          opConds.push({$lte: lte});
         }
         // inq
         if ('inq' in cond) {
@@ -443,7 +466,12 @@ export class MongodbAdapter extends Adapter {
               'an Array of possible values',
               cond.inq,
             );
-          opConds.push({$in: cond.inq.map(v => this._coerceId(v))});
+          const inq = cond.inq.map(v => {
+            v = this._coerceId(v);
+            v = this._coerceDate(v);
+            return v;
+          });
+          opConds.push({$in: inq});
         }
         // nin
         if ('nin' in cond) {
@@ -453,7 +481,12 @@ export class MongodbAdapter extends Adapter {
               'an Array of possible values',
               cond,
             );
-          opConds.push({$nin: cond.nin.map(v => this._coerceId(v))});
+          const nin = cond.nin.map(v => {
+            v = this._coerceId(v);
+            v = this._coerceDate(v);
+            return v;
+          });
+          opConds.push({$nin: nin});
         }
         // between
         if ('between' in cond) {
@@ -463,7 +496,9 @@ export class MongodbAdapter extends Adapter {
               'an Array of 2 elements',
               cond.between,
             );
-          opConds.push({$gte: cond.between[0], $lte: cond.between[1]});
+          const gte = this._coerceDate(cond.between[0]);
+          const lte = this._coerceDate(cond.between[1]);
+          opConds.push({$gte: gte, $lte: lte});
         }
         // exists
         if ('exists' in cond) {

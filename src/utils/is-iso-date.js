@@ -1,5 +1,5 @@
 /**
- * Is iso date string.
+ * Is iso date.
  *
  * @param value
  * @return {boolean}

@@ -812,6 +812,148 @@ describe('MongodbAdapter', function () {
       expect(res[0]).to.be.eql(oid);
     });
 
+    it('converts property value to an instance of Date', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: isoDate};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('model', input);
+      expect(res.foo).to.be.instanceof(Date);
+      expect(res.foo).to.be.eql(date);
+    });
+
+    it('the "eq" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {eq: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$eq: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "neq" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {neq: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$ne: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "gt" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {gt: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$gt: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "lt" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {lt: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$lt: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "gte" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {gte: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$gte: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "lte" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {lte: isoDate}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$lte: res},
+      } = A._buildQuery('model', input);
+      expect(res).to.be.instanceOf(Date);
+      expect(res).to.be.eql(date);
+    });
+
+    it('the "inq" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {inq: [isoDate]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$in: res},
+      } = A._buildQuery('model', input);
+      expect(res[0]).to.be.instanceOf(Date);
+      expect(res[0]).to.be.eql(date);
+    });
+
+    it('the "nin" operator converts Date string to an instance', async function () {
+      const date = new Date();
+      const isoDate = date.toISOString();
+      const input = {foo: {nin: [isoDate]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$nin: res},
+      } = A._buildQuery('model', input);
+      expect(res[0]).to.be.instanceOf(Date);
+      expect(res[0]).to.be.eql(date);
+    });
+
+    it('the "between" operator converts Date string to an instance', async function () {
+      const date1 = new Date();
+      const date2 = new Date();
+      const isoDate1 = date1.toISOString();
+      const isoDate2 = date2.toISOString();
+      const input = {foo: {between: [isoDate1, isoDate2]}};
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const {
+        foo: {$gte: res1, $lte: res2},
+      } = A._buildQuery('model', input);
+      expect(res1).to.be.instanceOf(Date);
+      expect(res1).to.be.eql(date1);
+      expect(res2).to.be.instanceOf(Date);
+      expect(res2).to.be.eql(date2);
+    });
+
     it('combines the given operators by the "and" clause', async function () {
       const input = {
         foo: {
