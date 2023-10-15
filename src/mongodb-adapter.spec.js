@@ -1977,6 +1977,940 @@ describe('MongodbAdapter', function () {
     });
   });
 
+  describe('patch', function () {
+    it('updates only provided properties for all items and returns their number', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: DataType.STRING,
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'd1'});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'd1', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'd1', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'd1', bar: 'c2'},
+      ]);
+    });
+
+    it('does not throw an error if a partial data does not have required property', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: {
+            type: DataType.STRING,
+            required: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'd1'});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'd1', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'd1', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'd1', bar: 'c2'},
+      ]);
+    });
+
+    it('ignores identifier value in a given data in case of a default primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: DataType.STRING,
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({[DEF_PK]: '100', foo: 'd1'});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'd1', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'd1', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'd1', bar: 'c2'},
+      ]);
+    });
+
+    it('ignores identifier value in a given data in case of a specified primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.STRING,
+            primaryKey: true,
+          },
+          foo: DataType.STRING,
+          bar: DataType.STRING,
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({id: '100', foo: 'd1'});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'd1', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'd1', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'd1', bar: 'c2'},
+      ]);
+    });
+
+    it('sets a default values for patched properties with an undefined value', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            default: 'fooVal',
+          },
+          bar: {
+            type: DataType.STRING,
+            default: 'barVal',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: undefined});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'fooVal', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'fooVal', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'fooVal', bar: 'c2'},
+      ]);
+    });
+
+    it('sets a default values for patched properties with a null value', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            default: 'fooVal',
+          },
+          bar: {
+            type: DataType.STRING,
+            default: 'barVal',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: null});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'fooVal', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'fooVal', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'fooVal', bar: 'c2'},
+      ]);
+    });
+
+    it('uses a specified column name for a regular property', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            columnName: 'fooCol',
+          },
+          bar: {
+            type: DataType.STRING,
+            columnName: 'barCol',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'd1'});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), fooCol: 'd1', barCol: 'a2'},
+        {_id: new ObjectId(id2), fooCol: 'd1', barCol: 'b2'},
+        {_id: new ObjectId(id3), fooCol: 'd1', barCol: 'c2'},
+      ]);
+    });
+
+    it('uses a specified column name for a regular property with a default value', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            columnName: 'fooCol',
+            default: 'fooVal',
+          },
+          bar: {
+            type: DataType.STRING,
+            columnName: 'barCol',
+            default: 'barVal',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: undefined});
+      expect(result).to.be.eq(3);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), fooCol: 'fooVal', barCol: 'a2'},
+        {_id: new ObjectId(id2), fooCol: 'fooVal', barCol: 'b2'},
+        {_id: new ObjectId(id3), fooCol: 'fooVal', barCol: 'c2'},
+      ]);
+    });
+
+    it('returns zero if nothing matched by the "where" clause', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: DataType.STRING,
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a1', bar: 'a2'};
+      const input2 = {foo: 'b1', bar: 'b2'};
+      const input3 = {foo: 'c1', bar: 'c2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'test'}, {baz: 'd3'});
+      expect(result).to.be.eq(0);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'a1', bar: 'a2'},
+        {_id: new ObjectId(id2), foo: 'b1', bar: 'b2'},
+        {_id: new ObjectId(id3), foo: 'c1', bar: 'c2'},
+      ]);
+    });
+
+    it('uses the "where" clause to patch specific items', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: DataType.STRING,
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a', bar: '1'};
+      const input2 = {foo: 'b', bar: '2'};
+      const input3 = {foo: 'c', bar: '2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'd'}, {bar: '2'});
+      expect(result).to.be.eq(2);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), foo: 'a', bar: '1'},
+        {_id: new ObjectId(id2), foo: 'd', bar: '2'},
+        {_id: new ObjectId(id3), foo: 'd', bar: '2'},
+      ]);
+    });
+
+    it('the "where" clause uses property names instead of column names', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.STRING,
+            columnName: 'fooCol',
+          },
+          bar: {
+            type: DataType.STRING,
+            columnName: 'barCol',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a', bar: '1'};
+      const input2 = {foo: 'b', bar: '2'};
+      const input3 = {foo: 'c', bar: '2'};
+      const created1 = await rep.create(input1);
+      const created2 = await rep.create(input2);
+      const created3 = await rep.create(input3);
+      const id1 = created1[DEF_PK];
+      const id2 = created2[DEF_PK];
+      const id3 = created3[DEF_PK];
+      const result = await rep.patch({foo: 'd'}, {bar: '2'});
+      expect(result).to.be.eq(2);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .find()
+        .toArray();
+      expect(rawData).to.be.eql([
+        {_id: new ObjectId(id1), fooCol: 'a', barCol: '1'},
+        {_id: new ObjectId(id2), fooCol: 'd', barCol: '2'},
+        {_id: new ObjectId(id3), fooCol: 'd', barCol: '2'},
+      ]);
+    });
+
+    it('the "where" clause uses a persisted data instead of default values in case of undefined', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: {
+            type: DataType.STRING,
+            default: 'barVal',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a', bar: undefined};
+      const input2 = {foo: 'b', bar: undefined};
+      const input3 = {foo: 'c', bar: 10};
+      const input4 = {foo: 'd', bar: null};
+      const table = await MDB_CLIENT.db().collection('model');
+      const {insertedIds} = await table.insertMany([
+        input1,
+        input2,
+        input3,
+        input4,
+      ]);
+      const result = await rep.patch({foo: 'd'}, {bar: undefined});
+      expect(result).to.be.eq(3);
+      const rawData = await table.find().toArray();
+      expect(rawData).to.be.eql([
+        {_id: insertedIds[0], foo: 'd', bar: null},
+        {_id: insertedIds[1], foo: 'd', bar: null},
+        {_id: insertedIds[2], foo: 'c', bar: 10},
+        {_id: insertedIds[3], foo: 'd', bar: null},
+      ]);
+    });
+
+    it('the "where" clause uses a persisted data instead of default values in case of null', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: DataType.STRING,
+          bar: {
+            type: DataType.STRING,
+            default: 'barVal',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const input1 = {foo: 'a', bar: undefined};
+      const input2 = {foo: 'b', bar: undefined};
+      const input3 = {foo: 'c', bar: 10};
+      const input4 = {foo: 'd', bar: null};
+      const table = await MDB_CLIENT.db().collection('model');
+      const {insertedIds} = await table.insertMany([
+        input1,
+        input2,
+        input3,
+        input4,
+      ]);
+      const result = await rep.patch({foo: 'd'}, {bar: null});
+      expect(result).to.be.eq(3);
+      const rawData = await table.find().toArray();
+      expect(rawData).to.be.eql([
+        {_id: insertedIds[0], foo: 'd', bar: null},
+        {_id: insertedIds[1], foo: 'd', bar: null},
+        {_id: insertedIds[2], foo: 'c', bar: 10},
+        {_id: insertedIds[3], foo: 'd', bar: null},
+      ]);
+    });
+
+    describe('patches by a where clause', function () {
+      it('matches by a document subset', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: 10});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 5},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "eq" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {eq: 10}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 5},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "neq" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {neq: 10}});
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 10},
+          {_id: new ObjectId(id3), foo: 7},
+        ]);
+      });
+
+      it('matches by the "gt" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {gt: 10}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 5},
+          {_id: new ObjectId(id2), foo: 10},
+          {_id: new ObjectId(id3), foo: 7},
+        ]);
+      });
+
+      it('matches by the "lt" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {lt: 10}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 10},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "gte" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {gte: 10}});
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 5},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 7},
+        ]);
+      });
+
+      it('matches by the "lte" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {lte: 10}});
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "inq" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {inq: [5, 10]}});
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "nin" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {nin: [5, 10]}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 5},
+          {_id: new ObjectId(id2), foo: 10},
+          {_id: new ObjectId(id3), foo: 7},
+        ]);
+      });
+
+      it('matches by the "between" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 5});
+        const input2 = await rep.create({foo: 10});
+        const input3 = await rep.create({foo: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {between: [5, 10]}});
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 20},
+        ]);
+      });
+
+      it('matches by the "exists" operator in case of true', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: undefined});
+        const input2 = await rep.create({foo: null});
+        const input3 = await rep.create({foo: 10});
+        const input4 = await rep.create({bar: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {exists: true}});
+        expect(result).to.be.eq(3);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 7},
+          {_id: new ObjectId(id2), foo: 7},
+          {_id: new ObjectId(id3), foo: 7},
+          {_id: new ObjectId(id4), bar: 20},
+        ]);
+      });
+
+      it('matches by the "exists" operator in case of false', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: undefined});
+        const input2 = await rep.create({foo: null});
+        const input3 = await rep.create({foo: 10});
+        const input4 = await rep.create({bar: 20});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch({foo: 7}, {foo: {exists: false}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: null},
+          {_id: new ObjectId(id2), foo: null},
+          {_id: new ObjectId(id3), foo: 10},
+          {_id: new ObjectId(id4), foo: 7, bar: 20},
+        ]);
+      });
+
+      it('matches by the "like" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {like: 'sit amet'}},
+        );
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'lorem ipsum'},
+          {_id: new ObjectId(id2), foo: 'test'},
+          {_id: new ObjectId(id3), foo: 'DOLOR SIT AMET'},
+          {_id: new ObjectId(id4), foo: 'test'},
+        ]);
+      });
+
+      it('matches by the "nlike" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {nlike: 'sit amet'}},
+        );
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'test'},
+          {_id: new ObjectId(id2), foo: 'dolor sit amet'},
+          {_id: new ObjectId(id3), foo: 'test'},
+          {_id: new ObjectId(id4), foo: 'sit amet'},
+        ]);
+      });
+
+      it('matches by the "ilike" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {ilike: 'sit amet'}},
+        );
+        expect(result).to.be.eq(3);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'lorem ipsum'},
+          {_id: new ObjectId(id2), foo: 'test'},
+          {_id: new ObjectId(id3), foo: 'test'},
+          {_id: new ObjectId(id4), foo: 'test'},
+        ]);
+      });
+
+      it('matches by the "nilike" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {nilike: 'sit amet'}},
+        );
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'test'},
+          {_id: new ObjectId(id2), foo: 'dolor sit amet'},
+          {_id: new ObjectId(id3), foo: 'DOLOR SIT AMET'},
+          {_id: new ObjectId(id4), foo: 'sit amet'},
+        ]);
+      });
+
+      it('matches by the "regexp" operator', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {regexp: 'sit am+'}},
+        );
+        expect(result).to.be.eq(2);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'lorem ipsum'},
+          {_id: new ObjectId(id2), foo: 'test'},
+          {_id: new ObjectId(id3), foo: 'DOLOR SIT AMET'},
+          {_id: new ObjectId(id4), foo: 'test'},
+        ]);
+      });
+
+      it('matches by the "regexp" operator with flags', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const input1 = await rep.create({foo: 'lorem ipsum'});
+        const input2 = await rep.create({foo: 'dolor sit amet'});
+        const input3 = await rep.create({foo: 'DOLOR SIT AMET'});
+        const input4 = await rep.create({foo: 'sit amet'});
+        const id1 = input1[DEF_PK];
+        const id2 = input2[DEF_PK];
+        const id3 = input3[DEF_PK];
+        const id4 = input4[DEF_PK];
+        const result = await rep.patch(
+          {foo: 'test'},
+          {foo: {regexp: 'sit am+', flags: 'i'}},
+        );
+        expect(result).to.be.eq(3);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id1), foo: 'lorem ipsum'},
+          {_id: new ObjectId(id2), foo: 'test'},
+          {_id: new ObjectId(id3), foo: 'test'},
+          {_id: new ObjectId(id4), foo: 'test'},
+        ]);
+      });
+    });
+  });
+
   describe('patchById', function () {
     it('updates only provided properties by a given identifier', async function () {
       const schema = createSchema();
@@ -3018,7 +3952,7 @@ describe('MongodbAdapter', function () {
         ]);
       });
 
-      it('matches by the "exists" operator', async function () {
+      it('matches by the "exists" operator in case of true', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
         const rep = schema.getRepository('model');
@@ -3026,13 +3960,38 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: undefined});
         await rep.create({foo: null});
         await rep.create({foo: 10});
+        const id1 = created1[DEF_PK];
         const result = await rep.delete({foo: {exists: true}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
           .collection('model')
           .find()
           .toArray();
-        expect(rawData).to.be.eql([{_id: new ObjectId(created1[DEF_PK])}]);
+        expect(rawData).to.be.eql([{_id: new ObjectId(id1)}]);
+      });
+
+      it('matches by the "exists" operator in case of false', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        await rep.create({});
+        const created2 = await rep.create({foo: undefined});
+        const created3 = await rep.create({foo: null});
+        const created4 = await rep.create({foo: 10});
+        const id2 = created2[DEF_PK];
+        const id3 = created3[DEF_PK];
+        const id4 = created4[DEF_PK];
+        const result = await rep.delete({foo: {exists: false}});
+        expect(result).to.be.eq(1);
+        const rawData = await MDB_CLIENT.db()
+          .collection('model')
+          .find()
+          .toArray();
+        expect(rawData).to.be.eql([
+          {_id: new ObjectId(id2), foo: null},
+          {_id: new ObjectId(id3), foo: null},
+          {_id: new ObjectId(id4), foo: 10},
+        ]);
       });
 
       it('matches by the "like" operator', async function () {

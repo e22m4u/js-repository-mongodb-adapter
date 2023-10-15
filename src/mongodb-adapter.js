@@ -651,6 +651,24 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
+   * Patch.
+   *
+   * @param {string} modelName
+   * @param {object} modelData
+   * @param {object|undefined} where
+   * @return {Promise<number>}
+   */
+  async patch(modelName, modelData, where = undefined) {
+    const idPropName = this._getIdPropName(modelName);
+    delete modelData[idPropName];
+    const query = this._buildQuery(modelName, where) || {};
+    const tableData = this._toDatabase(modelName, modelData);
+    const table = this._getCollection(modelName);
+    const {matchedCount} = await table.updateMany(query, {$set: tableData});
+    return matchedCount;
+  }
+
+  /**
    * Patch by id.
    *
    * @param {string} modelName
