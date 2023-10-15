@@ -38,22 +38,22 @@
   "peerDependencies": {
     "@e22m4u/js-format": "*",
     "@e22m4u/js-service": "*",
-    "@e22m4u/js-repository": "~0.0.36"
+    "@e22m4u/js-repository": "~0.0.41"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/cli": "^17.8.0",
+    "@commitlint/config-conventional": "^17.8.0",
     "c8": "^8.0.1",
-    "chai": "^4.3.7",
+    "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.0.0",
     "dotenv": "^16.3.1",
-    "eslint": "^8.47.0",
+    "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-chai-expect": "^3.0.0",
-    "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-mocha": "^10.2.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.3"
   }
 }
