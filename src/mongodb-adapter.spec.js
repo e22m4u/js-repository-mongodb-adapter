@@ -3602,22 +3602,32 @@ describe('MongodbAdapter', function () {
         ]);
       });
 
-      it('matches by the "exists" operator', async function () {
+      it('matches by the "exists" operator in case of true', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
         const rep = schema.getRepository('model');
-        const created1 = await rep.create({});
+        await rep.create({});
         const created2 = await rep.create({foo: undefined});
         const created3 = await rep.create({foo: null});
         const created4 = await rep.create({foo: 10});
-        const result1 = await rep.find({where: {foo: {exists: true}}});
-        const result2 = await rep.find({where: {foo: {exists: false}}});
-        expect(result1).to.be.eql([
+        const result = await rep.find({where: {foo: {exists: true}}});
+        expect(result).to.be.eql([
           {[DEF_PK]: created2[DEF_PK], foo: null},
           {[DEF_PK]: created3[DEF_PK], foo: null},
           {[DEF_PK]: created4[DEF_PK], foo: 10},
         ]);
-        expect(result2).to.be.eql([{[DEF_PK]: created1[DEF_PK]}]);
+      });
+
+      it('matches by the "exists" operator in case of false', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        const created1 = await rep.create({});
+        await rep.create({foo: undefined});
+        await rep.create({foo: null});
+        await rep.create({foo: 10});
+        const result = await rep.find({where: {foo: {exists: false}}});
+        expect(result).to.be.eql([{[DEF_PK]: created1[DEF_PK]}]);
       });
 
       it('matches by the "like" operator', async function () {
@@ -4294,7 +4304,7 @@ describe('MongodbAdapter', function () {
         expect(result).to.be.eq(2);
       });
 
-      it('matches by the "exists" operator', async function () {
+      it('matches by the "exists" operator in case of true', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
         const rep = schema.getRepository('model');
@@ -4304,6 +4314,18 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 10});
         const result1 = await rep.count({foo: {exists: true}});
         expect(result1).to.be.eq(3);
+      });
+
+      it('matches by the "exists" operator in case of false', async function () {
+        const schema = createSchema();
+        schema.defineModel({name: 'model', datasource: 'mongodb'});
+        const rep = schema.getRepository('model');
+        await rep.create({});
+        await rep.create({foo: undefined});
+        await rep.create({foo: null});
+        await rep.create({foo: 10});
+        const result1 = await rep.count({foo: {exists: false}});
+        expect(result1).to.be.eq(1);
       });
 
       it('matches by the "like" operator', async function () {
