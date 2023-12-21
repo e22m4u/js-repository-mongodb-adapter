@@ -601,7 +601,7 @@ export class MongodbAdapter extends Adapter {
   async create(modelName, modelData, filter = undefined) {
     const idPropName = this._getIdPropName(modelName);
     const idValue = modelData[idPropName];
-    if (idValue == null) {
+    if (idValue == null || idValue === '') {
       const pkType = this._getIdType(modelName);
       if (pkType !== DataType.STRING && pkType !== DataType.ANY)
         throw new InvalidArgumentError(
@@ -648,6 +648,50 @@ export class MongodbAdapter extends Adapter {
     );
     const replacedData = await table.findOne({_id: id}, {projection});
     return this._fromDatabase(modelName, replacedData);
+  }
+
+  /**
+   * Replace or create.
+   *
+   * @param {string} modelName
+   * @param {object} modelData
+   * @param {object|undefined} filter
+   * @return {Promise<object>}
+   */
+  async replaceOrCreate(modelName, modelData, filter = undefined) {
+    const idPropName = this._getIdPropName(modelName);
+    let idValue = modelData[idPropName];
+    idValue = this._coerceId(idValue);
+    if (idValue == null || idValue === '') {
+      const pkType = this._getIdType(modelName);
+      if (pkType !== DataType.STRING && pkType !== DataType.ANY)
+        throw new InvalidArgumentError(
+          'MongoDB unable to generate primary keys of %s. ' +
+            'Do provide your own value for the %v property ' +
+            'or set property type to String.',
+          capitalize(pkType),
+          idPropName,
+        );
+      delete modelData[idPropName];
+      idValue = undefined;
+    }
+    const tableData = this._toDatabase(modelName, modelData);
+    const table = this._getCollection(modelName);
+    if (idValue == null) {
+      const {insertedId} = await table.insertOne(tableData);
+      idValue = insertedId;
+    } else {
+      const {upsertedId} = await table.replaceOne({_id: idValue}, tableData, {
+        upsert: true,
+      });
+      if (upsertedId) idValue = upsertedId;
+    }
+    const projection = this._buildProjection(
+      modelName,
+      filter && filter.fields,
+    );
+    const upsertedData = await table.findOne({_id: idValue}, {projection});
+    return this._fromDatabase(modelName, upsertedData);
   }
 
   /**

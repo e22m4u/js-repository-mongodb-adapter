@@ -1083,6 +1083,16 @@ describe('MongodbAdapter', function () {
       expect(result[DEF_PK]).to.have.lengthOf(24);
     });
 
+    it('generates a new identifier when a value of a primary key is an empty string', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.create({[DEF_PK]: '', foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
     it('generates a new identifier for a primary key of a "string" type', async function () {
       const schema = createSchema();
       schema.defineModel({
@@ -1969,6 +1979,580 @@ describe('MongodbAdapter', function () {
       const id = created[DEF_PK];
       const replaced = await rep.replaceById(id, {foo: 10});
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 10});
+      const oid = new ObjectId(id);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 10});
+    });
+  });
+
+  describe('replaceOrCreate', function () {
+    it('generates a new identifier when a value of a primary key is not provided', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier when a value of a primary key is undefined', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({
+        [DEF_PK]: undefined,
+        foo: 'bar',
+      });
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier when a value of a primary key is null', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({[DEF_PK]: null, foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier when a value of a primary key is an empty string', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({[DEF_PK]: '', foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier for a primary key of a "string" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.STRING,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({[DEF_PK]: null, foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier for a primary key of a "any" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.ANY,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({[DEF_PK]: null, foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('throws an error when generating a new value for a primary key of a "number" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.NUMBER,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const promise = rep.replaceOrCreate({});
+      expect(promise).to.be.rejectedWith(
+        'MongoDB unable to generate primary keys of Number. ' +
+          'Do provide your own value for the "id" property ' +
+          'or set the property type to String.',
+      );
+    });
+
+    it('throws an error when generating a new value for a primary key of a "boolean" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.BOOLEAN,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const promise = rep.replaceOrCreate({});
+      expect(promise).to.be.rejectedWith(
+        'MongoDB unable to generate primary keys of Boolean. ' +
+          'Do provide your own value for the "id" property ' +
+          'or set the property type to String.',
+      );
+    });
+
+    it('throws an error when generating a new value for a primary key of a "array" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.ARRAY,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const promise = rep.replaceOrCreate({});
+      expect(promise).to.be.rejectedWith(
+        'MongoDB unable to generate primary keys of Array. ' +
+          'Do provide your own value for the "id" property ' +
+          'or set the property type to String.',
+      );
+    });
+
+    it('throws an error when generating a new value for a primary key of a "object" type', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.OBJECT,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const promise = rep.replaceOrCreate({});
+      expect(promise).to.be.rejectedWith(
+        'MongoDB unable to generate primary keys of Object. ' +
+          'Do provide your own value for the "id" property ' +
+          'or set the property type to String.',
+      );
+    });
+
+    it('allows to specify an ObjectID instance for a default primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const result = await rep.replaceOrCreate({[DEF_PK]: oid});
+      expect(result).to.be.eql({[DEF_PK]: String(oid)});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('allows to specify an ObjectID string for a default primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const id = String(oid);
+      const result = await rep.replaceOrCreate({[DEF_PK]: id});
+      expect(result).to.be.eql({[DEF_PK]: id});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('allows to specify an ObjectID instance for "id" primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.ANY,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const result = await rep.replaceOrCreate({id: oid});
+      expect(result).to.be.eql({id: String(oid)});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('allows to specify an ObjectID string for "id" primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          id: {
+            type: DataType.STRING,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const id = String(oid);
+      const result = await rep.replaceOrCreate({id});
+      expect(result).to.be.eql({id});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('allows to specify an ObjectID instance for "_id" primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          _id: {
+            type: DataType.ANY,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const result = await rep.replaceOrCreate({_id: oid});
+      expect(result).to.be.eql({_id: String(oid)});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('allows to specify an ObjectID string for "_id" primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          _id: {
+            type: DataType.STRING,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const id = String(oid);
+      const result = await rep.replaceOrCreate({_id: id});
+      expect(result).to.be.eql({_id: id});
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.not.null;
+    });
+
+    it('throws an error for a custom primary key', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          myId: {
+            type: DataType.ANY,
+            primaryKey: true,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const oid = new ObjectId();
+      const promise = rep.replaceOrCreate({myId: oid});
+      await expect(promise).to.be.rejectedWith(
+        'MongoDB is not supporting custom names of the primary key. ' +
+          'Do use "id" as a primary key instead of "myId".',
+      );
+    });
+
+    it('uses a specified column name for a regular property', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.NUMBER,
+            columnName: 'bar',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: 10});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, bar: 10});
+    });
+
+    it('uses a specified column name for a regular property with a default value', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.NUMBER,
+            columnName: 'bar',
+            default: 10,
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, bar: 10});
+    });
+
+    it('stores a Date instance as date and returns string type', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const date = new Date();
+      const dateString = date.toISOString();
+      const result = await rep.replaceOrCreate({date});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, date});
+    });
+
+    it('stores a Date string as date and returns string type', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const date = new Date();
+      const dateString = date.toISOString();
+      const result = await rep.replaceOrCreate({date: dateString});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, date});
+    });
+
+    it('stores a string as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: 'str'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'str'});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 'str'});
+    });
+
+    it('stores a number as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: 10});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 10});
+    });
+
+    it('stores a boolean as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: true, bar: false});
+      expect(result).to.be.eql({
+        [DEF_PK]: result[DEF_PK],
+        foo: true,
+        bar: false,
+      });
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: true, bar: false});
+    });
+
+    it('stores an array as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: ['bar']});
+      expect(result).to.be.eql({
+        [DEF_PK]: result[DEF_PK],
+        foo: ['bar'],
+      });
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: ['bar']});
+    });
+
+    it('stores an object as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: {bar: 10}});
+      expect(result).to.be.eql({
+        [DEF_PK]: result[DEF_PK],
+        foo: {bar: 10},
+      });
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: {bar: 10}});
+    });
+
+    it('stores an undefined as null', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: undefined});
+      expect(result).to.be.eql({
+        [DEF_PK]: result[DEF_PK],
+        foo: null,
+      });
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: null});
+    });
+
+    it('stores an null as is', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({foo: null});
+      expect(result).to.be.eql({
+        [DEF_PK]: result[DEF_PK],
+        foo: null,
+      });
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: null});
+    });
+
+    it('uses a short fields clause to filter results', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate(
+        {foo: 10, bar: 20},
+        {fields: 'foo'},
+      );
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
+    });
+
+    it('uses a full fields clause to filter results', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate(
+        {foo: 10, bar: 20, baz: 30},
+        {fields: ['foo', 'bar']},
+      );
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10, bar: 20});
+      const oid = new ObjectId(result[DEF_PK]);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, foo: 10, bar: 20, baz: 30});
+    });
+
+    it('a fields clause uses property names instead of column names', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'model',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.NUMBER,
+            columnName: 'fooCol',
+          },
+          bar: {
+            type: DataType.NUMBER,
+            columnName: 'barCol',
+          },
+          baz: {
+            type: DataType.NUMBER,
+            columnName: 'bazCol',
+          },
+        },
+      });
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate(
+        {foo: 10, bar: 20, baz: 30},
+        {fields: ['fooCol', 'barCol']},
+      );
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK]});
+    });
+
+    it('removes properties when replacing an item by a given identifier', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const created = await rep.create({foo: 10});
+      const id = created[DEF_PK];
+      const replacer = {[DEF_PK]: id, bar: 20};
+      const replaced = await rep.replaceOrCreate(replacer);
+      expect(replaced).to.be.eql(replacer);
+      const oid = new ObjectId(id);
+      const rawData = await MDB_CLIENT.db()
+        .collection('model')
+        .findOne({_id: oid});
+      expect(rawData).to.be.eql({_id: oid, bar: 20});
+    });
+
+    it('does not throws an error if nothing changed', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const created = await rep.create({foo: 10});
+      const id = created[DEF_PK];
+      const replacer = {[DEF_PK]: id, foo: 10};
+      const replaced = await rep.replaceOrCreate(replacer);
+      expect(replaced).to.be.eql(replacer);
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
         .collection('model')

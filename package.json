@@ -33,27 +33,27 @@
   "license": "MIT",
   "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
   "dependencies": {
-    "mongodb": "5.9.1"
+    "mongodb": "5.9.2"
   },
   "peerDependencies": {
     "@e22m4u/js-format": "*",
     "@e22m4u/js-service": "*",
-    "@e22m4u/js-repository": "~0.0.42"
+    "@e22m4u/js-repository": "~0.1.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.2",
-    "@commitlint/config-conventional": "^18.4.2",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
     "c8": "^8.0.1",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.1.0",
     "dotenv": "^16.3.1",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-chai-expect": "^3.0.0",
     "eslint-plugin-mocha": "^10.2.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
-    "prettier": "^3.1.0"
+    "prettier": "^3.1.1"
   }
 }
