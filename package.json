@@ -38,7 +38,7 @@
   "peerDependencies": {
     "@e22m4u/js-format": "*",
     "@e22m4u/js-service": "*",
-    "@e22m4u/js-repository": "~0.1.0"
+    "@e22m4u/js-repository": "~0.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",

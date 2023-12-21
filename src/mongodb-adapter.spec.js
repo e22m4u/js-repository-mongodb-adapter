@@ -1093,6 +1093,16 @@ describe('MongodbAdapter', function () {
       expect(result[DEF_PK]).to.have.lengthOf(24);
     });
 
+    it('generates a new identifier when a value of a primary key is zero', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.create({[DEF_PK]: 0, foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
     it('generates a new identifier for a primary key of a "string" type', async function () {
       const schema = createSchema();
       schema.defineModel({
@@ -2026,6 +2036,16 @@ describe('MongodbAdapter', function () {
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const rep = schema.getRepository('model');
       const result = await rep.replaceOrCreate({[DEF_PK]: '', foo: 'bar'});
+      expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
+      expect(typeof result[DEF_PK]).to.be.eq('string');
+      expect(result[DEF_PK]).to.have.lengthOf(24);
+    });
+
+    it('generates a new identifier when a value of a primary key is zero', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
+      const rep = schema.getRepository('model');
+      const result = await rep.replaceOrCreate({[DEF_PK]: 0, foo: 'bar'});
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'bar'});
       expect(typeof result[DEF_PK]).to.be.eq('string');
       expect(result[DEF_PK]).to.have.lengthOf(24);

@@ -601,7 +601,7 @@ export class MongodbAdapter extends Adapter {
   async create(modelName, modelData, filter = undefined) {
     const idPropName = this._getIdPropName(modelName);
     const idValue = modelData[idPropName];
-    if (idValue == null || idValue === '') {
+    if (idValue == null || idValue === '' || idValue === 0) {
       const pkType = this._getIdType(modelName);
       if (pkType !== DataType.STRING && pkType !== DataType.ANY)
         throw new InvalidArgumentError(
@@ -662,7 +662,7 @@ export class MongodbAdapter extends Adapter {
     const idPropName = this._getIdPropName(modelName);
     let idValue = modelData[idPropName];
     idValue = this._coerceId(idValue);
-    if (idValue == null || idValue === '') {
+    if (idValue == null || idValue === '' || idValue === 0) {
       const pkType = this._getIdType(modelName);
       if (pkType !== DataType.STRING && pkType !== DataType.ANY)
         throw new InvalidArgumentError(
