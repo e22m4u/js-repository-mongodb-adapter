@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitflic.ru/project/e22m4u/js-repository-mongodb-adapter.git"
+    "url": "https://gitverse.ru/sc/e22m4u/js-repository-mongodb-adapter.git"
   },
   "keywords": [
     "MongoDB",
@@ -30,7 +30,7 @@
   ],
   "author": "e22m4u <e22m4u@yandex.ru>",
   "license": "MIT",
-  "homepage": "https://gitflic.ru/project/e22m4u/js-repository-mongodb-adapter",
+  "homepage": "https://gitverse.ru/e22m4u/js-repository-mongodb-adapter",
   "dependencies": {
     "mongodb": "5.9.2"
   },
@@ -40,8 +40,8 @@
     "@e22m4u/js-repository": "~0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "~19.0.3",
-    "@commitlint/config-conventional": "~19.0.3",
+    "@commitlint/cli": "~19.2.0",
+    "@commitlint/config-conventional": "~19.1.0",
     "c8": "~9.1.0",
     "chai": "~4.4.1",
     "chai-as-promised": "~7.1.1",
