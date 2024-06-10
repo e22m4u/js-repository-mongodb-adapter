@@ -53,6 +53,6 @@
     "eslint-plugin-mocha": "~10.4.3",
     "husky": "~9.0.11",
     "mocha": "~10.4.0",
-    "prettier": "~3.2.5"
+    "prettier": "~3.3.1"
   }
 }
