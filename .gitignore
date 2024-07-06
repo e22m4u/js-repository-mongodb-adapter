@@ -1,8 +1,9 @@
 # OS
 .DS_Store
 
-# IDE
+# Editor
 .idea
+.vscode
 
 # Npm
 node_modules
