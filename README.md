@@ -4,12 +4,9 @@ MongoDB адаптер для [@e22m4u/js-repository](https://www.npmjs.com/pack
 
 ## Установка
 
-
 ```bash
 npm install @e22m4u/js-repository-mongodb-adapter
 ```
-
-*требует пакет [js-repository](https://www.npmjs.com/package/@e22m4u/js-repository)*
 
 ## Параметры
 

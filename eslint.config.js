@@ -1,8 +1,8 @@
-import js from '@eslint/js';
 import globals from 'globals';
-import mochaPlugin from 'eslint-plugin-mocha';
-import chaiExpectPlugin from 'eslint-plugin-chai-expect';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintJs from '@eslint/js';
+import eslintMochaPlugin from 'eslint-plugin-mocha';
+import eslintPrettierConfig from 'eslint-config-prettier';
+import eslintChaiExpectPlugin from 'eslint-plugin-chai-expect';
 
 export default [{
   languageOptions: {
@@ -13,14 +13,14 @@ export default [{
     },
   },
   plugins: {
-    'mocha': mochaPlugin,
-    'chai-expect': chaiExpectPlugin,
+    'mocha': eslintMochaPlugin,
+    'chai-expect': eslintChaiExpectPlugin,
   },
   rules: {
-    ...js.configs.recommended.rules,
-    ...eslintConfigPrettier.rules,
-    ...mochaPlugin.configs.flat.recommended.rules,
-    ...chaiExpectPlugin.configs['recommended-flat'].rules,
+    ...eslintJs.configs.recommended.rules,
+    ...eslintPrettierConfig.rules,
+    ...eslintMochaPlugin.configs.flat.recommended.rules,
+    ...eslintChaiExpectPlugin.configs['recommended-flat'].rules,
   },
   files: ['src/**/*.js'],
 }];
