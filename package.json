@@ -3,16 +3,22 @@
   "version": "0.1.5",
   "description": "MongoDB адаптер для @e22m4u/js-repository",
   "type": "module",
-  "main": "src/index.js",
+  "module": "./src/index.js",
+  "main": "./dist/cjs/index.cjs",
+  "exports": {
+    "import": "./src/index.js",
+    "require": "./dist/cjs/index.cjs"
+  },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.20.1"
   },
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"./src/**/*.js\"",
-    "test": "eslint . && c8 --reporter=text-summary mocha",
-    "test:coverage": "eslint . && c8 --reporter=text mocha",
+    "test": "eslint ./src && c8 --reporter=text-summary mocha",
+    "test:coverage": "eslint ./src && c8 --reporter=text mocha",
+    "build:cjs": "node build-cjs.js",
     "prepare": "husky"
   },
   "repository": {
@@ -47,6 +53,7 @@
     "chai": "~5.1.1",
     "chai-as-promised": "~8.0.0",
     "dotenv": "~16.4.5",
+    "esbuild": "~0.24.0",
     "eslint": "~9.12.0",
     "eslint-config-prettier": "~9.1.0",
     "eslint-plugin-chai-expect": "~3.1.0",
