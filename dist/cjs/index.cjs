@@ -31342,24 +31342,24 @@ var require_lib3 = __commonJS({
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/utils/is-class.js
+// node_modules/@e22m4u/js-format/src/utils/is-class.js
 function isClass(value) {
   if (!value) return false;
   return typeof value === "function" && /^class\s/.test(Function.prototype.toString.call(value));
 }
 var init_is_class = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/utils/is-class.js"() {
+  "node_modules/@e22m4u/js-format/src/utils/is-class.js"() {
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/utils/index.js
+// node_modules/@e22m4u/js-format/src/utils/index.js
 var init_utils = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/utils/index.js"() {
+  "node_modules/@e22m4u/js-format/src/utils/index.js"() {
     init_is_class();
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/value-to-string.js
+// node_modules/@e22m4u/js-format/src/value-to-string.js
 function valueToString(input) {
   if (input == null) return String(input);
   if (typeof input === "string") return `"${input}"`;
@@ -31367,17 +31367,30 @@ function valueToString(input) {
     return String(input);
   if (isClass(input)) return input.name ? input.name : "Class";
   if (input.constructor && input.constructor.name)
-    return input.constructor.name;
+    return BASE_CTOR_NAMES.includes(input.constructor.name) ? input.constructor.name : `${input.constructor.name} (instance)`;
   if (typeof input === "object" && input.constructor == null) return "Object";
   return String(input);
 }
+var BASE_CTOR_NAMES;
 var init_value_to_string = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/value-to-string.js"() {
+  "node_modules/@e22m4u/js-format/src/value-to-string.js"() {
     init_utils();
+    BASE_CTOR_NAMES = [
+      "String",
+      "Number",
+      "Boolean",
+      "Object",
+      "Array",
+      "Function",
+      "Symbol",
+      "Map",
+      "Set",
+      "Date"
+    ];
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/array-to-list.js
+// node_modules/@e22m4u/js-format/src/array-to-list.js
 function arrayToList(input) {
   if (Array.isArray(input) && input.length)
     return input.map(valueToString).join(SEPARATOR);
@@ -31385,13 +31398,13 @@ function arrayToList(input) {
 }
 var SEPARATOR;
 var init_array_to_list = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/array-to-list.js"() {
+  "node_modules/@e22m4u/js-format/src/array-to-list.js"() {
     init_value_to_string();
     SEPARATOR = ", ";
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/format.js
+// node_modules/@e22m4u/js-format/src/format.js
 function format(pattern) {
   if (pattern instanceof Date) {
     pattern = pattern.toISOString();
@@ -31404,7 +31417,6 @@ function format(pattern) {
     pattern = pattern.replace(re, function(match, escaped, ptn, flag) {
       let arg = args.shift();
       switch (flag) {
-        // eslint-disable-next-line no-fallthrough
         case "s":
           arg = String(arg);
           break;
@@ -31427,20 +31439,20 @@ function format(pattern) {
     });
   }
   if (args.length) pattern += " " + args.join(" ");
-  pattern = pattern.replace(/%{2,2}/g, "%");
+  pattern = pattern.replace(/%{2}/g, "%");
   return "" + pattern;
 }
 var init_format = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/format.js"() {
+  "node_modules/@e22m4u/js-format/src/format.js"() {
     init_array_to_list();
     init_value_to_string();
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/errorf.js
+// node_modules/@e22m4u/js-format/src/errorf.js
 var Errorf;
 var init_errorf = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/errorf.js"() {
+  "node_modules/@e22m4u/js-format/src/errorf.js"() {
     init_format();
     Errorf = class extends Error {
       /**
@@ -31457,35 +31469,35 @@ var init_errorf = __esm({
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/index.js
+// node_modules/@e22m4u/js-format/src/index.js
 var init_src = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-format/src/index.js"() {
+  "node_modules/@e22m4u/js-format/src/index.js"() {
     init_format();
     init_errorf();
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
+// node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
 var InvalidArgumentError;
 var init_invalid_argument_error = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js"() {
+  "node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js"() {
     init_src();
     InvalidArgumentError = class extends Errorf {
     };
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/errors/index.js
+// node_modules/@e22m4u/js-service/src/errors/index.js
 var init_errors = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/errors/index.js"() {
+  "node_modules/@e22m4u/js-service/src/errors/index.js"() {
     init_invalid_argument_error();
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/service-container.js
+// node_modules/@e22m4u/js-service/src/service-container.js
 var ServiceContainer;
 var init_service_container = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/service-container.js"() {
+  "node_modules/@e22m4u/js-service/src/service-container.js"() {
     init_service();
     init_errors();
     ServiceContainer = class _ServiceContainer {
@@ -31614,10 +31626,10 @@ var init_service_container = __esm({
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/service.js
+// node_modules/@e22m4u/js-service/src/service.js
 var Service;
 var init_service = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/service.js"() {
+  "node_modules/@e22m4u/js-service/src/service.js"() {
     init_service_container();
     Service = class {
       /**
@@ -31690,9 +31702,9 @@ var init_service = __esm({
   }
 });
 
-// node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/index.js
+// node_modules/@e22m4u/js-service/src/index.js
 var init_src2 = __esm({
-  "node_modules/@e22m4u/js-repository/node_modules/@e22m4u/js-service/src/index.js"() {
+  "node_modules/@e22m4u/js-service/src/index.js"() {
     init_service();
     init_service_container();
   }
@@ -31943,7 +31955,7 @@ function isDeepEqual(firstValue, secondValue) {
     setForB.add(a);
     const propertyNamesA = [...keysA, ...symbolsA];
     for (const propertyNameA of propertyNamesA) {
-      if (!b.hasOwnProperty(propertyNameA)) return false;
+      if (!Object.prototype.hasOwnProperty.call(b, propertyNameA)) return false;
       const propertyValueA = a[propertyNameA];
       const propertyValueB = b[propertyNameA];
       if (!compare(propertyValueA, propertyValueB)) return false;
@@ -37116,6 +37128,7 @@ var init_memory_adapter = __esm({
        * @param {object|undefined} filter
        * @returns {Promise<object>}
        */
+      // eslint-disable-next-line no-unused-vars
       async replaceOrCreate(modelName, modelData, filter = void 0) {
         const pkPropName = this.getService(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
           modelName
@@ -37858,6 +37871,7 @@ function transformValuesDeep(value, transformer) {
 }
 
 // src/mongodb-adapter.js
+init_src2();
 var MONGODB_OPTION_NAMES = [
   "appname",
   "authMechanism",
