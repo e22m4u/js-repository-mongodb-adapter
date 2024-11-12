@@ -18,7 +18,7 @@
     "format": "prettier --write \"./src/**/*.js\"",
     "test": "npm run lint && c8 --reporter=text-summary mocha",
     "test:coverage": "npm run lint && c8 --reporter=text mocha",
-    "build:cjs": "rimraf ./dist/cjs && node build-cjs.js",
+    "build:cjs": "rimraf ./dist/cjs && node --no-warnings=ExperimentalWarning build-cjs.js",
     "prepare": "husky"
   },
   "repository": {
