@@ -6,5 +6,5 @@ await esbuild.build({
   format: 'cjs',
   platform: 'node',
   target: ['node14'],
-  bundle: true,
+  keepNames: true,
 });
