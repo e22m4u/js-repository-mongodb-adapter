@@ -7,5 +7,4 @@ await esbuild.build({
   platform: 'node',
   target: ['node14'],
   bundle: true,
-  keepNames: true,
 });

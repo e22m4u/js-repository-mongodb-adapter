@@ -4,7 +4,6 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 var __glob = (map) => (path) => {
   var fn = map[path];
   if (fn) return fn();
@@ -109,8 +108,7 @@ var require_error = __commonJS({
     function isAggregateError(e) {
       return "errors" in e && Array.isArray(e.errors);
     }
-    __name(isAggregateError, "isAggregateError");
-    var _MongoError = class _MongoError extends Error {
+    var MongoError = class _MongoError extends Error {
       constructor(message) {
         super(_MongoError.buildErrorMessage(message));
         if (message instanceof Error) {
@@ -151,10 +149,8 @@ var require_error = __commonJS({
         return Array.from(this[kErrorLabels]);
       }
     };
-    __name(_MongoError, "MongoError");
-    var MongoError = _MongoError;
     exports2.MongoError = MongoError;
-    var _MongoServerError = class _MongoServerError extends MongoError {
+    var MongoServerError = class extends MongoError {
       constructor(message) {
         super(message.message || message.errmsg || message.$err || "n/a");
         if (message.errorLabels) {
@@ -169,10 +165,8 @@ var require_error = __commonJS({
         return "MongoServerError";
       }
     };
-    __name(_MongoServerError, "MongoServerError");
-    var MongoServerError = _MongoServerError;
     exports2.MongoServerError = MongoServerError;
-    var _MongoDriverError = class _MongoDriverError extends MongoError {
+    var MongoDriverError = class extends MongoError {
       constructor(message) {
         super(message);
       }
@@ -180,10 +174,8 @@ var require_error = __commonJS({
         return "MongoDriverError";
       }
     };
-    __name(_MongoDriverError, "MongoDriverError");
-    var MongoDriverError = _MongoDriverError;
     exports2.MongoDriverError = MongoDriverError;
-    var _MongoAPIError = class _MongoAPIError extends MongoDriverError {
+    var MongoAPIError = class extends MongoDriverError {
       constructor(message) {
         super(message);
       }
@@ -191,10 +183,8 @@ var require_error = __commonJS({
         return "MongoAPIError";
       }
     };
-    __name(_MongoAPIError, "MongoAPIError");
-    var MongoAPIError = _MongoAPIError;
     exports2.MongoAPIError = MongoAPIError;
-    var _MongoRuntimeError = class _MongoRuntimeError extends MongoDriverError {
+    var MongoRuntimeError = class extends MongoDriverError {
       constructor(message) {
         super(message);
       }
@@ -202,10 +192,8 @@ var require_error = __commonJS({
         return "MongoRuntimeError";
       }
     };
-    __name(_MongoRuntimeError, "MongoRuntimeError");
-    var MongoRuntimeError = _MongoRuntimeError;
     exports2.MongoRuntimeError = MongoRuntimeError;
-    var _MongoBatchReExecutionError = class _MongoBatchReExecutionError extends MongoAPIError {
+    var MongoBatchReExecutionError = class extends MongoAPIError {
       constructor(message = "This batch has already been executed, create new batch to execute") {
         super(message);
       }
@@ -213,10 +201,8 @@ var require_error = __commonJS({
         return "MongoBatchReExecutionError";
       }
     };
-    __name(_MongoBatchReExecutionError, "MongoBatchReExecutionError");
-    var MongoBatchReExecutionError = _MongoBatchReExecutionError;
     exports2.MongoBatchReExecutionError = MongoBatchReExecutionError;
-    var _MongoDecompressionError = class _MongoDecompressionError extends MongoRuntimeError {
+    var MongoDecompressionError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -224,10 +210,8 @@ var require_error = __commonJS({
         return "MongoDecompressionError";
       }
     };
-    __name(_MongoDecompressionError, "MongoDecompressionError");
-    var MongoDecompressionError = _MongoDecompressionError;
     exports2.MongoDecompressionError = MongoDecompressionError;
-    var _MongoNotConnectedError = class _MongoNotConnectedError extends MongoAPIError {
+    var MongoNotConnectedError = class extends MongoAPIError {
       constructor(message) {
         super(message);
       }
@@ -235,10 +219,8 @@ var require_error = __commonJS({
         return "MongoNotConnectedError";
       }
     };
-    __name(_MongoNotConnectedError, "MongoNotConnectedError");
-    var MongoNotConnectedError = _MongoNotConnectedError;
     exports2.MongoNotConnectedError = MongoNotConnectedError;
-    var _MongoTransactionError = class _MongoTransactionError extends MongoAPIError {
+    var MongoTransactionError = class extends MongoAPIError {
       constructor(message) {
         super(message);
       }
@@ -246,10 +228,8 @@ var require_error = __commonJS({
         return "MongoTransactionError";
       }
     };
-    __name(_MongoTransactionError, "MongoTransactionError");
-    var MongoTransactionError = _MongoTransactionError;
     exports2.MongoTransactionError = MongoTransactionError;
-    var _MongoExpiredSessionError = class _MongoExpiredSessionError extends MongoAPIError {
+    var MongoExpiredSessionError = class extends MongoAPIError {
       constructor(message = "Cannot use a session that has ended") {
         super(message);
       }
@@ -257,10 +237,8 @@ var require_error = __commonJS({
         return "MongoExpiredSessionError";
       }
     };
-    __name(_MongoExpiredSessionError, "MongoExpiredSessionError");
-    var MongoExpiredSessionError = _MongoExpiredSessionError;
     exports2.MongoExpiredSessionError = MongoExpiredSessionError;
-    var _MongoKerberosError = class _MongoKerberosError extends MongoRuntimeError {
+    var MongoKerberosError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -268,10 +246,8 @@ var require_error = __commonJS({
         return "MongoKerberosError";
       }
     };
-    __name(_MongoKerberosError, "MongoKerberosError");
-    var MongoKerberosError = _MongoKerberosError;
     exports2.MongoKerberosError = MongoKerberosError;
-    var _MongoAWSError = class _MongoAWSError extends MongoRuntimeError {
+    var MongoAWSError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -279,10 +255,8 @@ var require_error = __commonJS({
         return "MongoAWSError";
       }
     };
-    __name(_MongoAWSError, "MongoAWSError");
-    var MongoAWSError = _MongoAWSError;
     exports2.MongoAWSError = MongoAWSError;
-    var _MongoAzureError = class _MongoAzureError extends MongoRuntimeError {
+    var MongoAzureError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -290,10 +264,8 @@ var require_error = __commonJS({
         return "MongoAzureError";
       }
     };
-    __name(_MongoAzureError, "MongoAzureError");
-    var MongoAzureError = _MongoAzureError;
     exports2.MongoAzureError = MongoAzureError;
-    var _MongoChangeStreamError = class _MongoChangeStreamError extends MongoRuntimeError {
+    var MongoChangeStreamError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -301,10 +273,8 @@ var require_error = __commonJS({
         return "MongoChangeStreamError";
       }
     };
-    __name(_MongoChangeStreamError, "MongoChangeStreamError");
-    var MongoChangeStreamError = _MongoChangeStreamError;
     exports2.MongoChangeStreamError = MongoChangeStreamError;
-    var _MongoTailableCursorError = class _MongoTailableCursorError extends MongoAPIError {
+    var MongoTailableCursorError = class extends MongoAPIError {
       constructor(message = "Tailable cursor does not support this operation") {
         super(message);
       }
@@ -312,10 +282,8 @@ var require_error = __commonJS({
         return "MongoTailableCursorError";
       }
     };
-    __name(_MongoTailableCursorError, "MongoTailableCursorError");
-    var MongoTailableCursorError = _MongoTailableCursorError;
     exports2.MongoTailableCursorError = MongoTailableCursorError;
-    var _MongoGridFSStreamError = class _MongoGridFSStreamError extends MongoRuntimeError {
+    var MongoGridFSStreamError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -323,10 +291,8 @@ var require_error = __commonJS({
         return "MongoGridFSStreamError";
       }
     };
-    __name(_MongoGridFSStreamError, "MongoGridFSStreamError");
-    var MongoGridFSStreamError = _MongoGridFSStreamError;
     exports2.MongoGridFSStreamError = MongoGridFSStreamError;
-    var _MongoGridFSChunkError = class _MongoGridFSChunkError extends MongoRuntimeError {
+    var MongoGridFSChunkError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -334,10 +300,8 @@ var require_error = __commonJS({
         return "MongoGridFSChunkError";
       }
     };
-    __name(_MongoGridFSChunkError, "MongoGridFSChunkError");
-    var MongoGridFSChunkError = _MongoGridFSChunkError;
     exports2.MongoGridFSChunkError = MongoGridFSChunkError;
-    var _MongoUnexpectedServerResponseError = class _MongoUnexpectedServerResponseError extends MongoRuntimeError {
+    var MongoUnexpectedServerResponseError = class extends MongoRuntimeError {
       constructor(message) {
         super(message);
       }
@@ -345,10 +309,8 @@ var require_error = __commonJS({
         return "MongoUnexpectedServerResponseError";
       }
     };
-    __name(_MongoUnexpectedServerResponseError, "MongoUnexpectedServerResponseError");
-    var MongoUnexpectedServerResponseError = _MongoUnexpectedServerResponseError;
     exports2.MongoUnexpectedServerResponseError = MongoUnexpectedServerResponseError;
-    var _MongoCursorInUseError = class _MongoCursorInUseError extends MongoAPIError {
+    var MongoCursorInUseError = class extends MongoAPIError {
       constructor(message = "Cursor is already initialized") {
         super(message);
       }
@@ -356,10 +318,8 @@ var require_error = __commonJS({
         return "MongoCursorInUseError";
       }
     };
-    __name(_MongoCursorInUseError, "MongoCursorInUseError");
-    var MongoCursorInUseError = _MongoCursorInUseError;
     exports2.MongoCursorInUseError = MongoCursorInUseError;
-    var _MongoServerClosedError = class _MongoServerClosedError extends MongoAPIError {
+    var MongoServerClosedError = class extends MongoAPIError {
       constructor(message = "Server is closed") {
         super(message);
       }
@@ -367,10 +327,8 @@ var require_error = __commonJS({
         return "MongoServerClosedError";
       }
     };
-    __name(_MongoServerClosedError, "MongoServerClosedError");
-    var MongoServerClosedError = _MongoServerClosedError;
     exports2.MongoServerClosedError = MongoServerClosedError;
-    var _MongoCursorExhaustedError = class _MongoCursorExhaustedError extends MongoAPIError {
+    var MongoCursorExhaustedError = class extends MongoAPIError {
       constructor(message) {
         super(message || "Cursor is exhausted");
       }
@@ -378,10 +336,8 @@ var require_error = __commonJS({
         return "MongoCursorExhaustedError";
       }
     };
-    __name(_MongoCursorExhaustedError, "MongoCursorExhaustedError");
-    var MongoCursorExhaustedError = _MongoCursorExhaustedError;
     exports2.MongoCursorExhaustedError = MongoCursorExhaustedError;
-    var _MongoTopologyClosedError = class _MongoTopologyClosedError extends MongoAPIError {
+    var MongoTopologyClosedError = class extends MongoAPIError {
       constructor(message = "Topology is closed") {
         super(message);
       }
@@ -389,16 +345,13 @@ var require_error = __commonJS({
         return "MongoTopologyClosedError";
       }
     };
-    __name(_MongoTopologyClosedError, "MongoTopologyClosedError");
-    var MongoTopologyClosedError = _MongoTopologyClosedError;
     exports2.MongoTopologyClosedError = MongoTopologyClosedError;
     var kBeforeHandshake = Symbol("beforeHandshake");
     function isNetworkErrorBeforeHandshake(err) {
       return err[kBeforeHandshake] === true;
     }
-    __name(isNetworkErrorBeforeHandshake, "isNetworkErrorBeforeHandshake");
     exports2.isNetworkErrorBeforeHandshake = isNetworkErrorBeforeHandshake;
-    var _MongoNetworkError = class _MongoNetworkError extends MongoError {
+    var MongoNetworkError = class extends MongoError {
       constructor(message, options) {
         super(message);
         if (options && typeof options.beforeHandshake === "boolean") {
@@ -409,10 +362,8 @@ var require_error = __commonJS({
         return "MongoNetworkError";
       }
     };
-    __name(_MongoNetworkError, "MongoNetworkError");
-    var MongoNetworkError = _MongoNetworkError;
     exports2.MongoNetworkError = MongoNetworkError;
-    var _MongoNetworkTimeoutError = class _MongoNetworkTimeoutError extends MongoNetworkError {
+    var MongoNetworkTimeoutError = class extends MongoNetworkError {
       constructor(message, options) {
         super(message, options);
       }
@@ -420,10 +371,8 @@ var require_error = __commonJS({
         return "MongoNetworkTimeoutError";
       }
     };
-    __name(_MongoNetworkTimeoutError, "MongoNetworkTimeoutError");
-    var MongoNetworkTimeoutError = _MongoNetworkTimeoutError;
     exports2.MongoNetworkTimeoutError = MongoNetworkTimeoutError;
-    var _MongoParseError = class _MongoParseError extends MongoDriverError {
+    var MongoParseError = class extends MongoDriverError {
       constructor(message) {
         super(message);
       }
@@ -431,10 +380,8 @@ var require_error = __commonJS({
         return "MongoParseError";
       }
     };
-    __name(_MongoParseError, "MongoParseError");
-    var MongoParseError = _MongoParseError;
     exports2.MongoParseError = MongoParseError;
-    var _MongoInvalidArgumentError = class _MongoInvalidArgumentError extends MongoAPIError {
+    var MongoInvalidArgumentError = class extends MongoAPIError {
       constructor(message) {
         super(message);
       }
@@ -442,10 +389,8 @@ var require_error = __commonJS({
         return "MongoInvalidArgumentError";
       }
     };
-    __name(_MongoInvalidArgumentError, "MongoInvalidArgumentError");
-    var MongoInvalidArgumentError = _MongoInvalidArgumentError;
     exports2.MongoInvalidArgumentError = MongoInvalidArgumentError;
-    var _MongoCompatibilityError = class _MongoCompatibilityError extends MongoAPIError {
+    var MongoCompatibilityError = class extends MongoAPIError {
       constructor(message) {
         super(message);
       }
@@ -453,10 +398,8 @@ var require_error = __commonJS({
         return "MongoCompatibilityError";
       }
     };
-    __name(_MongoCompatibilityError, "MongoCompatibilityError");
-    var MongoCompatibilityError = _MongoCompatibilityError;
     exports2.MongoCompatibilityError = MongoCompatibilityError;
-    var _MongoMissingCredentialsError = class _MongoMissingCredentialsError extends MongoAPIError {
+    var MongoMissingCredentialsError = class extends MongoAPIError {
       constructor(message) {
         super(message);
       }
@@ -464,10 +407,8 @@ var require_error = __commonJS({
         return "MongoMissingCredentialsError";
       }
     };
-    __name(_MongoMissingCredentialsError, "MongoMissingCredentialsError");
-    var MongoMissingCredentialsError = _MongoMissingCredentialsError;
     exports2.MongoMissingCredentialsError = MongoMissingCredentialsError;
-    var _MongoMissingDependencyError = class _MongoMissingDependencyError extends MongoAPIError {
+    var MongoMissingDependencyError = class extends MongoAPIError {
       constructor(message, { cause } = {}) {
         super(message);
         if (cause)
@@ -477,10 +418,8 @@ var require_error = __commonJS({
         return "MongoMissingDependencyError";
       }
     };
-    __name(_MongoMissingDependencyError, "MongoMissingDependencyError");
-    var MongoMissingDependencyError = _MongoMissingDependencyError;
     exports2.MongoMissingDependencyError = MongoMissingDependencyError;
-    var _MongoSystemError = class _MongoSystemError extends MongoError {
+    var MongoSystemError = class extends MongoError {
       constructor(message, reason) {
         var _a;
         if (reason && reason.error) {
@@ -497,10 +436,8 @@ var require_error = __commonJS({
         return "MongoSystemError";
       }
     };
-    __name(_MongoSystemError, "MongoSystemError");
-    var MongoSystemError = _MongoSystemError;
     exports2.MongoSystemError = MongoSystemError;
-    var _MongoServerSelectionError = class _MongoServerSelectionError extends MongoSystemError {
+    var MongoServerSelectionError = class extends MongoSystemError {
       constructor(message, reason) {
         super(message, reason);
       }
@@ -508,8 +445,6 @@ var require_error = __commonJS({
         return "MongoServerSelectionError";
       }
     };
-    __name(_MongoServerSelectionError, "MongoServerSelectionError");
-    var MongoServerSelectionError = _MongoServerSelectionError;
     exports2.MongoServerSelectionError = MongoServerSelectionError;
     function makeWriteConcernResultObject(input) {
       const output = Object.assign({}, input);
@@ -521,8 +456,7 @@ var require_error = __commonJS({
       }
       return output;
     }
-    __name(makeWriteConcernResultObject, "makeWriteConcernResultObject");
-    var _MongoWriteConcernError = class _MongoWriteConcernError extends MongoServerError {
+    var MongoWriteConcernError = class extends MongoServerError {
       constructor(message, result) {
         if (result && Array.isArray(result.errorLabels)) {
           message.errorLabels = result.errorLabels;
@@ -537,8 +471,6 @@ var require_error = __commonJS({
         return "MongoWriteConcernError";
       }
     };
-    __name(_MongoWriteConcernError, "MongoWriteConcernError");
-    var MongoWriteConcernError = _MongoWriteConcernError;
     exports2.MongoWriteConcernError = MongoWriteConcernError;
     var RETRYABLE_READ_ERROR_CODES = /* @__PURE__ */ new Set([
       exports2.MONGODB_ERROR_CODES.HostUnreachable,
@@ -583,12 +515,10 @@ var require_error = __commonJS({
       }
       return false;
     }
-    __name(needsRetryableWriteLabel, "needsRetryableWriteLabel");
     exports2.needsRetryableWriteLabel = needsRetryableWriteLabel;
     function isRetryableWriteError(error) {
       return error.hasErrorLabel(exports2.MongoErrorLabel.RetryableWriteError);
     }
-    __name(isRetryableWriteError, "isRetryableWriteError");
     exports2.isRetryableWriteError = isRetryableWriteError;
     function isRetryableReadError(error) {
       const hasRetryableErrorCode = typeof error.code === "number" ? RETRYABLE_READ_ERROR_CODES.has(error.code) : false;
@@ -608,7 +538,6 @@ var require_error = __commonJS({
       }
       return false;
     }
-    __name(isRetryableReadError, "isRetryableReadError");
     exports2.isRetryableReadError = isRetryableReadError;
     var SDAM_RECOVERING_CODES = /* @__PURE__ */ new Set([
       exports2.MONGODB_ERROR_CODES.ShutdownInProgress,
@@ -632,7 +561,6 @@ var require_error = __commonJS({
       }
       return exports2.LEGACY_NOT_PRIMARY_OR_SECONDARY_ERROR_MESSAGE.test(err.message) || exports2.NODE_IS_RECOVERING_ERROR_MESSAGE.test(err.message);
     }
-    __name(isRecoveringError, "isRecoveringError");
     function isNotWritablePrimaryError(err) {
       if (typeof err.code === "number") {
         return SDAM_NOT_PRIMARY_CODES.has(err.code);
@@ -642,11 +570,9 @@ var require_error = __commonJS({
       }
       return exports2.LEGACY_NOT_WRITABLE_PRIMARY_ERROR_MESSAGE.test(err.message);
     }
-    __name(isNotWritablePrimaryError, "isNotWritablePrimaryError");
     function isNodeShuttingDownError(err) {
       return !!(typeof err.code === "number" && SDAM_NODE_SHUTTING_DOWN_ERROR_CODES.has(err.code));
     }
-    __name(isNodeShuttingDownError, "isNodeShuttingDownError");
     exports2.isNodeShuttingDownError = isNodeShuttingDownError;
     function isSDAMUnrecoverableError(error) {
       if (error instanceof MongoParseError || error == null) {
@@ -654,12 +580,10 @@ var require_error = __commonJS({
       }
       return isRecoveringError(error) || isNotWritablePrimaryError(error);
     }
-    __name(isSDAMUnrecoverableError, "isSDAMUnrecoverableError");
     exports2.isSDAMUnrecoverableError = isSDAMUnrecoverableError;
     function isNetworkTimeoutError(err) {
       return !!(err instanceof MongoNetworkError && err.message.match(/timed out/));
     }
-    __name(isNetworkTimeoutError, "isNetworkTimeoutError");
     exports2.isNetworkTimeoutError = isNetworkTimeoutError;
     function isResumableError(error, wireVersion) {
       if (error == null || !(error instanceof MongoError)) {
@@ -679,7 +603,6 @@ var require_error = __commonJS({
       }
       return false;
     }
-    __name(isResumableError, "isResumableError");
     exports2.isResumableError = isResumableError;
   }
 });
@@ -691,23 +614,18 @@ var require_bson = __commonJS({
     function isAnyArrayBuffer(value) {
       return ["[object ArrayBuffer]", "[object SharedArrayBuffer]"].includes(Object.prototype.toString.call(value));
     }
-    __name(isAnyArrayBuffer, "isAnyArrayBuffer");
     function isUint8Array(value) {
       return Object.prototype.toString.call(value) === "[object Uint8Array]";
     }
-    __name(isUint8Array, "isUint8Array");
     function isRegExp(d) {
       return Object.prototype.toString.call(d) === "[object RegExp]";
     }
-    __name(isRegExp, "isRegExp");
     function isMap(d) {
       return Object.prototype.toString.call(d) === "[object Map]";
     }
-    __name(isMap, "isMap");
     function isDate(d) {
       return Object.prototype.toString.call(d) === "[object Date]";
     }
-    __name(isDate, "isDate");
     var BSON_MAJOR_VERSION = 5;
     var BSON_INT32_MAX = 2147483647;
     var BSON_INT32_MIN = -2147483648;
@@ -761,7 +679,7 @@ var require_bson = __commonJS({
       minKey: -1,
       maxKey: 127
     });
-    var _BSONError = class _BSONError extends Error {
+    var BSONError = class extends Error {
       get bsonError() {
         return true;
       }
@@ -775,9 +693,7 @@ var require_bson = __commonJS({
         return value != null && typeof value === "object" && "bsonError" in value && value.bsonError === true && "name" in value && "message" in value && "stack" in value;
       }
     };
-    __name(_BSONError, "BSONError");
-    var BSONError = _BSONError;
-    var _BSONVersionError = class _BSONVersionError extends BSONError {
+    var BSONVersionError = class extends BSONError {
       get name() {
         return "BSONVersionError";
       }
@@ -785,9 +701,7 @@ var require_bson = __commonJS({
         super(`Unsupported BSON version, bson types must be from bson ${BSON_MAJOR_VERSION}.x.x`);
       }
     };
-    __name(_BSONVersionError, "BSONVersionError");
-    var BSONVersionError = _BSONVersionError;
-    var _BSONRuntimeError = class _BSONRuntimeError extends BSONError {
+    var BSONRuntimeError = class extends BSONError {
       get name() {
         return "BSONRuntimeError";
       }
@@ -795,12 +709,9 @@ var require_bson = __commonJS({
         super(message);
       }
     };
-    __name(_BSONRuntimeError, "BSONRuntimeError");
-    var BSONRuntimeError = _BSONRuntimeError;
     function nodejsMathRandomBytes(byteLength) {
       return nodeJsByteUtils.fromNumberArray(Array.from({ length: byteLength }, () => Math.floor(Math.random() * 256)));
     }
-    __name(nodejsMathRandomBytes, "nodejsMathRandomBytes");
     var nodejsRandomBytes = (() => {
       try {
         return require("crypto").randomBytes;
@@ -867,14 +778,12 @@ var require_bson = __commonJS({
       const { navigator: navigator2 } = globalThis;
       return typeof navigator2 === "object" && navigator2.product === "ReactNative";
     }
-    __name(isReactNative, "isReactNative");
     function webMathRandomBytes(byteLength) {
       if (byteLength < 0) {
         throw new RangeError(`The argument 'byteLength' is invalid. Received ${byteLength}`);
       }
       return webByteUtils.fromNumberArray(Array.from({ length: byteLength }, () => Math.floor(Math.random() * 256)));
     }
-    __name(webMathRandomBytes, "webMathRandomBytes");
     var webRandomBytes = (() => {
       var _a2;
       const { crypto } = globalThis;
@@ -976,21 +885,17 @@ var require_bson = __commonJS({
     var _a;
     var hasGlobalBuffer = typeof Buffer === "function" && ((_a = Buffer.prototype) == null ? void 0 : _a._isBuffer) !== true;
     var ByteUtils = hasGlobalBuffer ? nodeJsByteUtils : webByteUtils;
-    var _BSONDataView = class _BSONDataView extends DataView {
+    var BSONDataView = class extends DataView {
       static fromUint8Array(input) {
         return new DataView(input.buffer, input.byteOffset, input.byteLength);
       }
     };
-    __name(_BSONDataView, "BSONDataView");
-    var BSONDataView = _BSONDataView;
-    var _BSONValue = class _BSONValue {
+    var BSONValue = class {
       get [Symbol.for("@@mdb.bson.version")]() {
         return BSON_MAJOR_VERSION;
       }
     };
-    __name(_BSONValue, "BSONValue");
-    var BSONValue = _BSONValue;
-    var _Binary = class _Binary extends BSONValue {
+    var Binary = class _Binary extends BSONValue {
       get _bsontype() {
         return "Binary";
       }
@@ -1144,8 +1049,6 @@ var require_bson = __commonJS({
         return `Binary.createFromBase64("${base64}", ${this.sub_type})`;
       }
     };
-    __name(_Binary, "Binary");
-    var Binary = _Binary;
     Binary.BSON_BINARY_SUBTYPE_DEFAULT = 0;
     Binary.BUFFER_SIZE = 256;
     Binary.SUBTYPE_DEFAULT = 0;
@@ -1160,7 +1063,7 @@ var require_bson = __commonJS({
     var UUID_BYTE_LENGTH = 16;
     var UUID_WITHOUT_DASHES = /^[0-9A-F]{32}$/i;
     var UUID_WITH_DASHES = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
-    var _UUID = class _UUID extends Binary {
+    var UUID = class _UUID extends Binary {
       constructor(input) {
         let bytes;
         if (input == null) {
@@ -1261,10 +1164,8 @@ var require_bson = __commonJS({
         return `new UUID("${this.toHexString()}")`;
       }
     };
-    __name(_UUID, "UUID");
-    var UUID = _UUID;
     UUID.cacheHexString = false;
-    var _Code = class _Code extends BSONValue {
+    var Code = class _Code extends BSONValue {
       get _bsontype() {
         return "Code";
       }
@@ -1296,13 +1197,10 @@ var require_bson = __commonJS({
         return `new Code("${String(codeJson.code)}"${codeJson.scope != null ? `, ${JSON.stringify(codeJson.scope)}` : ""})`;
       }
     };
-    __name(_Code, "Code");
-    var Code = _Code;
     function isDBRefLike(value) {
       return value != null && typeof value === "object" && "$id" in value && value.$id != null && "$ref" in value && typeof value.$ref === "string" && (!("$db" in value) || "$db" in value && typeof value.$db === "string");
     }
-    __name(isDBRefLike, "isDBRefLike");
-    var _DBRef = class _DBRef extends BSONValue {
+    var DBRef = class _DBRef extends BSONValue {
       get _bsontype() {
         return "DBRef";
       }
@@ -1362,8 +1260,6 @@ var require_bson = __commonJS({
         return `new DBRef("${this.namespace}", new ObjectId("${String(oid)}")${this.db ? `, "${this.db}"` : ""})`;
       }
     };
-    __name(_DBRef, "DBRef");
-    var DBRef = _DBRef;
     var wasm = void 0;
     try {
       wasm = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 13, 2, 96, 0, 1, 127, 96, 4, 127, 127, 127, 127, 1, 127, 3, 7, 6, 0, 1, 1, 1, 1, 1, 6, 6, 1, 127, 1, 65, 0, 11, 7, 50, 6, 3, 109, 117, 108, 0, 1, 5, 100, 105, 118, 95, 115, 0, 2, 5, 100, 105, 118, 95, 117, 0, 3, 5, 114, 101, 109, 95, 115, 0, 4, 5, 114, 101, 109, 95, 117, 0, 5, 8, 103, 101, 116, 95, 104, 105, 103, 104, 0, 0, 10, 191, 1, 6, 4, 0, 35, 0, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 126, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 127, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 128, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 129, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 130, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11])), {}).exports;
@@ -1378,7 +1274,7 @@ var require_bson = __commonJS({
     var UINT_CACHE = {};
     var MAX_INT64_STRING_LENGTH = 20;
     var DECIMAL_REG_EX = /^(\+?0|(\+|-)?[1-9][0-9]*)$/;
-    var _Long = class _Long extends BSONValue {
+    var Long = class _Long extends BSONValue {
       get _bsontype() {
         return "Long";
       }
@@ -1970,8 +1866,6 @@ var require_bson = __commonJS({
         return `new Long("${this.toString()}"${this.unsigned ? ", true" : ""})`;
       }
     };
-    __name(_Long, "Long");
-    var Long = _Long;
     Long.TWO_PWR_24 = Long.fromInt(TWO_PWR_24_DBL);
     Long.MAX_UNSIGNED_VALUE = Long.fromBits(4294967295 | 0, 4294967295 | 0, true);
     Long.ZERO = Long.fromInt(0);
@@ -2050,7 +1944,6 @@ var require_bson = __commonJS({
     function isDigit(value) {
       return !isNaN(parseInt(value, 10));
     }
-    __name(isDigit, "isDigit");
     function divideu128(value) {
       const DIVISOR = Long.fromNumber(1e3 * 1e3 * 1e3);
       let _rem = Long.fromNumber(0);
@@ -2065,7 +1958,6 @@ var require_bson = __commonJS({
       }
       return { quotient: value, rem: _rem };
     }
-    __name(divideu128, "divideu128");
     function multiply64x2(left, right) {
       if (!left && !right) {
         return { high: Long.fromNumber(0), low: Long.fromNumber(0) };
@@ -2084,7 +1976,6 @@ var require_bson = __commonJS({
       productLow = productMid.shiftLeft(32).add(new Long(productLow.getLowBits(), 0));
       return { high: productHigh, low: productLow };
     }
-    __name(multiply64x2, "multiply64x2");
     function lessThan(left, right) {
       const uhleft = left.high >>> 0;
       const uhright = right.high >>> 0;
@@ -2098,12 +1989,10 @@ var require_bson = __commonJS({
       }
       return false;
     }
-    __name(lessThan, "lessThan");
     function invalidErr(string, message) {
       throw new BSONError(`"${string}" is not a valid Decimal128 string - ${message}`);
     }
-    __name(invalidErr, "invalidErr");
-    var _Decimal128 = class _Decimal128 extends BSONValue {
+    var Decimal128 = class _Decimal128 extends BSONValue {
       get _bsontype() {
         return "Decimal128";
       }
@@ -2550,9 +2439,7 @@ var require_bson = __commonJS({
         return `new Decimal128("${this.toString()}")`;
       }
     };
-    __name(_Decimal128, "Decimal128");
-    var Decimal128 = _Decimal128;
-    var _Double = class _Double extends BSONValue {
+    var Double = class _Double extends BSONValue {
       get _bsontype() {
         return "Double";
       }
@@ -2595,9 +2482,7 @@ var require_bson = __commonJS({
         return `new Double(${eJSON.$numberDouble})`;
       }
     };
-    __name(_Double, "Double");
-    var Double = _Double;
-    var _Int32 = class _Int32 extends BSONValue {
+    var Int32 = class _Int32 extends BSONValue {
       get _bsontype() {
         return "Int32";
       }
@@ -2632,9 +2517,7 @@ var require_bson = __commonJS({
         return `new Int32(${this.valueOf()})`;
       }
     };
-    __name(_Int32, "Int32");
-    var Int32 = _Int32;
-    var _MaxKey = class _MaxKey extends BSONValue {
+    var MaxKey = class _MaxKey extends BSONValue {
       get _bsontype() {
         return "MaxKey";
       }
@@ -2651,9 +2534,7 @@ var require_bson = __commonJS({
         return "new MaxKey()";
       }
     };
-    __name(_MaxKey, "MaxKey");
-    var MaxKey = _MaxKey;
-    var _MinKey = class _MinKey extends BSONValue {
+    var MinKey = class _MinKey extends BSONValue {
       get _bsontype() {
         return "MinKey";
       }
@@ -2670,12 +2551,10 @@ var require_bson = __commonJS({
         return "new MinKey()";
       }
     };
-    __name(_MinKey, "MinKey");
-    var MinKey = _MinKey;
     var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
     var PROCESS_UNIQUE = null;
     var kId = Symbol("id");
-    var _ObjectId = class _ObjectId extends BSONValue {
+    var ObjectId3 = class _ObjectId extends BSONValue {
       get _bsontype() {
         return "ObjectId";
       }
@@ -2844,8 +2723,6 @@ var require_bson = __commonJS({
         return `new ObjectId("${this.toHexString()}")`;
       }
     };
-    __name(_ObjectId, "ObjectId");
-    var ObjectId3 = _ObjectId;
     ObjectId3.index = Math.floor(Math.random() * 16777215);
     function internalCalculateObjectSize(object, serializeFunctions, ignoreUndefined) {
       let totalLength = 4 + 1;
@@ -2863,7 +2740,6 @@ var require_bson = __commonJS({
       }
       return totalLength;
     }
-    __name(internalCalculateObjectSize, "internalCalculateObjectSize");
     function calculateElement(name, value, serializeFunctions = false, isArray = false, ignoreUndefined = false) {
       if (typeof (value == null ? void 0 : value.toBSON) === "function") {
         value = value.toBSON();
@@ -2940,12 +2816,10 @@ var require_bson = __commonJS({
       }
       return 0;
     }
-    __name(calculateElement, "calculateElement");
     function alphabetize(str) {
       return str.split("").sort().join("");
     }
-    __name(alphabetize, "alphabetize");
-    var _BSONRegExp = class _BSONRegExp extends BSONValue {
+    var BSONRegExp = class _BSONRegExp extends BSONValue {
       get _bsontype() {
         return "BSONRegExp";
       }
@@ -2997,9 +2871,7 @@ var require_bson = __commonJS({
         return `new BSONRegExp(${JSON.stringify(this.pattern)}, ${JSON.stringify(this.options)})`;
       }
     };
-    __name(_BSONRegExp, "BSONRegExp");
-    var BSONRegExp = _BSONRegExp;
-    var _BSONSymbol = class _BSONSymbol extends BSONValue {
+    var BSONSymbol = class _BSONSymbol extends BSONValue {
       get _bsontype() {
         return "BSONSymbol";
       }
@@ -3029,10 +2901,8 @@ var require_bson = __commonJS({
         return this.inspect();
       }
     };
-    __name(_BSONSymbol, "BSONSymbol");
-    var BSONSymbol = _BSONSymbol;
     var LongWithoutOverridesClass = Long;
-    var _Timestamp = class _Timestamp extends LongWithoutOverridesClass {
+    var Timestamp = class _Timestamp extends LongWithoutOverridesClass {
       get _bsontype() {
         return "Timestamp";
       }
@@ -3101,8 +2971,6 @@ var require_bson = __commonJS({
         return `new Timestamp({ t: ${this.getHighBits()}, i: ${this.getLowBits()} })`;
       }
     };
-    __name(_Timestamp, "Timestamp");
-    var Timestamp = _Timestamp;
     Timestamp.MAX_VALUE = Long.MAX_UNSIGNED_VALUE;
     var FIRST_BIT = 128;
     var FIRST_TWO_BITS = 192;
@@ -3136,7 +3004,6 @@ var require_bson = __commonJS({
       }
       return !continuation;
     }
-    __name(validateUtf8, "validateUtf8");
     var JS_INT_MAX_LONG = Long.fromNumber(JS_INT_MAX);
     var JS_INT_MIN_LONG = Long.fromNumber(JS_INT_MIN);
     function internalDeserialize(buffer2, options, isArray) {
@@ -3160,7 +3027,6 @@ var require_bson = __commonJS({
       }
       return deserializeObject(buffer2, index, options, isArray);
     }
-    __name(internalDeserialize, "internalDeserialize");
     var allowedDBRefKeys = /^\$ref$|^\$id$|^\$db$/;
     function deserializeObject(buffer2, index, options, isArray = false) {
       const fieldsAsRaw = options["fieldsAsRaw"] == null ? null : options["fieldsAsRaw"];
@@ -3512,7 +3378,6 @@ var require_bson = __commonJS({
       }
       return object;
     }
-    __name(deserializeObject, "deserializeObject");
     function getValidatedString(buffer2, start, end, shouldValidateUtf8) {
       const value = ByteUtils.toUTF8(buffer2, start, end);
       if (shouldValidateUtf8) {
@@ -3527,7 +3392,6 @@ var require_bson = __commonJS({
       }
       return value;
     }
-    __name(getValidatedString, "getValidatedString");
     var regexp = /\x00/;
     var ignoreKeys = /* @__PURE__ */ new Set(["$db", "$ref", "$id", "$clusterTime"]);
     function serializeString(buffer2, key, value, index) {
@@ -3544,7 +3408,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeString, "serializeString");
     var NUMBER_SPACE = new DataView(new ArrayBuffer(8), 0, 8);
     var FOUR_BYTE_VIEW_ON_NUMBER = new Uint8Array(NUMBER_SPACE.buffer, 0, 4);
     var EIGHT_BYTE_VIEW_ON_NUMBER = new Uint8Array(NUMBER_SPACE.buffer, 0, 8);
@@ -3565,7 +3428,6 @@ var require_bson = __commonJS({
       index += bytes.byteLength;
       return index;
     }
-    __name(serializeNumber, "serializeNumber");
     function serializeBigInt(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_LONG;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3576,7 +3438,6 @@ var require_bson = __commonJS({
       index += EIGHT_BYTE_VIEW_ON_NUMBER.byteLength;
       return index;
     }
-    __name(serializeBigInt, "serializeBigInt");
     function serializeNull(buffer2, key, _, index) {
       buffer2[index++] = BSON_DATA_NULL;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3584,7 +3445,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeNull, "serializeNull");
     function serializeBoolean(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_BOOLEAN;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3593,7 +3453,6 @@ var require_bson = __commonJS({
       buffer2[index++] = value ? 1 : 0;
       return index;
     }
-    __name(serializeBoolean, "serializeBoolean");
     function serializeDate(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_DATE;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3612,7 +3471,6 @@ var require_bson = __commonJS({
       buffer2[index++] = highBits >> 24 & 255;
       return index;
     }
-    __name(serializeDate, "serializeDate");
     function serializeRegExp(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_REGEXP;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3632,7 +3490,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeRegExp, "serializeRegExp");
     function serializeBSONRegExp(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_REGEXP;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3648,7 +3505,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeBSONRegExp, "serializeBSONRegExp");
     function serializeMinMax(buffer2, key, value, index) {
       if (value === null) {
         buffer2[index++] = BSON_DATA_NULL;
@@ -3662,7 +3518,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeMinMax, "serializeMinMax");
     function serializeObjectId(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_OID;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3675,7 +3530,6 @@ var require_bson = __commonJS({
       }
       return index + 12;
     }
-    __name(serializeObjectId, "serializeObjectId");
     function serializeBuffer(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_BINARY;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3691,7 +3545,6 @@ var require_bson = __commonJS({
       index = index + size;
       return index;
     }
-    __name(serializeBuffer, "serializeBuffer");
     function serializeObject(buffer2, key, value, index, checkKeys, depth, serializeFunctions, ignoreUndefined, path) {
       if (path.has(value)) {
         throw new BSONError("Cannot convert circular structure to BSON");
@@ -3705,7 +3558,6 @@ var require_bson = __commonJS({
       path.delete(value);
       return endIndex;
     }
-    __name(serializeObject, "serializeObject");
     function serializeDecimal128(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_DECIMAL128;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3714,7 +3566,6 @@ var require_bson = __commonJS({
       buffer2.set(value.bytes.subarray(0, 16), index);
       return index + 16;
     }
-    __name(serializeDecimal128, "serializeDecimal128");
     function serializeLong(buffer2, key, value, index) {
       buffer2[index++] = value._bsontype === "Long" ? BSON_DATA_LONG : BSON_DATA_TIMESTAMP;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3732,7 +3583,6 @@ var require_bson = __commonJS({
       buffer2[index++] = highBits >> 24 & 255;
       return index;
     }
-    __name(serializeLong, "serializeLong");
     function serializeInt32(buffer2, key, value, index) {
       value = value.valueOf();
       buffer2[index++] = BSON_DATA_INT;
@@ -3745,7 +3595,6 @@ var require_bson = __commonJS({
       buffer2[index++] = value >> 24 & 255;
       return index;
     }
-    __name(serializeInt32, "serializeInt32");
     function serializeDouble(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_NUMBER;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3756,7 +3605,6 @@ var require_bson = __commonJS({
       index = index + 8;
       return index;
     }
-    __name(serializeDouble, "serializeDouble");
     function serializeFunction(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_CODE;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3772,7 +3620,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeFunction, "serializeFunction");
     function serializeCode(buffer2, key, value, index, checkKeys = false, depth = 0, serializeFunctions = false, ignoreUndefined = true, path) {
       if (value.scope && typeof value.scope === "object") {
         buffer2[index++] = BSON_DATA_CODE_W_SCOPE;
@@ -3813,7 +3660,6 @@ var require_bson = __commonJS({
       }
       return index;
     }
-    __name(serializeCode, "serializeCode");
     function serializeBinary(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_BINARY;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3839,7 +3685,6 @@ var require_bson = __commonJS({
       index = index + value.position;
       return index;
     }
-    __name(serializeBinary, "serializeBinary");
     function serializeSymbol(buffer2, key, value, index) {
       buffer2[index++] = BSON_DATA_SYMBOL;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3854,7 +3699,6 @@ var require_bson = __commonJS({
       buffer2[index++] = 0;
       return index;
     }
-    __name(serializeSymbol, "serializeSymbol");
     function serializeDBRef(buffer2, key, value, index, depth, serializeFunctions, path) {
       buffer2[index++] = BSON_DATA_OBJECT;
       const numberOfWrittenBytes = ByteUtils.encodeUTF8Into(buffer2, key, index);
@@ -3877,7 +3721,6 @@ var require_bson = __commonJS({
       buffer2[startIndex++] = size >> 24 & 255;
       return endIndex;
     }
-    __name(serializeDBRef, "serializeDBRef");
     function serializeInto(buffer2, object, checkKeys, startingIndex, depth, serializeFunctions, ignoreUndefined, path) {
       if (path == null) {
         if (object == null) {
@@ -4119,11 +3962,9 @@ var require_bson = __commonJS({
       buffer2[startingIndex++] = size >> 24 & 255;
       return index;
     }
-    __name(serializeInto, "serializeInto");
     function isBSONType(value) {
       return value != null && typeof value === "object" && "_bsontype" in value && typeof value._bsontype === "string";
     }
-    __name(isBSONType, "isBSONType");
     var keysToCodecs = {
       $oid: ObjectId3,
       $binary: Binary,
@@ -4217,7 +4058,6 @@ var require_bson = __commonJS({
       }
       return value;
     }
-    __name(deserializeValue, "deserializeValue");
     function serializeArray(array, options) {
       return array.map((v, index) => {
         options.seenObjects.push({ propertyName: `index ${index}`, obj: null });
@@ -4228,12 +4068,10 @@ var require_bson = __commonJS({
         }
       });
     }
-    __name(serializeArray, "serializeArray");
     function getISOString(date) {
       const isoStr = date.toISOString();
       return date.getUTCMilliseconds() !== 0 ? isoStr : isoStr.slice(0, -5) + "Z";
     }
-    __name(getISOString, "getISOString");
     function serializeValue(value, options) {
       if (value instanceof Map || isMap(value)) {
         const obj = /* @__PURE__ */ Object.create(null);
@@ -4304,21 +4142,20 @@ var require_bson = __commonJS({
         return serializeDocument(value, options);
       return value;
     }
-    __name(serializeValue, "serializeValue");
     var BSON_TYPE_MAPPINGS = {
-      Binary: /* @__PURE__ */ __name((o) => new Binary(o.value(), o.sub_type), "Binary"),
-      Code: /* @__PURE__ */ __name((o) => new Code(o.code, o.scope), "Code"),
-      DBRef: /* @__PURE__ */ __name((o) => new DBRef(o.collection || o.namespace, o.oid, o.db, o.fields), "DBRef"),
-      Decimal128: /* @__PURE__ */ __name((o) => new Decimal128(o.bytes), "Decimal128"),
-      Double: /* @__PURE__ */ __name((o) => new Double(o.value), "Double"),
-      Int32: /* @__PURE__ */ __name((o) => new Int32(o.value), "Int32"),
-      Long: /* @__PURE__ */ __name((o) => Long.fromBits(o.low != null ? o.low : o.low_, o.low != null ? o.high : o.high_, o.low != null ? o.unsigned : o.unsigned_), "Long"),
-      MaxKey: /* @__PURE__ */ __name(() => new MaxKey(), "MaxKey"),
-      MinKey: /* @__PURE__ */ __name(() => new MinKey(), "MinKey"),
-      ObjectId: /* @__PURE__ */ __name((o) => new ObjectId3(o), "ObjectId"),
-      BSONRegExp: /* @__PURE__ */ __name((o) => new BSONRegExp(o.pattern, o.options), "BSONRegExp"),
-      BSONSymbol: /* @__PURE__ */ __name((o) => new BSONSymbol(o.value), "BSONSymbol"),
-      Timestamp: /* @__PURE__ */ __name((o) => Timestamp.fromBits(o.low, o.high), "Timestamp")
+      Binary: (o) => new Binary(o.value(), o.sub_type),
+      Code: (o) => new Code(o.code, o.scope),
+      DBRef: (o) => new DBRef(o.collection || o.namespace, o.oid, o.db, o.fields),
+      Decimal128: (o) => new Decimal128(o.bytes),
+      Double: (o) => new Double(o.value),
+      Int32: (o) => new Int32(o.value),
+      Long: (o) => Long.fromBits(o.low != null ? o.low : o.low_, o.low != null ? o.high : o.high_, o.low != null ? o.unsigned : o.unsigned_),
+      MaxKey: () => new MaxKey(),
+      MinKey: () => new MinKey(),
+      ObjectId: (o) => new ObjectId3(o),
+      BSONRegExp: (o) => new BSONRegExp(o.pattern, o.options),
+      BSONSymbol: (o) => new BSONSymbol(o.value),
+      Timestamp: (o) => Timestamp.fromBits(o.low, o.high)
     };
     function serializeDocument(doc, options) {
       if (doc == null || typeof doc !== "object")
@@ -4366,7 +4203,6 @@ var require_bson = __commonJS({
         throw new BSONError("_bsontype must be a string, but was: " + typeof bsontype);
       }
     }
-    __name(serializeDocument, "serializeDocument");
     function parse(text, options) {
       const ejsonOptions = {
         useBigInt64: (options == null ? void 0 : options.useBigInt64) ?? false,
@@ -4380,7 +4216,6 @@ var require_bson = __commonJS({
         return deserializeValue(value, ejsonOptions);
       });
     }
-    __name(parse, "parse");
     function stringify(value, replacer, space, options) {
       if (space != null && typeof space === "object") {
         options = space;
@@ -4397,17 +4232,14 @@ var require_bson = __commonJS({
       const doc = serializeValue(value, serializeOptions);
       return JSON.stringify(doc, replacer, space);
     }
-    __name(stringify, "stringify");
     function EJSONserialize(value, options) {
       options = options || {};
       return JSON.parse(stringify(value, options));
     }
-    __name(EJSONserialize, "EJSONserialize");
     function EJSONdeserialize(ejson, options) {
       options = options || {};
       return parse(JSON.stringify(ejson), options);
     }
-    __name(EJSONdeserialize, "EJSONdeserialize");
     var EJSON = /* @__PURE__ */ Object.create(null);
     EJSON.parse = parse;
     EJSON.stringify = stringify;
@@ -4421,7 +4253,6 @@ var require_bson = __commonJS({
         buffer = ByteUtils.allocate(size);
       }
     }
-    __name(setInternalBufferSize, "setInternalBufferSize");
     function serialize(object, options = {}) {
       const checkKeys = typeof options.checkKeys === "boolean" ? options.checkKeys : false;
       const serializeFunctions = typeof options.serializeFunctions === "boolean" ? options.serializeFunctions : false;
@@ -4435,7 +4266,6 @@ var require_bson = __commonJS({
       finishedBuffer.set(buffer.subarray(0, serializationIndex), 0);
       return finishedBuffer;
     }
-    __name(serialize, "serialize");
     function serializeWithBufferAndIndex(object, finalBuffer, options = {}) {
       const checkKeys = typeof options.checkKeys === "boolean" ? options.checkKeys : false;
       const serializeFunctions = typeof options.serializeFunctions === "boolean" ? options.serializeFunctions : false;
@@ -4445,18 +4275,15 @@ var require_bson = __commonJS({
       finalBuffer.set(buffer.subarray(0, serializationIndex), startIndex);
       return startIndex + serializationIndex - 1;
     }
-    __name(serializeWithBufferAndIndex, "serializeWithBufferAndIndex");
     function deserialize(buffer2, options = {}) {
       return internalDeserialize(ByteUtils.toLocalBufferType(buffer2), options);
     }
-    __name(deserialize, "deserialize");
     function calculateObjectSize(object, options = {}) {
       options = options || {};
       const serializeFunctions = typeof options.serializeFunctions === "boolean" ? options.serializeFunctions : false;
       const ignoreUndefined = typeof options.ignoreUndefined === "boolean" ? options.ignoreUndefined : true;
       return internalCalculateObjectSize(object, serializeFunctions, ignoreUndefined);
     }
-    __name(calculateObjectSize, "calculateObjectSize");
     function deserializeStream(data, startIndex, numberOfDocuments, documents, docStartIndex, options) {
       const internalOptions = Object.assign({ allowObjectSmallerThanBufferSize: true, index: 0 }, options);
       const bufferData = ByteUtils.toLocalBufferType(data);
@@ -4469,7 +4296,6 @@ var require_bson = __commonJS({
       }
       return index;
     }
-    __name(deserializeStream, "deserializeStream");
     var bson = /* @__PURE__ */ Object.freeze({
       __proto__: null,
       BSONError,
@@ -4536,60 +4362,60 @@ var require_bson2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveBSONOptions = exports2.pluckBSONSerializeOptions = exports2.Timestamp = exports2.serialize = exports2.ObjectId = exports2.MinKey = exports2.MaxKey = exports2.Long = exports2.Int32 = exports2.Double = exports2.deserialize = exports2.Decimal128 = exports2.DBRef = exports2.Code = exports2.calculateObjectSize = exports2.BSONType = exports2.BSONSymbol = exports2.BSONRegExp = exports2.BSON = exports2.Binary = void 0;
     var bson_1 = require_bson();
-    Object.defineProperty(exports2, "Binary", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Binary", { enumerable: true, get: function() {
       return bson_1.Binary;
-    }, "get") });
-    Object.defineProperty(exports2, "BSON", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSON", { enumerable: true, get: function() {
       return bson_1.BSON;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONRegExp", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONRegExp", { enumerable: true, get: function() {
       return bson_1.BSONRegExp;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONSymbol", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONSymbol", { enumerable: true, get: function() {
       return bson_1.BSONSymbol;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONType", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONType", { enumerable: true, get: function() {
       return bson_1.BSONType;
-    }, "get") });
-    Object.defineProperty(exports2, "calculateObjectSize", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "calculateObjectSize", { enumerable: true, get: function() {
       return bson_1.calculateObjectSize;
-    }, "get") });
-    Object.defineProperty(exports2, "Code", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Code", { enumerable: true, get: function() {
       return bson_1.Code;
-    }, "get") });
-    Object.defineProperty(exports2, "DBRef", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "DBRef", { enumerable: true, get: function() {
       return bson_1.DBRef;
-    }, "get") });
-    Object.defineProperty(exports2, "Decimal128", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Decimal128", { enumerable: true, get: function() {
       return bson_1.Decimal128;
-    }, "get") });
-    Object.defineProperty(exports2, "deserialize", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "deserialize", { enumerable: true, get: function() {
       return bson_1.deserialize;
-    }, "get") });
-    Object.defineProperty(exports2, "Double", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Double", { enumerable: true, get: function() {
       return bson_1.Double;
-    }, "get") });
-    Object.defineProperty(exports2, "Int32", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Int32", { enumerable: true, get: function() {
       return bson_1.Int32;
-    }, "get") });
-    Object.defineProperty(exports2, "Long", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Long", { enumerable: true, get: function() {
       return bson_1.Long;
-    }, "get") });
-    Object.defineProperty(exports2, "MaxKey", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MaxKey", { enumerable: true, get: function() {
       return bson_1.MaxKey;
-    }, "get") });
-    Object.defineProperty(exports2, "MinKey", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MinKey", { enumerable: true, get: function() {
       return bson_1.MinKey;
-    }, "get") });
-    Object.defineProperty(exports2, "ObjectId", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ObjectId", { enumerable: true, get: function() {
       return bson_1.ObjectId;
-    }, "get") });
-    Object.defineProperty(exports2, "serialize", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "serialize", { enumerable: true, get: function() {
       return bson_1.serialize;
-    }, "get") });
-    Object.defineProperty(exports2, "Timestamp", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Timestamp", { enumerable: true, get: function() {
       return bson_1.Timestamp;
-    }, "get") });
+    } });
     function pluckBSONSerializeOptions(options) {
       const { fieldsAsRaw, useBigInt64, promoteValues, promoteBuffers, promoteLongs, serializeFunctions, ignoreUndefined, bsonRegExp, raw, enableUtf8Validation } = options;
       return {
@@ -4605,7 +4431,6 @@ var require_bson2 = __commonJS({
         enableUtf8Validation
       };
     }
-    __name(pluckBSONSerializeOptions, "pluckBSONSerializeOptions");
     exports2.pluckBSONSerializeOptions = pluckBSONSerializeOptions;
     function resolveBSONOptions(options, parent) {
       const parentOptions = parent == null ? void 0 : parent.bsonOptions;
@@ -4622,7 +4447,6 @@ var require_bson2 = __commonJS({
         enableUtf8Validation: (options == null ? void 0 : options.enableUtf8Validation) ?? (parentOptions == null ? void 0 : parentOptions.enableUtf8Validation) ?? true
       };
     }
-    __name(resolveBSONOptions, "resolveBSONOptions");
     exports2.resolveBSONOptions = resolveBSONOptions;
   }
 });
@@ -4776,7 +4600,7 @@ var require_read_concern = __commonJS({
       available: "available",
       snapshot: "snapshot"
     });
-    var _ReadConcern = class _ReadConcern {
+    var ReadConcern = class _ReadConcern {
       /** Constructs a ReadConcern from the read concern level.*/
       constructor(level) {
         this.level = exports2.ReadConcernLevel[level] ?? level;
@@ -4821,8 +4645,6 @@ var require_read_concern = __commonJS({
         return { level: this.level };
       }
     };
-    __name(_ReadConcern, "ReadConcern");
-    var ReadConcern = _ReadConcern;
     exports2.ReadConcern = ReadConcern;
   }
 });
@@ -4841,7 +4663,7 @@ var require_read_preference = __commonJS({
       secondaryPreferred: "secondaryPreferred",
       nearest: "nearest"
     });
-    var _ReadPreference = class _ReadPreference {
+    var ReadPreference = class _ReadPreference {
       /**
        * @param mode - A string describing the read preference mode (primary|primaryPreferred|secondary|secondaryPreferred|nearest)
        * @param tags - A tag set used to target reads to members with the specified tag(s). tagSet is not available if using read preference mode primary.
@@ -5000,8 +4822,6 @@ var require_read_preference = __commonJS({
         return readPreference;
       }
     };
-    __name(_ReadPreference, "ReadPreference");
-    var ReadPreference = _ReadPreference;
     ReadPreference.PRIMARY = exports2.ReadPreferenceMode.primary;
     ReadPreference.PRIMARY_PREFERRED = exports2.ReadPreferenceMode.primaryPreferred;
     ReadPreference.SECONDARY = exports2.ReadPreferenceMode.secondary;
@@ -5051,7 +4871,6 @@ var require_common = __commonJS({
       queue.forEach(timers_1.clearTimeout);
       queue.clear();
     }
-    __name(drainTimerQueue, "drainTimerQueue");
     exports2.drainTimerQueue = drainTimerQueue;
     function _advanceClusterTime(entity, $clusterTime) {
       if (entity.clusterTime == null) {
@@ -5062,7 +4881,6 @@ var require_common = __commonJS({
         }
       }
     }
-    __name(_advanceClusterTime, "_advanceClusterTime");
     exports2._advanceClusterTime = _advanceClusterTime;
   }
 });
@@ -5074,7 +4892,7 @@ var require_write_concern = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WriteConcern = exports2.WRITE_CONCERN_KEYS = void 0;
     exports2.WRITE_CONCERN_KEYS = ["w", "wtimeout", "j", "journal", "fsync"];
-    var _WriteConcern = class _WriteConcern {
+    var WriteConcern = class _WriteConcern {
       /**
        * Constructs a WriteConcern from the write concern properties.
        * @param w - request acknowledgment that the write operation has propagated to a specified number of mongod instances or to mongod instances with specified tags.
@@ -5138,8 +4956,6 @@ var require_write_concern = __commonJS({
         return void 0;
       }
     };
-    __name(_WriteConcern, "WriteConcern");
-    var WriteConcern = _WriteConcern;
     exports2.WriteConcern = WriteConcern;
   }
 });
@@ -5185,7 +5001,6 @@ var require_utils = __commonJS({
       }
       return false;
     }
-    __name(hostMatchesWildcards, "hostMatchesWildcards");
     exports2.hostMatchesWildcards = hostMatchesWildcards;
     function checkCollectionName(collectionName) {
       if ("string" !== typeof collectionName) {
@@ -5204,7 +5019,6 @@ var require_utils = __commonJS({
         throw new error_1.MongoInvalidArgumentError("Collection names cannot contain a null character");
       }
     }
-    __name(checkCollectionName, "checkCollectionName");
     exports2.checkCollectionName = checkCollectionName;
     function normalizeHintField(hint) {
       let finalHint = void 0;
@@ -5223,18 +5037,15 @@ var require_utils = __commonJS({
       }
       return finalHint;
     }
-    __name(normalizeHintField, "normalizeHintField");
     exports2.normalizeHintField = normalizeHintField;
-    var TO_STRING = /* @__PURE__ */ __name((object) => Object.prototype.toString.call(object), "TO_STRING");
+    var TO_STRING = (object) => Object.prototype.toString.call(object);
     function isObject(arg) {
       return "[object Object]" === TO_STRING(arg);
     }
-    __name(isObject, "isObject");
     exports2.isObject = isObject;
     function mergeOptions(target, source) {
       return { ...target, ...source };
     }
-    __name(mergeOptions, "mergeOptions");
     exports2.mergeOptions = mergeOptions;
     function filterOptions(options, names) {
       const filterOptions2 = {};
@@ -5245,7 +5056,6 @@ var require_utils = __commonJS({
       }
       return filterOptions2;
     }
-    __name(filterOptions, "filterOptions");
     exports2.filterOptions = filterOptions;
     function applyRetryableWrites(target, db) {
       var _a;
@@ -5254,12 +5064,10 @@ var require_utils = __commonJS({
       }
       return target;
     }
-    __name(applyRetryableWrites, "applyRetryableWrites");
     exports2.applyRetryableWrites = applyRetryableWrites;
     function isPromiseLike(value) {
       return !!value && typeof value.then === "function";
     }
-    __name(isPromiseLike, "isPromiseLike");
     exports2.isPromiseLike = isPromiseLike;
     function decorateWithCollation(command, target, options) {
       const capabilities = getTopology(target).capabilities;
@@ -5271,7 +5079,6 @@ var require_utils = __commonJS({
         }
       }
     }
-    __name(decorateWithCollation, "decorateWithCollation");
     exports2.decorateWithCollation = decorateWithCollation;
     function decorateWithReadConcern(command, coll, options) {
       if (options && options.session && options.session.inTransaction()) {
@@ -5285,7 +5092,6 @@ var require_utils = __commonJS({
         Object.assign(command, { readConcern });
       }
     }
-    __name(decorateWithReadConcern, "decorateWithReadConcern");
     exports2.decorateWithReadConcern = decorateWithReadConcern;
     function decorateWithExplain(command, explain) {
       if (command.explain) {
@@ -5293,7 +5099,6 @@ var require_utils = __commonJS({
       }
       return { explain: command, verbosity: explain.verbosity };
     }
-    __name(decorateWithExplain, "decorateWithExplain");
     exports2.decorateWithExplain = decorateWithExplain;
     function getTopology(provider) {
       if ("topology" in provider && provider.topology) {
@@ -5303,14 +5108,12 @@ var require_utils = __commonJS({
       }
       throw new error_1.MongoNotConnectedError("MongoClient must be connected to perform this operation");
     }
-    __name(getTopology, "getTopology");
     exports2.getTopology = getTopology;
     function ns(ns2) {
       return MongoDBNamespace.fromString(ns2);
     }
-    __name(ns, "ns");
     exports2.ns = ns;
-    var _MongoDBNamespace = class _MongoDBNamespace {
+    var MongoDBNamespace = class _MongoDBNamespace {
       /**
        * Create a namespace object
        *
@@ -5337,17 +5140,13 @@ var require_utils = __commonJS({
         return new _MongoDBNamespace(db, collection === "" ? void 0 : collection);
       }
     };
-    __name(_MongoDBNamespace, "MongoDBNamespace");
-    var MongoDBNamespace = _MongoDBNamespace;
     exports2.MongoDBNamespace = MongoDBNamespace;
-    var _MongoDBCollectionNamespace = class _MongoDBCollectionNamespace extends MongoDBNamespace {
+    var MongoDBCollectionNamespace = class extends MongoDBNamespace {
       constructor(db, collection) {
         super(db, collection);
         this.collection = collection;
       }
     };
-    __name(_MongoDBCollectionNamespace, "MongoDBCollectionNamespace");
-    var MongoDBCollectionNamespace = _MongoDBCollectionNamespace;
     exports2.MongoDBCollectionNamespace = MongoDBCollectionNamespace;
     function* makeCounter(seed = 0) {
       let count = seed;
@@ -5357,7 +5156,6 @@ var require_utils = __commonJS({
         yield newCount;
       }
     }
-    __name(makeCounter, "makeCounter");
     exports2.makeCounter = makeCounter;
     function maybeCallback(promiseFn, callback) {
       const promise = promiseFn();
@@ -5367,12 +5165,10 @@ var require_utils = __commonJS({
       promise.then((result) => callback(void 0, result), (error) => callback(error));
       return;
     }
-    __name(maybeCallback, "maybeCallback");
     exports2.maybeCallback = maybeCallback;
     function databaseNamespace(ns2) {
       return ns2.split(".")[0];
     }
-    __name(databaseNamespace, "databaseNamespace");
     exports2.databaseNamespace = databaseNamespace;
     function uuidV4() {
       const result = crypto.randomBytes(16);
@@ -5380,7 +5176,6 @@ var require_utils = __commonJS({
       result[8] = result[8] & 63 | 128;
       return result;
     }
-    __name(uuidV4, "uuidV4");
     exports2.uuidV4 = uuidV4;
     function maxWireVersion(topologyOrServer) {
       if (topologyOrServer) {
@@ -5402,7 +5197,6 @@ var require_utils = __commonJS({
       }
       return 0;
     }
-    __name(maxWireVersion, "maxWireVersion");
     exports2.maxWireVersion = maxWireVersion;
     function eachAsync(arr, eachFn, callback) {
       arr = arr || [];
@@ -5426,9 +5220,7 @@ var require_utils = __commonJS({
           callback();
         }
       }
-      __name(eachCallback, "eachCallback");
     }
-    __name(eachAsync, "eachAsync");
     exports2.eachAsync = eachAsync;
     function arrayStrictEqual(arr, arr2) {
       if (!Array.isArray(arr) || !Array.isArray(arr2)) {
@@ -5436,7 +5228,6 @@ var require_utils = __commonJS({
       }
       return arr.length === arr2.length && arr.every((elt, idx) => elt === arr2[idx]);
     }
-    __name(arrayStrictEqual, "arrayStrictEqual");
     exports2.arrayStrictEqual = arrayStrictEqual;
     function errorStrictEqual(lhs, rhs) {
       if (lhs === rhs) {
@@ -5456,25 +5247,22 @@ var require_utils = __commonJS({
       }
       return true;
     }
-    __name(errorStrictEqual, "errorStrictEqual");
     exports2.errorStrictEqual = errorStrictEqual;
     function makeStateMachine(stateTable) {
-      return /* @__PURE__ */ __name(function stateTransition(target, newState) {
+      return function stateTransition(target, newState) {
         const legalStates = stateTable[target.s.state];
         if (legalStates && legalStates.indexOf(newState) < 0) {
           throw new error_1.MongoRuntimeError(`illegal state transition from [${target.s.state}] => [${newState}], allowed: [${legalStates}]`);
         }
         target.emit("stateChanged", target.s.state, newState);
         target.s.state = newState;
-      }, "stateTransition");
+      };
     }
-    __name(makeStateMachine, "makeStateMachine");
     exports2.makeStateMachine = makeStateMachine;
     function now() {
       const hrtime = process.hrtime();
       return Math.floor(hrtime[0] * 1e3 + hrtime[1] / 1e6);
     }
-    __name(now, "now");
     exports2.now = now;
     function calculateDurationInMs(started) {
       if (typeof started !== "number") {
@@ -5483,7 +5271,6 @@ var require_utils = __commonJS({
       const elapsed = now() - started;
       return elapsed < 0 ? 0 : elapsed;
     }
-    __name(calculateDurationInMs, "calculateDurationInMs");
     exports2.calculateDurationInMs = calculateDurationInMs;
     function hasAtomicOperators(doc) {
       if (Array.isArray(doc)) {
@@ -5497,7 +5284,6 @@ var require_utils = __commonJS({
       const keys = Object.keys(doc);
       return keys.length > 0 && keys[0][0] === "$";
     }
-    __name(hasAtomicOperators, "hasAtomicOperators");
     exports2.hasAtomicOperators = hasAtomicOperators;
     function resolveOptions(parent, options) {
       const result = Object.assign({}, options, (0, bson_1.resolveBSONOptions)(options, parent));
@@ -5518,7 +5304,6 @@ var require_utils = __commonJS({
       }
       return result;
     }
-    __name(resolveOptions, "resolveOptions");
     exports2.resolveOptions = resolveOptions;
     function isSuperset(set, subset) {
       set = Array.isArray(set) ? new Set(set) : set;
@@ -5530,12 +5315,10 @@ var require_utils = __commonJS({
       }
       return true;
     }
-    __name(isSuperset, "isSuperset");
     exports2.isSuperset = isSuperset;
     function isHello(doc) {
       return doc[constants_2.LEGACY_HELLO_COMMAND] || doc.hello ? true : false;
     }
-    __name(isHello, "isHello");
     exports2.isHello = isHello;
     function setDifference(setA, setB) {
       const difference = new Set(setA);
@@ -5544,9 +5327,8 @@ var require_utils = __commonJS({
       }
       return difference;
     }
-    __name(setDifference, "setDifference");
     exports2.setDifference = setDifference;
-    var HAS_OWN = /* @__PURE__ */ __name((object, prop) => Object.prototype.hasOwnProperty.call(object, prop), "HAS_OWN");
+    var HAS_OWN = (object, prop) => Object.prototype.hasOwnProperty.call(object, prop);
     function isRecord(value, requiredKeys = void 0) {
       if (!isObject(value)) {
         return false;
@@ -5566,7 +5348,6 @@ var require_utils = __commonJS({
       }
       return true;
     }
-    __name(isRecord, "isRecord");
     exports2.isRecord = isRecord;
     function deepCopy(value) {
       if (value == null) {
@@ -5595,9 +5376,8 @@ var require_utils = __commonJS({
       }
       return value;
     }
-    __name(deepCopy, "deepCopy");
     exports2.deepCopy = deepCopy;
-    var _List = class _List {
+    var List = class {
       get length() {
         return this.count;
       }
@@ -5702,10 +5482,8 @@ var require_utils = __commonJS({
         return this.head.prev.value;
       }
     };
-    __name(_List, "List");
-    var List = _List;
     exports2.List = List;
-    var _BufferPool = class _BufferPool {
+    var BufferPool = class {
       constructor() {
         this.buffers = new List();
         this.totalByteLength = 0;
@@ -5763,10 +5541,8 @@ var require_utils = __commonJS({
         return result;
       }
     };
-    __name(_BufferPool, "BufferPool");
-    var BufferPool = _BufferPool;
     exports2.BufferPool = BufferPool;
-    var _HostAddress = class _HostAddress {
+    var HostAddress = class _HostAddress {
       constructor(hostString) {
         this.host = void 0;
         this.port = void 0;
@@ -5842,8 +5618,6 @@ var require_utils = __commonJS({
         return { host, port };
       }
     };
-    __name(_HostAddress, "HostAddress");
-    var HostAddress = _HostAddress;
     exports2.HostAddress = HostAddress;
     exports2.DEFAULT_PK_FACTORY = {
       // We prefer not to rely on ObjectId having a createPk method
@@ -5855,7 +5629,6 @@ var require_utils = __commonJS({
     function emitWarning(message) {
       return process.emitWarning(message, { code: exports2.MONGODB_WARNING_CODE });
     }
-    __name(emitWarning, "emitWarning");
     exports2.emitWarning = emitWarning;
     var emittedWarnings = /* @__PURE__ */ new Set();
     function emitWarningOnce(message) {
@@ -5864,12 +5637,10 @@ var require_utils = __commonJS({
         return emitWarning(message);
       }
     }
-    __name(emitWarningOnce, "emitWarningOnce");
     exports2.emitWarningOnce = emitWarningOnce;
     function enumToString(en) {
       return Object.values(en).join(", ");
     }
-    __name(enumToString, "enumToString");
     exports2.enumToString = enumToString;
     function supportsRetryableWrites(server) {
       if (!server) {
@@ -5885,7 +5656,6 @@ var require_utils = __commonJS({
       }
       return false;
     }
-    __name(supportsRetryableWrites, "supportsRetryableWrites");
     exports2.supportsRetryableWrites = supportsRetryableWrites;
     function shuffle(sequence, limit = 0) {
       const items = Array.from(sequence);
@@ -5903,7 +5673,6 @@ var require_utils = __commonJS({
       }
       return limit % items.length === 0 ? items : items.slice(lowerBound);
     }
-    __name(shuffle, "shuffle");
     exports2.shuffle = shuffle;
     function commandSupportsReadConcern(command, options) {
       if (command.aggregate || command.count || command.distinct || command.find || command.geoNear) {
@@ -5914,7 +5683,6 @@ var require_utils = __commonJS({
       }
       return false;
     }
-    __name(commandSupportsReadConcern, "commandSupportsReadConcern");
     exports2.commandSupportsReadConcern = commandSupportsReadConcern;
     function getMongoDBClientEncryption() {
       let mongodbClientEncryption = null;
@@ -5931,7 +5699,6 @@ var require_utils = __commonJS({
       }
       return mongodbClientEncryption;
     }
-    __name(getMongoDBClientEncryption, "getMongoDBClientEncryption");
     exports2.getMongoDBClientEncryption = getMongoDBClientEncryption;
     function compareObjectId(oid1, oid2) {
       if (oid1 == null && oid2 == null) {
@@ -5945,7 +5712,6 @@ var require_utils = __commonJS({
       }
       return exports2.ByteUtils.compare(oid1.id, oid2.id);
     }
-    __name(compareObjectId, "compareObjectId");
     exports2.compareObjectId = compareObjectId;
     function parseInteger(value) {
       if (typeof value === "number")
@@ -5953,13 +5719,11 @@ var require_utils = __commonJS({
       const parsedValue = Number.parseInt(String(value), 10);
       return Number.isNaN(parsedValue) ? null : parsedValue;
     }
-    __name(parseInteger, "parseInteger");
     exports2.parseInteger = parseInteger;
     function parseUnsignedInteger(value) {
       const parsedInt = parseInteger(value);
       return parsedInt != null && parsedInt >= 0 ? parsedInt : null;
     }
-    __name(parseUnsignedInteger, "parseUnsignedInteger");
     exports2.parseUnsignedInteger = parseUnsignedInteger;
     function matchesParentDomain(address, srvHost) {
       const normalizedAddress = address.endsWith(".") ? address.slice(0, address.length - 1) : address;
@@ -5969,7 +5733,6 @@ var require_utils = __commonJS({
       const srvHostDomain = `.${normalizedSrvHost.replace(allCharacterBeforeFirstDot, "")}`;
       return addressDomain.endsWith(srvHostDomain);
     }
-    __name(matchesParentDomain, "matchesParentDomain");
     exports2.matchesParentDomain = matchesParentDomain;
     async function request(uri, options = {}) {
       return new Promise((resolve, reject) => {
@@ -6004,7 +5767,6 @@ var require_utils = __commonJS({
         req.end();
       });
     }
-    __name(request, "request");
     exports2.request = request;
   }
 });
@@ -6022,7 +5784,7 @@ var require_explain = __commonJS({
       executionStats: "executionStats",
       allPlansExecution: "allPlansExecution"
     });
-    var _Explain = class _Explain {
+    var Explain = class _Explain {
       constructor(verbosity) {
         if (typeof verbosity === "boolean") {
           this.verbosity = verbosity ? exports2.ExplainVerbosity.allPlansExecution : exports2.ExplainVerbosity.queryPlanner;
@@ -6040,8 +5802,6 @@ var require_explain = __commonJS({
         throw new error_1.MongoInvalidArgumentError('Field "explain" must be a string or a boolean');
       }
     };
-    __name(_Explain, "Explain");
-    var Explain = _Explain;
     exports2.Explain = Explain;
   }
 });
@@ -6061,7 +5821,6 @@ var require_server_selection = __commonJS({
     function writableServerSelector() {
       return (topologyDescription, servers) => latencyWindowReducer(topologyDescription, servers.filter((s) => s.isWritable));
     }
-    __name(writableServerSelector, "writableServerSelector");
     exports2.writableServerSelector = writableServerSelector;
     function sameServerSelector(description) {
       return (topologyDescription, servers) => {
@@ -6072,7 +5831,6 @@ var require_server_selection = __commonJS({
         });
       };
     }
-    __name(sameServerSelector, "sameServerSelector");
     exports2.sameServerSelector = sameServerSelector;
     function secondaryWritableServerSelector(wireVersion, readPreference) {
       if (!readPreference || !wireVersion || wireVersion && wireVersion < exports2.MIN_SECONDARY_WRITE_WIRE_VERSION) {
@@ -6080,7 +5838,6 @@ var require_server_selection = __commonJS({
       }
       return readPreferenceServerSelector(readPreference);
     }
-    __name(secondaryWritableServerSelector, "secondaryWritableServerSelector");
     exports2.secondaryWritableServerSelector = secondaryWritableServerSelector;
     function maxStalenessReducer(readPreference, topologyDescription, servers) {
       if (readPreference.maxStalenessSeconds == null || readPreference.maxStalenessSeconds < 0) {
@@ -6123,7 +5880,6 @@ var require_server_selection = __commonJS({
       }
       return servers;
     }
-    __name(maxStalenessReducer, "maxStalenessReducer");
     function tagSetMatch(tagSet, serverTags) {
       const keys = Object.keys(tagSet);
       const serverTagKeys = Object.keys(serverTags);
@@ -6135,7 +5891,6 @@ var require_server_selection = __commonJS({
       }
       return true;
     }
-    __name(tagSetMatch, "tagSetMatch");
     function tagSetReducer(readPreference, servers) {
       if (readPreference.tags == null || Array.isArray(readPreference.tags) && readPreference.tags.length === 0) {
         return servers;
@@ -6153,7 +5908,6 @@ var require_server_selection = __commonJS({
       }
       return [];
     }
-    __name(tagSetReducer, "tagSetReducer");
     function latencyWindowReducer(topologyDescription, servers) {
       const low = servers.reduce((min, server) => min === -1 ? server.roundTripTime : Math.min(server.roundTripTime, min), -1);
       const high = low + topologyDescription.localThresholdMS;
@@ -6163,27 +5917,21 @@ var require_server_selection = __commonJS({
         return result;
       }, []);
     }
-    __name(latencyWindowReducer, "latencyWindowReducer");
     function primaryFilter(server) {
       return server.type === common_1.ServerType.RSPrimary;
     }
-    __name(primaryFilter, "primaryFilter");
     function secondaryFilter(server) {
       return server.type === common_1.ServerType.RSSecondary;
     }
-    __name(secondaryFilter, "secondaryFilter");
     function nearestFilter(server) {
       return server.type === common_1.ServerType.RSSecondary || server.type === common_1.ServerType.RSPrimary;
     }
-    __name(nearestFilter, "nearestFilter");
     function knownFilter(server) {
       return server.type !== common_1.ServerType.Unknown;
     }
-    __name(knownFilter, "knownFilter");
     function loadBalancerFilter(server) {
       return server.type === common_1.ServerType.LoadBalancer;
     }
-    __name(loadBalancerFilter, "loadBalancerFilter");
     function readPreferenceServerSelector(readPreference) {
       if (!readPreference.isValid()) {
         throw new error_1.MongoInvalidArgumentError("Invalid read preference specified");
@@ -6220,7 +5968,6 @@ var require_server_selection = __commonJS({
         return selectedServers;
       };
     }
-    __name(readPreferenceServerSelector, "readPreferenceServerSelector");
     exports2.readPreferenceServerSelector = readPreferenceServerSelector;
   }
 });
@@ -6244,7 +5991,7 @@ var require_operation = __commonJS({
       MUST_SELECT_SAME_SERVER: Symbol("MUST_SELECT_SAME_SERVER")
     };
     var kSession = Symbol("session");
-    var _AbstractOperation = class _AbstractOperation {
+    var AbstractOperation = class {
       constructor(options = {}) {
         this.readPreference = this.hasAspect(exports2.Aspect.WRITE_OPERATION) ? read_preference_1.ReadPreference.primary : read_preference_1.ReadPreference.fromOptions(options) ?? read_preference_1.ReadPreference.primary;
         this.bsonOptions = (0, bson_1.resolveBSONOptions)(options);
@@ -6273,10 +6020,8 @@ var require_operation = __commonJS({
         return true;
       }
     };
-    __name(_AbstractOperation, "AbstractOperation");
-    var AbstractOperation = _AbstractOperation;
     exports2.AbstractOperation = AbstractOperation;
-    var _AbstractCallbackOperation = class _AbstractCallbackOperation extends AbstractOperation {
+    var AbstractCallbackOperation = class extends AbstractOperation {
       constructor(options = {}) {
         super(options);
       }
@@ -6286,8 +6031,6 @@ var require_operation = __commonJS({
         })();
       }
     };
-    __name(_AbstractCallbackOperation, "AbstractCallbackOperation");
-    var AbstractCallbackOperation = _AbstractCallbackOperation;
     exports2.AbstractCallbackOperation = AbstractCallbackOperation;
     function defineAspects(operation, aspects) {
       if (!Array.isArray(aspects) && !(aspects instanceof Set)) {
@@ -6300,7 +6043,6 @@ var require_operation = __commonJS({
       });
       return aspects;
     }
-    __name(defineAspects, "defineAspects");
     exports2.defineAspects = defineAspects;
   }
 });
@@ -6318,7 +6060,7 @@ var require_command = __commonJS({
     var utils_1 = require_utils();
     var write_concern_1 = require_write_concern();
     var operation_1 = require_operation();
-    var _CommandOperation = class _CommandOperation extends operation_1.AbstractCallbackOperation {
+    var CommandOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(parent, options) {
         super(options);
         this.options = options ?? {};
@@ -6373,10 +6115,8 @@ var require_command = __commonJS({
         return server.commandAsync(this.ns, cmd, options);
       }
     };
-    __name(_CommandOperation, "CommandOperation");
-    var CommandOperation = _CommandOperation;
     exports2.CommandOperation = CommandOperation;
-    var _CommandCallbackOperation = class _CommandCallbackOperation extends CommandOperation {
+    var CommandCallbackOperation = class extends CommandOperation {
       constructor(parent, options) {
         super(parent, options);
       }
@@ -6384,8 +6124,6 @@ var require_command = __commonJS({
         super.executeCommand(server, session, cmd).then((res) => callback(void 0, res), (err) => callback(err, void 0));
       }
     };
-    __name(_CommandCallbackOperation, "CommandCallbackOperation");
-    var CommandCallbackOperation = _CommandCallbackOperation;
     exports2.CommandCallbackOperation = CommandCallbackOperation;
   }
 });
@@ -6401,7 +6139,7 @@ var require_add_user = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _AddUserOperation = class _AddUserOperation extends command_1.CommandCallbackOperation {
+    var AddUserOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, username, password, options) {
         super(db, options);
         this.db = db;
@@ -6453,8 +6191,6 @@ var require_add_user = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_AddUserOperation, "AddUserOperation");
-    var AddUserOperation = _AddUserOperation;
     exports2.AddUserOperation = AddUserOperation;
     (0, operation_1.defineAspects)(AddUserOperation, [operation_1.Aspect.WRITE_OPERATION]);
   }
@@ -6476,7 +6212,6 @@ var require_execute_operation = __commonJS({
     function executeOperation(client, operation, callback) {
       return (0, utils_1.maybeCallback)(() => executeOperationAsync(client, operation), callback);
     }
-    __name(executeOperation, "executeOperation");
     exports2.executeOperation = executeOperation;
     async function executeOperationAsync(client, operation) {
       var _a;
@@ -6563,7 +6298,6 @@ var require_execute_operation = __commonJS({
         }
       }
     }
-    __name(executeOperationAsync, "executeOperationAsync");
     async function retryOperation(operation, originalError, { session, topology, selector }) {
       const isWriteOperation = operation.hasAspect(operation_1.Aspect.WRITE_OPERATION);
       const isReadOperation = operation.hasAspect(operation_1.Aspect.READ_OPERATION);
@@ -6596,7 +6330,6 @@ var require_execute_operation = __commonJS({
         throw retryError;
       }
     }
-    __name(retryOperation, "retryOperation");
   }
 });
 
@@ -6609,7 +6342,7 @@ var require_list_databases = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _ListDatabasesOperation = class _ListDatabasesOperation extends command_1.CommandCallbackOperation {
+    var ListDatabasesOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, options) {
         super(db, options);
         this.options = options ?? {};
@@ -6632,8 +6365,6 @@ var require_list_databases = __commonJS({
         super.executeCommandCallback(server, session, cmd, callback);
       }
     };
-    __name(_ListDatabasesOperation, "ListDatabasesOperation");
-    var ListDatabasesOperation = _ListDatabasesOperation;
     exports2.ListDatabasesOperation = ListDatabasesOperation;
     (0, operation_1.defineAspects)(ListDatabasesOperation, [operation_1.Aspect.READ_OPERATION, operation_1.Aspect.RETRYABLE]);
   }
@@ -6647,7 +6378,7 @@ var require_remove_user = __commonJS({
     exports2.RemoveUserOperation = void 0;
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _RemoveUserOperation = class _RemoveUserOperation extends command_1.CommandCallbackOperation {
+    var RemoveUserOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, username, options) {
         super(db, options);
         this.options = options;
@@ -6659,8 +6390,6 @@ var require_remove_user = __commonJS({
         });
       }
     };
-    __name(_RemoveUserOperation, "RemoveUserOperation");
-    var RemoveUserOperation = _RemoveUserOperation;
     exports2.RemoveUserOperation = RemoveUserOperation;
     (0, operation_1.defineAspects)(RemoveUserOperation, [operation_1.Aspect.WRITE_OPERATION]);
   }
@@ -6674,7 +6403,7 @@ var require_run_command = __commonJS({
     exports2.RunAdminCommandOperation = exports2.RunCommandOperation = void 0;
     var utils_1 = require_utils();
     var command_1 = require_command();
-    var _RunCommandOperation = class _RunCommandOperation extends command_1.CommandCallbackOperation {
+    var RunCommandOperation = class extends command_1.CommandCallbackOperation {
       constructor(parent, command, options) {
         super(parent, options);
         this.options = options ?? {};
@@ -6685,17 +6414,13 @@ var require_run_command = __commonJS({
         this.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_RunCommandOperation, "RunCommandOperation");
-    var RunCommandOperation = _RunCommandOperation;
     exports2.RunCommandOperation = RunCommandOperation;
-    var _RunAdminCommandOperation = class _RunAdminCommandOperation extends RunCommandOperation {
+    var RunAdminCommandOperation = class extends RunCommandOperation {
       constructor(parent, command, options) {
         super(parent, command, options);
         this.ns = new utils_1.MongoDBNamespace("admin");
       }
     };
-    __name(_RunAdminCommandOperation, "RunAdminCommandOperation");
-    var RunAdminCommandOperation = _RunAdminCommandOperation;
     exports2.RunAdminCommandOperation = RunAdminCommandOperation;
   }
 });
@@ -6708,7 +6433,7 @@ var require_validate_collection = __commonJS({
     exports2.ValidateCollectionOperation = void 0;
     var error_1 = require_error();
     var command_1 = require_command();
-    var _ValidateCollectionOperation = class _ValidateCollectionOperation extends command_1.CommandCallbackOperation {
+    var ValidateCollectionOperation = class extends command_1.CommandCallbackOperation {
       constructor(admin, collectionName, options) {
         const command = { validate: collectionName };
         const keys = Object.keys(options);
@@ -6739,8 +6464,6 @@ var require_validate_collection = __commonJS({
         });
       }
     };
-    __name(_ValidateCollectionOperation, "ValidateCollectionOperation");
-    var ValidateCollectionOperation = _ValidateCollectionOperation;
     exports2.ValidateCollectionOperation = ValidateCollectionOperation;
   }
 });
@@ -6757,7 +6480,7 @@ var require_admin = __commonJS({
     var remove_user_1 = require_remove_user();
     var run_command_1 = require_run_command();
     var validate_collection_1 = require_validate_collection();
-    var _Admin = class _Admin {
+    var Admin = class {
       /**
        * Create a new Admin instance
        * @internal
@@ -6871,8 +6594,6 @@ var require_admin = __commonJS({
         return this.command({ replSetGetStatus: 1 }, options);
       }
     };
-    __name(_Admin, "Admin");
-    var Admin = _Admin;
     exports2.Admin = Admin;
   }
 });
@@ -6886,7 +6607,7 @@ var require_delete = __commonJS({
     var error_1 = require_error();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _DeleteOperation = class _DeleteOperation extends command_1.CommandCallbackOperation {
+    var DeleteOperation = class extends command_1.CommandCallbackOperation {
       constructor(ns, statements, options) {
         super(void 0, options);
         this.options = options;
@@ -6923,10 +6644,8 @@ var require_delete = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_DeleteOperation, "DeleteOperation");
-    var DeleteOperation = _DeleteOperation;
     exports2.DeleteOperation = DeleteOperation;
-    var _DeleteOneOperation = class _DeleteOneOperation extends DeleteOperation {
+    var DeleteOneOperation = class extends DeleteOperation {
       constructor(collection, filter, options) {
         super(collection.s.namespace, [makeDeleteStatement(filter, { ...options, limit: 1 })], options);
       }
@@ -6948,10 +6667,8 @@ var require_delete = __commonJS({
         });
       }
     };
-    __name(_DeleteOneOperation, "DeleteOneOperation");
-    var DeleteOneOperation = _DeleteOneOperation;
     exports2.DeleteOneOperation = DeleteOneOperation;
-    var _DeleteManyOperation = class _DeleteManyOperation extends DeleteOperation {
+    var DeleteManyOperation = class extends DeleteOperation {
       constructor(collection, filter, options) {
         super(collection.s.namespace, [makeDeleteStatement(filter, options)], options);
       }
@@ -6973,8 +6690,6 @@ var require_delete = __commonJS({
         });
       }
     };
-    __name(_DeleteManyOperation, "DeleteManyOperation");
-    var DeleteManyOperation = _DeleteManyOperation;
     exports2.DeleteManyOperation = DeleteManyOperation;
     function makeDeleteStatement(filter, options) {
       const op = {
@@ -6989,7 +6704,6 @@ var require_delete = __commonJS({
       }
       return op;
     }
-    __name(makeDeleteStatement, "makeDeleteStatement");
     exports2.makeDeleteStatement = makeDeleteStatement;
     (0, operation_1.defineAspects)(DeleteOperation, [operation_1.Aspect.RETRYABLE, operation_1.Aspect.WRITE_OPERATION]);
     (0, operation_1.defineAspects)(DeleteOneOperation, [
@@ -7013,7 +6727,7 @@ var require_bulk_write = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.BulkWriteOperation = void 0;
     var operation_1 = require_operation();
-    var _BulkWriteOperation = class _BulkWriteOperation extends operation_1.AbstractCallbackOperation {
+    var BulkWriteOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, operations, options) {
         super(options);
         this.options = options;
@@ -7035,8 +6749,6 @@ var require_bulk_write = __commonJS({
         bulk.execute({ ...options, session }).then((result) => callback(void 0, result), (error) => callback(error));
       }
     };
-    __name(_BulkWriteOperation, "BulkWriteOperation");
-    var BulkWriteOperation = _BulkWriteOperation;
     exports2.BulkWriteOperation = BulkWriteOperation;
     (0, operation_1.defineAspects)(BulkWriteOperation, [operation_1.Aspect.WRITE_OPERATION]);
   }
@@ -7077,7 +6789,6 @@ var require_common_functions = __commonJS({
         }
         return info;
       }
-      __name(processResults, "processResults");
       db.collection(name).listIndexes(options).toArray().then((indexes) => {
         if (!Array.isArray(indexes))
           return callback(void 0, []);
@@ -7086,7 +6797,6 @@ var require_common_functions = __commonJS({
         callback(void 0, processResults(indexes));
       }, (error) => callback(error));
     }
-    __name(indexInformation, "indexInformation");
     exports2.indexInformation = indexInformation;
     function prepareDocs(coll, docs, options) {
       var _a;
@@ -7101,7 +6811,6 @@ var require_common_functions = __commonJS({
         return doc;
       });
     }
-    __name(prepareDocs, "prepareDocs");
     exports2.prepareDocs = prepareDocs;
   }
 });
@@ -7118,7 +6827,7 @@ var require_insert = __commonJS({
     var command_1 = require_command();
     var common_functions_1 = require_common_functions();
     var operation_1 = require_operation();
-    var _InsertOperation = class _InsertOperation extends command_1.CommandCallbackOperation {
+    var InsertOperation = class extends command_1.CommandCallbackOperation {
       constructor(ns, documents, options) {
         super(void 0, options);
         this.options = { ...options, checkKeys: options.checkKeys ?? false };
@@ -7142,10 +6851,8 @@ var require_insert = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_InsertOperation, "InsertOperation");
-    var InsertOperation = _InsertOperation;
     exports2.InsertOperation = InsertOperation;
-    var _InsertOneOperation = class _InsertOneOperation extends InsertOperation {
+    var InsertOneOperation = class extends InsertOperation {
       constructor(collection, doc, options) {
         super(collection.s.namespace, (0, common_functions_1.prepareDocs)(collection, [doc], options), options);
       }
@@ -7166,10 +6873,8 @@ var require_insert = __commonJS({
         });
       }
     };
-    __name(_InsertOneOperation, "InsertOneOperation");
-    var InsertOneOperation = _InsertOneOperation;
     exports2.InsertOneOperation = InsertOneOperation;
-    var _InsertManyOperation = class _InsertManyOperation extends operation_1.AbstractCallbackOperation {
+    var InsertManyOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, docs, options) {
         super(options);
         if (!Array.isArray(docs)) {
@@ -7199,8 +6904,6 @@ var require_insert = __commonJS({
         });
       }
     };
-    __name(_InsertManyOperation, "InsertManyOperation");
-    var InsertManyOperation = _InsertManyOperation;
     exports2.InsertManyOperation = InsertManyOperation;
     (0, operation_1.defineAspects)(InsertOperation, [operation_1.Aspect.RETRYABLE, operation_1.Aspect.WRITE_OPERATION]);
     (0, operation_1.defineAspects)(InsertOneOperation, [operation_1.Aspect.RETRYABLE, operation_1.Aspect.WRITE_OPERATION]);
@@ -7218,7 +6921,7 @@ var require_update = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _UpdateOperation = class _UpdateOperation extends command_1.CommandCallbackOperation {
+    var UpdateOperation = class extends command_1.CommandCallbackOperation {
       constructor(ns, statements, options) {
         super(void 0, options);
         this.options = options;
@@ -7258,10 +6961,8 @@ var require_update = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_UpdateOperation, "UpdateOperation");
-    var UpdateOperation = _UpdateOperation;
     exports2.UpdateOperation = UpdateOperation;
-    var _UpdateOneOperation = class _UpdateOneOperation extends UpdateOperation {
+    var UpdateOneOperation = class extends UpdateOperation {
       constructor(collection, filter, update, options) {
         super(collection.s.namespace, [makeUpdateStatement(filter, update, { ...options, multi: false })], options);
         if (!(0, utils_1.hasAtomicOperators)(update)) {
@@ -7289,10 +6990,8 @@ var require_update = __commonJS({
         });
       }
     };
-    __name(_UpdateOneOperation, "UpdateOneOperation");
-    var UpdateOneOperation = _UpdateOneOperation;
     exports2.UpdateOneOperation = UpdateOneOperation;
-    var _UpdateManyOperation = class _UpdateManyOperation extends UpdateOperation {
+    var UpdateManyOperation = class extends UpdateOperation {
       constructor(collection, filter, update, options) {
         super(collection.s.namespace, [makeUpdateStatement(filter, update, { ...options, multi: true })], options);
         if (!(0, utils_1.hasAtomicOperators)(update)) {
@@ -7320,10 +7019,8 @@ var require_update = __commonJS({
         });
       }
     };
-    __name(_UpdateManyOperation, "UpdateManyOperation");
-    var UpdateManyOperation = _UpdateManyOperation;
     exports2.UpdateManyOperation = UpdateManyOperation;
-    var _ReplaceOneOperation = class _ReplaceOneOperation extends UpdateOperation {
+    var ReplaceOneOperation = class extends UpdateOperation {
       constructor(collection, filter, replacement, options) {
         super(collection.s.namespace, [makeUpdateStatement(filter, replacement, { ...options, multi: false })], options);
         if ((0, utils_1.hasAtomicOperators)(replacement)) {
@@ -7351,8 +7048,6 @@ var require_update = __commonJS({
         });
       }
     };
-    __name(_ReplaceOneOperation, "ReplaceOneOperation");
-    var ReplaceOneOperation = _ReplaceOneOperation;
     exports2.ReplaceOneOperation = ReplaceOneOperation;
     function makeUpdateStatement(filter, update, options) {
       if (filter == null || typeof filter !== "object") {
@@ -7379,7 +7074,6 @@ var require_update = __commonJS({
       }
       return op;
     }
-    __name(makeUpdateStatement, "makeUpdateStatement");
     exports2.makeUpdateStatement = makeUpdateStatement;
     (0, operation_1.defineAspects)(UpdateOperation, [operation_1.Aspect.RETRYABLE, operation_1.Aspect.WRITE_OPERATION, operation_1.Aspect.SKIP_COLLATION]);
     (0, operation_1.defineAspects)(UpdateOneOperation, [
@@ -7422,7 +7116,7 @@ var require_common2 = __commonJS({
       UPDATE: 2,
       DELETE: 3
     });
-    var _Batch = class _Batch {
+    var Batch = class {
       constructor(batchType, originalZeroIndex) {
         this.originalZeroIndex = originalZeroIndex;
         this.currentIndex = 0;
@@ -7433,10 +7127,8 @@ var require_common2 = __commonJS({
         this.sizeBytes = 0;
       }
     };
-    __name(_Batch, "Batch");
-    var Batch = _Batch;
     exports2.Batch = Batch;
-    var _BulkWriteResult = class _BulkWriteResult {
+    var BulkWriteResult = class _BulkWriteResult {
       static generateIdMap(ids) {
         const idMap = {};
         for (const doc of ids) {
@@ -7572,10 +7264,8 @@ var require_common2 = __commonJS({
         return this.result.ok === 1;
       }
     };
-    __name(_BulkWriteResult, "BulkWriteResult");
-    var BulkWriteResult = _BulkWriteResult;
     exports2.BulkWriteResult = BulkWriteResult;
-    var _WriteConcernError = class _WriteConcernError {
+    var WriteConcernError = class {
       constructor(error) {
         this[kServerError] = error;
       }
@@ -7598,10 +7288,8 @@ var require_common2 = __commonJS({
         return `WriteConcernError(${this.errmsg})`;
       }
     };
-    __name(_WriteConcernError, "WriteConcernError");
-    var WriteConcernError = _WriteConcernError;
     exports2.WriteConcernError = WriteConcernError;
-    var _WriteError = class _WriteError {
+    var WriteError = class {
       constructor(err) {
         this.err = err;
       }
@@ -7632,8 +7320,6 @@ var require_common2 = __commonJS({
         return `WriteError(${JSON.stringify(this.toJSON())})`;
       }
     };
-    __name(_WriteError, "WriteError");
-    var WriteError = _WriteError;
     exports2.WriteError = WriteError;
     function mergeBatchResults(batch, bulkResult, err, result) {
       if (err) {
@@ -7706,7 +7392,6 @@ var require_common2 = __commonJS({
         bulkResult.writeConcernErrors.push(new WriteConcernError(result.writeConcernError));
       }
     }
-    __name(mergeBatchResults, "mergeBatchResults");
     exports2.mergeBatchResults = mergeBatchResults;
     function executeCommands(bulkOperation, options, callback) {
       if (bulkOperation.s.batches.length === 0) {
@@ -7726,7 +7411,6 @@ var require_common2 = __commonJS({
           return;
         executeCommands(bulkOperation, options, callback);
       }
-      __name(resultHandler, "resultHandler");
       const finalOptions = (0, utils_1.resolveOptions)(bulkOperation, {
         ...options,
         ordered: bulkOperation.isOrdered
@@ -7765,7 +7449,6 @@ var require_common2 = __commonJS({
         callback();
       }
     }
-    __name(executeCommands, "executeCommands");
     function handleMongoWriteConcernError(batch, bulkResult, isOrdered, err, callback) {
       var _a, _b;
       mergeBatchResults(batch, bulkResult, void 0, err.result);
@@ -7774,8 +7457,7 @@ var require_common2 = __commonJS({
         code: (_b = err.result) == null ? void 0 : _b.writeConcernError.result
       }, new BulkWriteResult(bulkResult, isOrdered)));
     }
-    __name(handleMongoWriteConcernError, "handleMongoWriteConcernError");
-    var _MongoBulkWriteError = class _MongoBulkWriteError extends error_1.MongoServerError {
+    var MongoBulkWriteError = class extends error_1.MongoServerError {
       /** Creates a new MongoBulkWriteError */
       constructor(error, result) {
         super(error);
@@ -7822,10 +7504,8 @@ var require_common2 = __commonJS({
         return this.result.upsertedIds;
       }
     };
-    __name(_MongoBulkWriteError, "MongoBulkWriteError");
-    var MongoBulkWriteError = _MongoBulkWriteError;
     exports2.MongoBulkWriteError = MongoBulkWriteError;
-    var _FindOperators = class _FindOperators {
+    var FindOperators = class {
       /**
        * Creates a new FindOperators object.
        * @internal
@@ -7900,10 +7580,8 @@ var require_common2 = __commonJS({
         return this;
       }
     };
-    __name(_FindOperators, "FindOperators");
-    var FindOperators = _FindOperators;
     exports2.FindOperators = FindOperators;
-    var _BulkWriteShimOperation = class _BulkWriteShimOperation extends operation_1.AbstractCallbackOperation {
+    var BulkWriteShimOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(bulkOperation, options) {
         super(options);
         this.bulkOperation = bulkOperation;
@@ -7915,9 +7593,7 @@ var require_common2 = __commonJS({
         return executeCommands(this.bulkOperation, this.options, callback);
       }
     };
-    __name(_BulkWriteShimOperation, "BulkWriteShimOperation");
-    var BulkWriteShimOperation = _BulkWriteShimOperation;
-    var _BulkOperationBase = class _BulkOperationBase {
+    var BulkOperationBase = class {
       /**
        * Create a new OrderedBulkOperation or UnorderedBulkOperation instance
        * @internal
@@ -8198,8 +7874,6 @@ var require_common2 = __commonJS({
         return false;
       }
     };
-    __name(_BulkOperationBase, "BulkOperationBase");
-    var BulkOperationBase = _BulkOperationBase;
     exports2.BulkOperationBase = BulkOperationBase;
     Object.defineProperty(BulkOperationBase.prototype, "length", {
       enumerable: true,
@@ -8217,19 +7891,15 @@ var require_common2 = __commonJS({
       }
       return false;
     }
-    __name(shouldForceServerObjectId, "shouldForceServerObjectId");
     function isInsertBatch(batch) {
       return batch.batchType === exports2.BatchType.INSERT;
     }
-    __name(isInsertBatch, "isInsertBatch");
     function isUpdateBatch(batch) {
       return batch.batchType === exports2.BatchType.UPDATE;
     }
-    __name(isUpdateBatch, "isUpdateBatch");
     function isDeleteBatch(batch) {
       return batch.batchType === exports2.BatchType.DELETE;
     }
-    __name(isDeleteBatch, "isDeleteBatch");
     function buildCurrentOp(bulkOp) {
       let { currentOp } = bulkOp.s;
       bulkOp.s.currentOp = void 0;
@@ -8237,7 +7907,6 @@ var require_common2 = __commonJS({
         currentOp = {};
       return currentOp;
     }
-    __name(buildCurrentOp, "buildCurrentOp");
   }
 });
 
@@ -8250,7 +7919,7 @@ var require_ordered = __commonJS({
     var BSON = require_bson2();
     var error_1 = require_error();
     var common_1 = require_common2();
-    var _OrderedBulkOperation = class _OrderedBulkOperation extends common_1.BulkOperationBase {
+    var OrderedBulkOperation = class extends common_1.BulkOperationBase {
       /** @internal */
       constructor(collection, options) {
         super(collection, options, true);
@@ -8297,8 +7966,6 @@ var require_ordered = __commonJS({
         return this;
       }
     };
-    __name(_OrderedBulkOperation, "OrderedBulkOperation");
-    var OrderedBulkOperation = _OrderedBulkOperation;
     exports2.OrderedBulkOperation = OrderedBulkOperation;
   }
 });
@@ -8312,7 +7979,7 @@ var require_unordered = __commonJS({
     var BSON = require_bson2();
     var error_1 = require_error();
     var common_1 = require_common2();
-    var _UnorderedBulkOperation = class _UnorderedBulkOperation extends common_1.BulkOperationBase {
+    var UnorderedBulkOperation = class extends common_1.BulkOperationBase {
       /** @internal */
       constructor(collection, options) {
         super(collection, options, false);
@@ -8377,8 +8044,6 @@ var require_unordered = __commonJS({
         return this;
       }
     };
-    __name(_UnorderedBulkOperation, "UnorderedBulkOperation");
-    var UnorderedBulkOperation = _UnorderedBulkOperation;
     exports2.UnorderedBulkOperation = UnorderedBulkOperation;
   }
 });
@@ -8396,7 +8061,7 @@ var require_aggregate = __commonJS({
     var operation_1 = require_operation();
     exports2.DB_AGGREGATE_COLLECTION = 1;
     var MIN_WIRE_VERSION_$OUT_READ_CONCERN_SUPPORT = 8;
-    var _AggregateOperation = class _AggregateOperation extends command_1.CommandCallbackOperation {
+    var AggregateOperation = class extends command_1.CommandCallbackOperation {
       constructor(ns, pipeline, options) {
         super(void 0, { ...options, dbName: ns.db });
         this.options = { ...options };
@@ -8462,8 +8127,6 @@ var require_aggregate = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_AggregateOperation, "AggregateOperation");
-    var AggregateOperation = _AggregateOperation;
     exports2.AggregateOperation = AggregateOperation;
     (0, operation_1.defineAspects)(AggregateOperation, [
       operation_1.Aspect.READ_OPERATION,
@@ -8481,7 +8144,7 @@ var require_mongo_types = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CancellationToken = exports2.TypedEventEmitter = void 0;
     var events_1 = require("events");
-    var _TypedEventEmitter = class _TypedEventEmitter extends events_1.EventEmitter {
+    var TypedEventEmitter = class extends events_1.EventEmitter {
       /** @internal */
       emitAndLog(event, ...args) {
         var _a;
@@ -8490,13 +8153,9 @@ var require_mongo_types = __commonJS({
           (_a = this.mongoLogger) == null ? void 0 : _a.debug(this.component, args[0]);
       }
     };
-    __name(_TypedEventEmitter, "TypedEventEmitter");
-    var TypedEventEmitter = _TypedEventEmitter;
     exports2.TypedEventEmitter = TypedEventEmitter;
-    var _CancellationToken = class _CancellationToken extends TypedEventEmitter {
+    var CancellationToken = class extends TypedEventEmitter {
     };
-    __name(_CancellationToken, "CancellationToken");
-    var CancellationToken = _CancellationToken;
     exports2.CancellationToken = CancellationToken;
   }
 });
@@ -8510,7 +8169,7 @@ var require_get_more = __commonJS({
     var error_1 = require_error();
     var utils_1 = require_utils();
     var operation_1 = require_operation();
-    var _GetMoreOperation = class _GetMoreOperation extends operation_1.AbstractCallbackOperation {
+    var GetMoreOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(ns, cursorId, server, options) {
         super(options);
         this.options = options;
@@ -8554,8 +8213,6 @@ var require_get_more = __commonJS({
         server.command(this.ns, getMoreCmd, commandOptions, callback);
       }
     };
-    __name(_GetMoreOperation, "GetMoreOperation");
-    var GetMoreOperation = _GetMoreOperation;
     exports2.GetMoreOperation = GetMoreOperation;
     (0, operation_1.defineAspects)(GetMoreOperation, [operation_1.Aspect.READ_OPERATION, operation_1.Aspect.MUST_SELECT_SAME_SERVER]);
   }
@@ -8569,7 +8226,7 @@ var require_kill_cursors = __commonJS({
     exports2.KillCursorsOperation = void 0;
     var error_1 = require_error();
     var operation_1 = require_operation();
-    var _KillCursorsOperation = class _KillCursorsOperation extends operation_1.AbstractCallbackOperation {
+    var KillCursorsOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(cursorId, ns, server, options) {
         super(options);
         this.ns = ns;
@@ -8591,8 +8248,6 @@ var require_kill_cursors = __commonJS({
         server.command(this.ns, killCursorsCommand, { session }, () => callback());
       }
     };
-    __name(_KillCursorsOperation, "KillCursorsOperation");
-    var KillCursorsOperation = _KillCursorsOperation;
     exports2.KillCursorsOperation = KillCursorsOperation;
     (0, operation_1.defineAspects)(KillCursorsOperation, [operation_1.Aspect.MUST_SELECT_SAME_SERVER]);
   }
@@ -8604,7 +8259,7 @@ var require_metrics = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ConnectionPoolMetrics = void 0;
-    var _ConnectionPoolMetrics = class _ConnectionPoolMetrics {
+    var ConnectionPoolMetrics = class _ConnectionPoolMetrics {
       constructor() {
         this.txnConnections = 0;
         this.cursorConnections = 0;
@@ -8649,8 +8304,6 @@ var require_metrics = __commonJS({
         this.otherConnections = 0;
       }
     };
-    __name(_ConnectionPoolMetrics, "ConnectionPoolMetrics");
-    var ConnectionPoolMetrics = _ConnectionPoolMetrics;
     ConnectionPoolMetrics.TXN = "txn";
     ConnectionPoolMetrics.CURSOR = "cursor";
     ConnectionPoolMetrics.OTHER = "other";
@@ -8681,7 +8334,7 @@ var require_server_description = __commonJS({
       common_1.ServerType.Standalone,
       common_1.ServerType.LoadBalancer
     ]);
-    var _ServerDescription = class _ServerDescription {
+    var ServerDescription = class {
       /**
        * Create a ServerDescription
        * @internal
@@ -8751,8 +8404,6 @@ var require_server_description = __commonJS({
         return other != null && (0, utils_1.errorStrictEqual)(this.error, other.error) && this.type === other.type && this.minWireVersion === other.minWireVersion && (0, utils_1.arrayStrictEqual)(this.hosts, other.hosts) && tagsStrictEqual(this.tags, other.tags) && this.setName === other.setName && this.setVersion === other.setVersion && electionIdsEqual && this.primary === other.primary && this.logicalSessionTimeoutMinutes === other.logicalSessionTimeoutMinutes && topologyVersionsEqual;
       }
     };
-    __name(_ServerDescription, "ServerDescription");
-    var ServerDescription = _ServerDescription;
     exports2.ServerDescription = ServerDescription;
     function parseServerType(hello, options) {
       if (options == null ? void 0 : options.loadBalanced) {
@@ -8782,14 +8433,12 @@ var require_server_description = __commonJS({
       }
       return common_1.ServerType.Standalone;
     }
-    __name(parseServerType, "parseServerType");
     exports2.parseServerType = parseServerType;
     function tagsStrictEqual(tags, tags2) {
       const tagsKeys = Object.keys(tags);
       const tags2Keys = Object.keys(tags2);
       return tagsKeys.length === tags2Keys.length && tagsKeys.every((key) => tags2[key] === tags[key]);
     }
-    __name(tagsStrictEqual, "tagsStrictEqual");
     function compareTopologyVersion(currentTv, newTv) {
       if (currentTv == null || newTv == null) {
         return -1;
@@ -8801,7 +8450,6 @@ var require_server_description = __commonJS({
       const newCounter = bson_1.Long.isLong(newTv.counter) ? newTv.counter : bson_1.Long.fromNumber(newTv.counter);
       return currentCounter.compare(newCounter);
     }
-    __name(compareTopologyVersion, "compareTopologyVersion");
     exports2.compareTopologyVersion = compareTopologyVersion;
   }
 });
@@ -8828,7 +8476,7 @@ var require_topology_description = __commonJS({
       common_1.ServerType.RSArbiter,
       common_1.ServerType.RSOther
     ]);
-    var _TopologyDescription = class _TopologyDescription {
+    var TopologyDescription = class _TopologyDescription {
       /**
        * Create a TopologyDescription
        */
@@ -9009,8 +8657,6 @@ var require_topology_description = __commonJS({
         return this.servers.has(address);
       }
     };
-    __name(_TopologyDescription, "TopologyDescription");
-    var TopologyDescription = _TopologyDescription;
     exports2.TopologyDescription = TopologyDescription;
     function topologyTypeForServerType(serverType) {
       switch (serverType) {
@@ -9027,7 +8673,6 @@ var require_topology_description = __commonJS({
           return common_1.TopologyType.Unknown;
       }
     }
-    __name(topologyTypeForServerType, "topologyTypeForServerType");
     function updateRsFromPrimary(serverDescriptions, serverDescription, setName = null, maxSetVersion = null, maxElectionId = null) {
       setName = setName || serverDescription.setName;
       if (setName !== serverDescription.setName) {
@@ -9079,7 +8724,6 @@ var require_topology_description = __commonJS({
       });
       return [checkHasPrimary(serverDescriptions), setName, maxSetVersion, maxElectionId];
     }
-    __name(updateRsFromPrimary, "updateRsFromPrimary");
     function updateRsWithPrimaryFromMember(serverDescriptions, serverDescription, setName = null) {
       if (setName == null) {
         throw new error_1.MongoRuntimeError('Argument "setName" is required if connected to a replica set');
@@ -9089,7 +8733,6 @@ var require_topology_description = __commonJS({
       }
       return checkHasPrimary(serverDescriptions);
     }
-    __name(updateRsWithPrimaryFromMember, "updateRsWithPrimaryFromMember");
     function updateRsNoPrimaryFromMember(serverDescriptions, serverDescription, setName = null) {
       const topologyType = common_1.TopologyType.ReplicaSetNoPrimary;
       setName = setName ?? serverDescription.setName;
@@ -9107,7 +8750,6 @@ var require_topology_description = __commonJS({
       }
       return [topologyType, setName];
     }
-    __name(updateRsNoPrimaryFromMember, "updateRsNoPrimaryFromMember");
     function checkHasPrimary(serverDescriptions) {
       for (const serverDescription of serverDescriptions.values()) {
         if (serverDescription.type === common_1.ServerType.RSPrimary) {
@@ -9116,7 +8758,6 @@ var require_topology_description = __commonJS({
       }
       return common_1.TopologyType.ReplicaSetNoPrimary;
     }
-    __name(checkHasPrimary, "checkHasPrimary");
   }
 });
 
@@ -9143,7 +8784,6 @@ var require_shared = __commonJS({
       }
       return readPreference;
     }
-    __name(getReadPreference, "getReadPreference");
     exports2.getReadPreference = getReadPreference;
     function isSharded(topologyOrServer) {
       if (topologyOrServer == null) {
@@ -9158,7 +8798,6 @@ var require_shared = __commonJS({
       }
       return false;
     }
-    __name(isSharded, "isSharded");
     exports2.isSharded = isSharded;
   }
 });
@@ -9215,7 +8854,7 @@ var require_transactions = __commonJS({
       exports2.TxnState.TRANSACTION_COMMITTED_EMPTY,
       exports2.TxnState.TRANSACTION_ABORTED
     ]);
-    var _Transaction = class _Transaction {
+    var Transaction = class {
       /** Create a transaction @internal */
       constructor(options) {
         options = options ?? {};
@@ -9290,13 +8929,10 @@ var require_transactions = __commonJS({
         this._pinnedServer = void 0;
       }
     };
-    __name(_Transaction, "Transaction");
-    var Transaction = _Transaction;
     exports2.Transaction = Transaction;
     function isTransactionCommand(command) {
       return !!(command.commitTransaction || command.abortTransaction);
     }
-    __name(isTransactionCommand, "isTransactionCommand");
     exports2.isTransactionCommand = isTransactionCommand;
   }
 });
@@ -9329,7 +8965,7 @@ var require_sessions = __commonJS({
     var kSnapshotEnabled = Symbol("snapshotEnabled");
     var kPinnedConnection = Symbol("pinnedConnection");
     var kTxnNumberIncrement = Symbol("txnNumberIncrement");
-    var _ClientSession = class _ClientSession extends mongo_types_1.TypedEventEmitter {
+    var ClientSession = class _ClientSession extends mongo_types_1.TypedEventEmitter {
       /**
        * Create a client session.
        * @internal
@@ -9582,8 +9218,6 @@ var require_sessions = __commonJS({
         return attemptTransaction(this, startTime, fn, options);
       }
     };
-    __name(_ClientSession, "ClientSession");
-    var ClientSession = _ClientSession;
     exports2.ClientSession = ClientSession;
     _a = kSnapshotEnabled;
     var MAX_WITH_TRANSACTION_TIMEOUT = 12e4;
@@ -9595,12 +9229,10 @@ var require_sessions = __commonJS({
     function hasNotTimedOut(startTime, max) {
       return (0, utils_1.calculateDurationInMs)(startTime) < max;
     }
-    __name(hasNotTimedOut, "hasNotTimedOut");
     function isUnknownTransactionCommitResult(err) {
       const isNonDeterministicWriteConcernError = err instanceof error_1.MongoServerError && err.codeName && NON_DETERMINISTIC_WRITE_CONCERN_ERRORS.has(err.codeName);
       return isMaxTimeMSExpiredError(err) || !isNonDeterministicWriteConcernError && err.code !== error_1.MONGODB_ERROR_CODES.UnsatisfiableWriteConcern && err.code !== error_1.MONGODB_ERROR_CODES.UnknownReplWriteConcern;
     }
-    __name(isUnknownTransactionCommitResult, "isUnknownTransactionCommitResult");
     function maybeClearPinnedConnection(session, options) {
       const conn = session[kPinnedConnection];
       const error = options == null ? void 0 : options.error;
@@ -9621,7 +9253,6 @@ var require_sessions = __commonJS({
         session[kPinnedConnection] = void 0;
       }
     }
-    __name(maybeClearPinnedConnection, "maybeClearPinnedConnection");
     exports2.maybeClearPinnedConnection = maybeClearPinnedConnection;
     function isMaxTimeMSExpiredError(err) {
       if (err == null || !(err instanceof error_1.MongoServerError)) {
@@ -9629,7 +9260,6 @@ var require_sessions = __commonJS({
       }
       return err.code === error_1.MONGODB_ERROR_CODES.MaxTimeMSExpired || err.writeConcernError && err.writeConcernError.code === error_1.MONGODB_ERROR_CODES.MaxTimeMSExpired;
     }
-    __name(isMaxTimeMSExpiredError, "isMaxTimeMSExpiredError");
     function attemptTransactionCommit(session, startTime, fn, options) {
       return session.commitTransaction().catch((err) => {
         if (err instanceof error_1.MongoError && hasNotTimedOut(startTime, MAX_WITH_TRANSACTION_TIMEOUT) && !isMaxTimeMSExpiredError(err)) {
@@ -9643,7 +9273,6 @@ var require_sessions = __commonJS({
         throw err;
       });
     }
-    __name(attemptTransactionCommit, "attemptTransactionCommit");
     var USER_EXPLICIT_TXN_END_STATES = /* @__PURE__ */ new Set([
       transactions_1.TxnState.NO_TRANSACTION,
       transactions_1.TxnState.TRANSACTION_COMMITTED,
@@ -9652,7 +9281,6 @@ var require_sessions = __commonJS({
     function userExplicitlyEndedTransaction(session) {
       return USER_EXPLICIT_TXN_END_STATES.has(session.transaction.state);
     }
-    __name(userExplicitlyEndedTransaction, "userExplicitlyEndedTransaction");
     function attemptTransaction(session, startTime, fn, options) {
       session.startTransaction(options);
       let promise;
@@ -9680,14 +9308,12 @@ var require_sessions = __commonJS({
           }
           throw err2;
         }
-        __name(maybeRetryOrThrow, "maybeRetryOrThrow");
         if (session.inTransaction()) {
           return session.abortTransaction().then(() => maybeRetryOrThrow(err));
         }
         return maybeRetryOrThrow(err);
       });
     }
-    __name(attemptTransaction, "attemptTransaction");
     var endTransactionAsync = (0, util_1.promisify)(endTransaction);
     function endTransaction(session, commandName, callback) {
       const txnState = session.transaction.state;
@@ -9757,7 +9383,6 @@ var require_sessions = __commonJS({
         }
         callback(error, result);
       }
-      __name(commandHandler, "commandHandler");
       if (session.transaction.recoveryToken) {
         command.recoveryToken = session.transaction.recoveryToken;
       }
@@ -9785,8 +9410,7 @@ var require_sessions = __commonJS({
         commandHandler(error, result);
       });
     }
-    __name(endTransaction, "endTransaction");
-    var _ServerSession = class _ServerSession {
+    var ServerSession = class _ServerSession {
       /** @internal */
       constructor() {
         this.id = { id: new bson_1.Binary((0, utils_1.uuidV4)(), bson_1.Binary.SUBTYPE_UUID) };
@@ -9821,10 +9445,8 @@ var require_sessions = __commonJS({
         }, _ServerSession.prototype);
       }
     };
-    __name(_ServerSession, "ServerSession");
-    var ServerSession = _ServerSession;
     exports2.ServerSession = ServerSession;
-    var _ServerSessionPool = class _ServerSessionPool {
+    var ServerSessionPool = class {
       constructor(client) {
         if (client == null) {
           throw new error_1.MongoRuntimeError("ServerSessionPool requires a MongoClient");
@@ -9879,8 +9501,6 @@ var require_sessions = __commonJS({
         }
       }
     };
-    __name(_ServerSessionPool, "ServerSessionPool");
-    var ServerSessionPool = _ServerSessionPool;
     exports2.ServerSessionPool = ServerSessionPool;
     function applySession(session, command, options) {
       var _a2, _b;
@@ -9936,7 +9556,6 @@ var require_sessions = __commonJS({
       }
       return;
     }
-    __name(applySession, "applySession");
     exports2.applySession = applySession;
     function updateSessionFromResponse(session, document) {
       var _a2;
@@ -9956,7 +9575,6 @@ var require_sessions = __commonJS({
         }
       }
     }
-    __name(updateSessionFromResponse, "updateSessionFromResponse");
     exports2.updateSessionFromResponse = updateSessionFromResponse;
   }
 });
@@ -9999,7 +9617,7 @@ var require_abstract_cursor = __commonJS({
       "exhaust",
       "partial"
     ];
-    var _AbstractCursor = class _AbstractCursor extends mongo_types_1.TypedEventEmitter {
+    var AbstractCursor = class extends mongo_types_1.TypedEventEmitter {
       /** @internal */
       constructor(client, namespace, options = {}) {
         super();
@@ -10410,8 +10028,6 @@ var require_abstract_cursor = __commonJS({
         });
       }
     };
-    __name(_AbstractCursor, "AbstractCursor");
-    var AbstractCursor = _AbstractCursor;
     AbstractCursor.CLOSE = "close";
     exports2.AbstractCursor = AbstractCursor;
     async function next(cursor, { blocking, transform }) {
@@ -10459,7 +10075,6 @@ var require_abstract_cursor = __commonJS({
       } while (!cursor.isDead || cursor[kDocuments].length !== 0);
       return null;
     }
-    __name(next, "next");
     var cleanupCursorAsync = (0, util_1.promisify)(cleanupCursor);
     function cleanupCursor(cursor, options, callback) {
       const cursorId = cursor[kId];
@@ -10508,22 +10123,19 @@ var require_abstract_cursor = __commonJS({
         cursor.emit(AbstractCursor.CLOSE);
         return callback();
       }
-      __name(completeCleanup, "completeCleanup");
       cursor[kKilled] = true;
       if (session.hasEnded) {
         return completeCleanup();
       }
       (0, execute_operation_1.executeOperation)(cursor[kClient], new kill_cursors_1.KillCursorsOperation(cursorId, cursorNs, server, { session })).catch(() => null).finally(completeCleanup);
     }
-    __name(cleanupCursor, "cleanupCursor");
     function assertUninitialized(cursor) {
       if (cursor[kInitialized]) {
         throw new error_1.MongoCursorInUseError();
       }
     }
-    __name(assertUninitialized, "assertUninitialized");
     exports2.assertUninitialized = assertUninitialized;
-    var _ReadableCursorStream = class _ReadableCursorStream extends stream_1.Readable {
+    var ReadableCursorStream = class extends stream_1.Readable {
       constructor(cursor) {
         super({
           objectMode: true,
@@ -10567,8 +10179,6 @@ var require_abstract_cursor = __commonJS({
         });
       }
     };
-    __name(_ReadableCursorStream, "ReadableCursorStream");
-    var ReadableCursorStream = _ReadableCursorStream;
   }
 });
 
@@ -10584,7 +10194,7 @@ var require_aggregation_cursor = __commonJS({
     var abstract_cursor_1 = require_abstract_cursor();
     var kPipeline = Symbol("pipeline");
     var kOptions = Symbol("options");
-    var _AggregationCursor = class _AggregationCursor extends abstract_cursor_1.AbstractCursor {
+    var AggregationCursor = class _AggregationCursor extends abstract_cursor_1.AbstractCursor {
       /** @internal */
       constructor(client, namespace, pipeline = [], options = {}) {
         super(client, namespace, options);
@@ -10731,8 +10341,6 @@ var require_aggregation_cursor = __commonJS({
         return this;
       }
     };
-    __name(_AggregationCursor, "AggregationCursor");
-    var AggregationCursor = _AggregationCursor;
     exports2.AggregationCursor = AggregationCursor;
   }
 });
@@ -10745,7 +10353,7 @@ var require_count = __commonJS({
     exports2.CountOperation = void 0;
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _CountOperation = class _CountOperation extends command_1.CommandCallbackOperation {
+    var CountOperation = class extends command_1.CommandCallbackOperation {
       constructor(namespace, filter, options) {
         super({ s: { namespace } }, options);
         this.options = options;
@@ -10775,8 +10383,6 @@ var require_count = __commonJS({
         });
       }
     };
-    __name(_CountOperation, "CountOperation");
-    var CountOperation = _CountOperation;
     exports2.CountOperation = CountOperation;
     (0, operation_1.defineAspects)(CountOperation, [operation_1.Aspect.READ_OPERATION, operation_1.Aspect.RETRYABLE]);
   }
@@ -10806,11 +10412,9 @@ var require_sort = __commonJS({
           throw new error_1.MongoInvalidArgumentError(`Invalid sort direction: ${JSON.stringify(direction)}`);
       }
     }
-    __name(prepareDirection, "prepareDirection");
     function isMeta(t) {
       return typeof t === "object" && t != null && "$meta" in t && typeof t.$meta === "string";
     }
-    __name(isMeta, "isMeta");
     function isPair(t) {
       if (Array.isArray(t) && t.length === 2) {
         try {
@@ -10822,29 +10426,23 @@ var require_sort = __commonJS({
       }
       return false;
     }
-    __name(isPair, "isPair");
     function isDeep(t) {
       return Array.isArray(t) && Array.isArray(t[0]);
     }
-    __name(isDeep, "isDeep");
     function isMap(t) {
       return t instanceof Map && t.size > 0;
     }
-    __name(isMap, "isMap");
     function pairToMap(v) {
       return /* @__PURE__ */ new Map([[`${v[0]}`, prepareDirection([v[1]])]]);
     }
-    __name(pairToMap, "pairToMap");
     function deepToMap(t) {
       const sortEntries = t.map(([k, v]) => [`${k}`, prepareDirection(v)]);
       return new Map(sortEntries);
     }
-    __name(deepToMap, "deepToMap");
     function stringsToMap(t) {
       const sortEntries = t.map((key) => [`${key}`, 1]);
       return new Map(sortEntries);
     }
-    __name(stringsToMap, "stringsToMap");
     function objectToMap(t) {
       const sortEntries = Object.entries(t).map(([k, v]) => [
         `${k}`,
@@ -10852,7 +10450,6 @@ var require_sort = __commonJS({
       ]);
       return new Map(sortEntries);
     }
-    __name(objectToMap, "objectToMap");
     function mapToMap(t) {
       const sortEntries = Array.from(t).map(([k, v]) => [
         `${k}`,
@@ -10860,7 +10457,6 @@ var require_sort = __commonJS({
       ]);
       return new Map(sortEntries);
     }
-    __name(mapToMap, "mapToMap");
     function formatSort(sort, direction) {
       if (sort == null)
         return void 0;
@@ -10880,7 +10476,6 @@ var require_sort = __commonJS({
         return pairToMap(sort);
       return stringsToMap(sort);
     }
-    __name(formatSort, "formatSort");
     exports2.formatSort = formatSort;
   }
 });
@@ -10897,7 +10492,7 @@ var require_find = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _FindOperation = class _FindOperation extends command_1.CommandCallbackOperation {
+    var FindOperation = class extends command_1.CommandCallbackOperation {
       constructor(collection, ns, filter = {}, options = {}) {
         super(collection, options);
         this.options = { ...options };
@@ -10923,8 +10518,6 @@ var require_find = __commonJS({
         }, callback);
       }
     };
-    __name(_FindOperation, "FindOperation");
-    var FindOperation = _FindOperation;
     exports2.FindOperation = FindOperation;
     function makeFindCommand(ns, filter, options) {
       const findCommand = {
@@ -11021,7 +10614,6 @@ var require_find = __commonJS({
       }
       return findCommand;
     }
-    __name(makeFindCommand, "makeFindCommand");
     (0, operation_1.defineAspects)(FindOperation, [
       operation_1.Aspect.READ_OPERATION,
       operation_1.Aspect.RETRYABLE,
@@ -11056,7 +10648,7 @@ var require_find_cursor = __commonJS({
       "exhaust",
       "partial"
     ];
-    var _FindCursor = class _FindCursor extends abstract_cursor_1.AbstractCursor {
+    var FindCursor = class _FindCursor extends abstract_cursor_1.AbstractCursor {
       /** @internal */
       constructor(client, namespace, filter = {}, options = {}) {
         super(client, namespace, options);
@@ -11399,8 +10991,6 @@ var require_find_cursor = __commonJS({
         return this;
       }
     };
-    __name(_FindCursor, "FindCursor");
-    var FindCursor = _FindCursor;
     exports2.FindCursor = FindCursor;
   }
 });
@@ -11447,11 +11037,9 @@ var require_indexes = __commonJS({
     function isIndexDirection(x) {
       return typeof x === "number" || x === "2d" || x === "2dsphere" || x === "text" || x === "geoHaystack";
     }
-    __name(isIndexDirection, "isIndexDirection");
     function isSingleIndexTuple(t) {
       return Array.isArray(t) && t.length === 2 && isIndexDirection(t[1]);
     }
-    __name(isSingleIndexTuple, "isSingleIndexTuple");
     function makeIndexSpec(indexSpec, options) {
       const key = /* @__PURE__ */ new Map();
       const indexSpecs = !Array.isArray(indexSpec) || isSingleIndexTuple(indexSpec) ? [indexSpec] : indexSpec;
@@ -11472,8 +11060,7 @@ var require_indexes = __commonJS({
       }
       return { ...options, key };
     }
-    __name(makeIndexSpec, "makeIndexSpec");
-    var _IndexesOperation = class _IndexesOperation extends operation_1.AbstractCallbackOperation {
+    var IndexesOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, options) {
         super(options);
         this.options = options;
@@ -11485,10 +11072,8 @@ var require_indexes = __commonJS({
         (0, common_functions_1.indexInformation)(coll.s.db, coll.collectionName, { full: true, ...options, readPreference: this.readPreference, session }, callback);
       }
     };
-    __name(_IndexesOperation, "IndexesOperation");
-    var IndexesOperation = _IndexesOperation;
     exports2.IndexesOperation = IndexesOperation;
-    var _CreateIndexesOperation = class _CreateIndexesOperation extends command_1.CommandCallbackOperation {
+    var CreateIndexesOperation = class extends command_1.CommandCallbackOperation {
       constructor(parent, collectionName, indexes, options) {
         super(parent, options);
         this.options = options ?? {};
@@ -11527,10 +11112,8 @@ var require_indexes = __commonJS({
         });
       }
     };
-    __name(_CreateIndexesOperation, "CreateIndexesOperation");
-    var CreateIndexesOperation = _CreateIndexesOperation;
     exports2.CreateIndexesOperation = CreateIndexesOperation;
-    var _CreateIndexOperation = class _CreateIndexOperation extends CreateIndexesOperation {
+    var CreateIndexOperation = class extends CreateIndexesOperation {
       constructor(parent, collectionName, indexSpec, options) {
         super(parent, collectionName, [makeIndexSpec(indexSpec, options)], options);
       }
@@ -11542,10 +11125,8 @@ var require_indexes = __commonJS({
         });
       }
     };
-    __name(_CreateIndexOperation, "CreateIndexOperation");
-    var CreateIndexOperation = _CreateIndexOperation;
     exports2.CreateIndexOperation = CreateIndexOperation;
-    var _EnsureIndexOperation = class _EnsureIndexOperation extends CreateIndexOperation {
+    var EnsureIndexOperation = class extends CreateIndexOperation {
       constructor(db, collectionName, indexSpec, options) {
         super(db, collectionName, indexSpec, options);
         this.readPreference = read_preference_1.ReadPreference.primary;
@@ -11570,10 +11151,8 @@ var require_indexes = __commonJS({
         });
       }
     };
-    __name(_EnsureIndexOperation, "EnsureIndexOperation");
-    var EnsureIndexOperation = _EnsureIndexOperation;
     exports2.EnsureIndexOperation = EnsureIndexOperation;
-    var _DropIndexOperation = class _DropIndexOperation extends command_1.CommandCallbackOperation {
+    var DropIndexOperation = class extends command_1.CommandCallbackOperation {
       constructor(collection, indexName, options) {
         super(collection, options);
         this.options = options ?? {};
@@ -11585,10 +11164,8 @@ var require_indexes = __commonJS({
         super.executeCommandCallback(server, session, cmd, callback);
       }
     };
-    __name(_DropIndexOperation, "DropIndexOperation");
-    var DropIndexOperation = _DropIndexOperation;
     exports2.DropIndexOperation = DropIndexOperation;
-    var _DropIndexesOperation = class _DropIndexesOperation extends DropIndexOperation {
+    var DropIndexesOperation = class extends DropIndexOperation {
       constructor(collection, options) {
         super(collection, "*", options);
       }
@@ -11600,10 +11177,8 @@ var require_indexes = __commonJS({
         });
       }
     };
-    __name(_DropIndexesOperation, "DropIndexesOperation");
-    var DropIndexesOperation = _DropIndexesOperation;
     exports2.DropIndexesOperation = DropIndexesOperation;
-    var _ListIndexesOperation = class _ListIndexesOperation extends command_1.CommandCallbackOperation {
+    var ListIndexesOperation = class extends command_1.CommandCallbackOperation {
       constructor(collection, options) {
         super(collection, options);
         this.options = { ...options };
@@ -11620,10 +11195,8 @@ var require_indexes = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_ListIndexesOperation, "ListIndexesOperation");
-    var ListIndexesOperation = _ListIndexesOperation;
     exports2.ListIndexesOperation = ListIndexesOperation;
-    var _IndexExistsOperation = class _IndexExistsOperation extends operation_1.AbstractCallbackOperation {
+    var IndexExistsOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, indexes, options) {
         super(options);
         this.options = options;
@@ -11647,10 +11220,8 @@ var require_indexes = __commonJS({
         });
       }
     };
-    __name(_IndexExistsOperation, "IndexExistsOperation");
-    var IndexExistsOperation = _IndexExistsOperation;
     exports2.IndexExistsOperation = IndexExistsOperation;
-    var _IndexInformationOperation = class _IndexInformationOperation extends operation_1.AbstractCallbackOperation {
+    var IndexInformationOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(db, name, options) {
         super(options);
         this.options = options ?? {};
@@ -11663,8 +11234,6 @@ var require_indexes = __commonJS({
         (0, common_functions_1.indexInformation)(db, name, { ...this.options, readPreference: this.readPreference, session }, callback);
       }
     };
-    __name(_IndexInformationOperation, "IndexInformationOperation");
-    var IndexInformationOperation = _IndexInformationOperation;
     exports2.IndexInformationOperation = IndexInformationOperation;
     (0, operation_1.defineAspects)(ListIndexesOperation, [
       operation_1.Aspect.READ_OPERATION,
@@ -11688,7 +11257,7 @@ var require_list_indexes_cursor = __commonJS({
     var execute_operation_1 = require_execute_operation();
     var indexes_1 = require_indexes();
     var abstract_cursor_1 = require_abstract_cursor();
-    var _ListIndexesCursor = class _ListIndexesCursor extends abstract_cursor_1.AbstractCursor {
+    var ListIndexesCursor = class _ListIndexesCursor extends abstract_cursor_1.AbstractCursor {
       constructor(collection, options) {
         super(collection.client, collection.s.namespace, options);
         this.parent = collection;
@@ -11714,8 +11283,6 @@ var require_list_indexes_cursor = __commonJS({
         });
       }
     };
-    __name(_ListIndexesCursor, "ListIndexesCursor");
-    var ListIndexesCursor = _ListIndexesCursor;
     exports2.ListIndexesCursor = ListIndexesCursor;
   }
 });
@@ -11727,15 +11294,13 @@ var require_list_search_indexes_cursor = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ListSearchIndexesCursor = void 0;
     var aggregation_cursor_1 = require_aggregation_cursor();
-    var _ListSearchIndexesCursor = class _ListSearchIndexesCursor extends aggregation_cursor_1.AggregationCursor {
+    var ListSearchIndexesCursor = class extends aggregation_cursor_1.AggregationCursor {
       /** @internal */
       constructor({ fullNamespace: ns, client }, name, options = {}) {
         const pipeline = name == null ? [{ $listSearchIndexes: {} }] : [{ $listSearchIndexes: { name } }];
         super(client, ns, pipeline, options);
       }
     };
-    __name(_ListSearchIndexesCursor, "ListSearchIndexesCursor");
-    var ListSearchIndexesCursor = _ListSearchIndexesCursor;
     exports2.ListSearchIndexesCursor = ListSearchIndexesCursor;
   }
 });
@@ -11747,7 +11312,7 @@ var require_count_documents = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CountDocumentsOperation = void 0;
     var aggregate_1 = require_aggregate();
-    var _CountDocumentsOperation = class _CountDocumentsOperation extends aggregate_1.AggregateOperation {
+    var CountDocumentsOperation = class extends aggregate_1.AggregateOperation {
       constructor(collection, query, options) {
         const pipeline = [];
         pipeline.push({ $match: query });
@@ -11776,8 +11341,6 @@ var require_count_documents = __commonJS({
         });
       }
     };
-    __name(_CountDocumentsOperation, "CountDocumentsOperation");
-    var CountDocumentsOperation = _CountDocumentsOperation;
     exports2.CountDocumentsOperation = CountDocumentsOperation;
   }
 });
@@ -11791,7 +11354,7 @@ var require_distinct = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _DistinctOperation = class _DistinctOperation extends command_1.CommandCallbackOperation {
+    var DistinctOperation = class extends command_1.CommandCallbackOperation {
       /**
        * Construct a Distinct operation.
        *
@@ -11838,8 +11401,6 @@ var require_distinct = __commonJS({
         });
       }
     };
-    __name(_DistinctOperation, "DistinctOperation");
-    var DistinctOperation = _DistinctOperation;
     exports2.DistinctOperation = DistinctOperation;
     (0, operation_1.defineAspects)(DistinctOperation, [operation_1.Aspect.READ_OPERATION, operation_1.Aspect.RETRYABLE, operation_1.Aspect.EXPLAINABLE]);
   }
@@ -11854,7 +11415,7 @@ var require_drop = __commonJS({
     var error_1 = require_error();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _DropCollectionOperation = class _DropCollectionOperation extends command_1.CommandCallbackOperation {
+    var DropCollectionOperation = class _DropCollectionOperation extends command_1.CommandCallbackOperation {
       constructor(db, name, options = {}) {
         super(db, options);
         this.db = db;
@@ -11900,10 +11461,8 @@ var require_drop = __commonJS({
         });
       }
     };
-    __name(_DropCollectionOperation, "DropCollectionOperation");
-    var DropCollectionOperation = _DropCollectionOperation;
     exports2.DropCollectionOperation = DropCollectionOperation;
-    var _DropDatabaseOperation = class _DropDatabaseOperation extends command_1.CommandCallbackOperation {
+    var DropDatabaseOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, options) {
         super(db, options);
         this.options = options;
@@ -11918,8 +11477,6 @@ var require_drop = __commonJS({
         });
       }
     };
-    __name(_DropDatabaseOperation, "DropDatabaseOperation");
-    var DropDatabaseOperation = _DropDatabaseOperation;
     exports2.DropDatabaseOperation = DropDatabaseOperation;
     (0, operation_1.defineAspects)(DropCollectionOperation, [operation_1.Aspect.WRITE_OPERATION]);
     (0, operation_1.defineAspects)(DropDatabaseOperation, [operation_1.Aspect.WRITE_OPERATION]);
@@ -11934,7 +11491,7 @@ var require_estimated_document_count = __commonJS({
     exports2.EstimatedDocumentCountOperation = void 0;
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _EstimatedDocumentCountOperation = class _EstimatedDocumentCountOperation extends command_1.CommandCallbackOperation {
+    var EstimatedDocumentCountOperation = class extends command_1.CommandCallbackOperation {
       constructor(collection, options = {}) {
         super(collection, options);
         this.options = options;
@@ -11957,8 +11514,6 @@ var require_estimated_document_count = __commonJS({
         });
       }
     };
-    __name(_EstimatedDocumentCountOperation, "EstimatedDocumentCountOperation");
-    var EstimatedDocumentCountOperation = _EstimatedDocumentCountOperation;
     exports2.EstimatedDocumentCountOperation = EstimatedDocumentCountOperation;
     (0, operation_1.defineAspects)(EstimatedDocumentCountOperation, [
       operation_1.Aspect.READ_OPERATION,
@@ -11992,8 +11547,7 @@ var require_find_and_modify = __commonJS({
       }
       return cmdBase;
     }
-    __name(configureFindAndModifyCmdBaseUpdateOpts, "configureFindAndModifyCmdBaseUpdateOpts");
-    var _FindAndModifyOperation = class _FindAndModifyOperation extends command_1.CommandCallbackOperation {
+    var FindAndModifyOperation = class extends command_1.CommandCallbackOperation {
       constructor(collection, query, options) {
         super(collection, options);
         this.options = options ?? {};
@@ -12056,9 +11610,7 @@ var require_find_and_modify = __commonJS({
         });
       }
     };
-    __name(_FindAndModifyOperation, "FindAndModifyOperation");
-    var FindAndModifyOperation = _FindAndModifyOperation;
-    var _FindOneAndDeleteOperation = class _FindOneAndDeleteOperation extends FindAndModifyOperation {
+    var FindOneAndDeleteOperation = class extends FindAndModifyOperation {
       constructor(collection, filter, options) {
         if (filter == null || typeof filter !== "object") {
           throw new error_1.MongoInvalidArgumentError('Argument "filter" must be an object');
@@ -12067,10 +11619,8 @@ var require_find_and_modify = __commonJS({
         this.cmdBase.remove = true;
       }
     };
-    __name(_FindOneAndDeleteOperation, "FindOneAndDeleteOperation");
-    var FindOneAndDeleteOperation = _FindOneAndDeleteOperation;
     exports2.FindOneAndDeleteOperation = FindOneAndDeleteOperation;
-    var _FindOneAndReplaceOperation = class _FindOneAndReplaceOperation extends FindAndModifyOperation {
+    var FindOneAndReplaceOperation = class extends FindAndModifyOperation {
       constructor(collection, filter, replacement, options) {
         if (filter == null || typeof filter !== "object") {
           throw new error_1.MongoInvalidArgumentError('Argument "filter" must be an object');
@@ -12086,10 +11636,8 @@ var require_find_and_modify = __commonJS({
         configureFindAndModifyCmdBaseUpdateOpts(this.cmdBase, options);
       }
     };
-    __name(_FindOneAndReplaceOperation, "FindOneAndReplaceOperation");
-    var FindOneAndReplaceOperation = _FindOneAndReplaceOperation;
     exports2.FindOneAndReplaceOperation = FindOneAndReplaceOperation;
-    var _FindOneAndUpdateOperation = class _FindOneAndUpdateOperation extends FindAndModifyOperation {
+    var FindOneAndUpdateOperation = class extends FindAndModifyOperation {
       constructor(collection, filter, update, options) {
         if (filter == null || typeof filter !== "object") {
           throw new error_1.MongoInvalidArgumentError('Argument "filter" must be an object');
@@ -12108,8 +11656,6 @@ var require_find_and_modify = __commonJS({
         }
       }
     };
-    __name(_FindOneAndUpdateOperation, "FindOneAndUpdateOperation");
-    var FindOneAndUpdateOperation = _FindOneAndUpdateOperation;
     exports2.FindOneAndUpdateOperation = FindOneAndUpdateOperation;
     (0, operation_1.defineAspects)(FindAndModifyOperation, [
       operation_1.Aspect.WRITE_OPERATION,
@@ -12127,7 +11673,7 @@ var require_is_capped = __commonJS({
     exports2.IsCappedOperation = void 0;
     var error_1 = require_error();
     var operation_1 = require_operation();
-    var _IsCappedOperation = class _IsCappedOperation extends operation_1.AbstractCallbackOperation {
+    var IsCappedOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, options) {
         super(options);
         this.options = options;
@@ -12144,8 +11690,6 @@ var require_is_capped = __commonJS({
         }, (error) => callback(error));
       }
     };
-    __name(_IsCappedOperation, "IsCappedOperation");
-    var IsCappedOperation = _IsCappedOperation;
     exports2.IsCappedOperation = IsCappedOperation;
   }
 });
@@ -12158,7 +11702,7 @@ var require_options_operation = __commonJS({
     exports2.OptionsOperation = void 0;
     var error_1 = require_error();
     var operation_1 = require_operation();
-    var _OptionsOperation = class _OptionsOperation extends operation_1.AbstractCallbackOperation {
+    var OptionsOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, options) {
         super(options);
         this.options = options;
@@ -12174,8 +11718,6 @@ var require_options_operation = __commonJS({
         }, (error) => callback(error));
       }
     };
-    __name(_OptionsOperation, "OptionsOperation");
-    var OptionsOperation = _OptionsOperation;
     exports2.OptionsOperation = OptionsOperation;
   }
 });
@@ -12191,7 +11733,7 @@ var require_rename = __commonJS({
     var utils_1 = require_utils();
     var operation_1 = require_operation();
     var run_command_1 = require_run_command();
-    var _RenameOperation = class _RenameOperation extends run_command_1.RunAdminCommandOperation {
+    var RenameOperation = class extends run_command_1.RunAdminCommandOperation {
       constructor(collection, newName, options) {
         (0, utils_1.checkCollectionName)(newName);
         const renameCollection = collection.namespace;
@@ -12221,8 +11763,6 @@ var require_rename = __commonJS({
         });
       }
     };
-    __name(_RenameOperation, "RenameOperation");
-    var RenameOperation = _RenameOperation;
     exports2.RenameOperation = RenameOperation;
     (0, operation_1.defineAspects)(RenameOperation, [operation_1.Aspect.WRITE_OPERATION]);
   }
@@ -12235,7 +11775,7 @@ var require_create = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CreateSearchIndexesOperation = void 0;
     var operation_1 = require_operation();
-    var _CreateSearchIndexesOperation = class _CreateSearchIndexesOperation extends operation_1.AbstractCallbackOperation {
+    var CreateSearchIndexesOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, descriptions) {
         super();
         this.collection = collection;
@@ -12257,8 +11797,6 @@ var require_create = __commonJS({
         });
       }
     };
-    __name(_CreateSearchIndexesOperation, "CreateSearchIndexesOperation");
-    var CreateSearchIndexesOperation = _CreateSearchIndexesOperation;
     exports2.CreateSearchIndexesOperation = CreateSearchIndexesOperation;
   }
 });
@@ -12270,7 +11808,7 @@ var require_drop2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DropSearchIndexOperation = void 0;
     var operation_1 = require_operation();
-    var _DropSearchIndexOperation = class _DropSearchIndexOperation extends operation_1.AbstractCallbackOperation {
+    var DropSearchIndexOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, name) {
         super();
         this.collection = collection;
@@ -12293,8 +11831,6 @@ var require_drop2 = __commonJS({
         });
       }
     };
-    __name(_DropSearchIndexOperation, "DropSearchIndexOperation");
-    var DropSearchIndexOperation = _DropSearchIndexOperation;
     exports2.DropSearchIndexOperation = DropSearchIndexOperation;
   }
 });
@@ -12306,7 +11842,7 @@ var require_update2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.UpdateSearchIndexOperation = void 0;
     var operation_1 = require_operation();
-    var _UpdateSearchIndexOperation = class _UpdateSearchIndexOperation extends operation_1.AbstractCallbackOperation {
+    var UpdateSearchIndexOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(collection, name, definition) {
         super();
         this.collection = collection;
@@ -12329,8 +11865,6 @@ var require_update2 = __commonJS({
         });
       }
     };
-    __name(_UpdateSearchIndexOperation, "UpdateSearchIndexOperation");
-    var UpdateSearchIndexOperation = _UpdateSearchIndexOperation;
     exports2.UpdateSearchIndexOperation = UpdateSearchIndexOperation;
   }
 });
@@ -12343,7 +11877,7 @@ var require_stats = __commonJS({
     exports2.DbStatsOperation = exports2.CollStatsOperation = void 0;
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _CollStatsOperation = class _CollStatsOperation extends command_1.CommandCallbackOperation {
+    var CollStatsOperation = class extends command_1.CommandCallbackOperation {
       /**
        * Construct a Stats operation.
        *
@@ -12363,10 +11897,8 @@ var require_stats = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_CollStatsOperation, "CollStatsOperation");
-    var CollStatsOperation = _CollStatsOperation;
     exports2.CollStatsOperation = CollStatsOperation;
-    var _DbStatsOperation = class _DbStatsOperation extends command_1.CommandCallbackOperation {
+    var DbStatsOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, options) {
         super(db, options);
         this.options = options;
@@ -12379,8 +11911,6 @@ var require_stats = __commonJS({
         super.executeCommandCallback(server, session, command, callback);
       }
     };
-    __name(_DbStatsOperation, "DbStatsOperation");
-    var DbStatsOperation = _DbStatsOperation;
     exports2.DbStatsOperation = DbStatsOperation;
     (0, operation_1.defineAspects)(CollStatsOperation, [operation_1.Aspect.READ_OPERATION]);
     (0, operation_1.defineAspects)(DbStatsOperation, [operation_1.Aspect.READ_OPERATION]);
@@ -12425,7 +11955,7 @@ var require_collection = __commonJS({
     var read_preference_1 = require_read_preference();
     var utils_1 = require_utils();
     var write_concern_1 = require_write_concern();
-    var _Collection = class _Collection {
+    var Collection = class {
       /**
        * Create a new Collection instance
        * @internal
@@ -12984,8 +12514,6 @@ var require_collection = __commonJS({
         return (0, execute_operation_1.executeOperation)(this.client, new update_1.UpdateSearchIndexOperation(this, name, definition));
       }
     };
-    __name(_Collection, "Collection");
-    var Collection = _Collection;
     exports2.Collection = Collection;
   }
 });
@@ -13002,7 +12530,7 @@ var require_change_stream_cursor = __commonJS({
     var execute_operation_1 = require_execute_operation();
     var utils_1 = require_utils();
     var abstract_cursor_1 = require_abstract_cursor();
-    var _ChangeStreamCursor = class _ChangeStreamCursor extends abstract_cursor_1.AbstractCursor {
+    var ChangeStreamCursor = class _ChangeStreamCursor extends abstract_cursor_1.AbstractCursor {
       constructor(client, namespace, pipeline = [], options = {}) {
         super(client, namespace, options);
         this.pipeline = pipeline;
@@ -13097,8 +12625,6 @@ var require_change_stream_cursor = __commonJS({
         });
       }
     };
-    __name(_ChangeStreamCursor, "ChangeStreamCursor");
-    var ChangeStreamCursor = _ChangeStreamCursor;
     exports2.ChangeStreamCursor = ChangeStreamCursor;
   }
 });
@@ -13112,7 +12638,7 @@ var require_list_collections = __commonJS({
     var utils_1 = require_utils();
     var command_1 = require_command();
     var operation_1 = require_operation();
-    var _ListCollectionsOperation = class _ListCollectionsOperation extends command_1.CommandCallbackOperation {
+    var ListCollectionsOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, filter, options) {
         super(db, options);
         this.options = { ...options };
@@ -13143,8 +12669,6 @@ var require_list_collections = __commonJS({
         return command;
       }
     };
-    __name(_ListCollectionsOperation, "ListCollectionsOperation");
-    var ListCollectionsOperation = _ListCollectionsOperation;
     exports2.ListCollectionsOperation = ListCollectionsOperation;
     (0, operation_1.defineAspects)(ListCollectionsOperation, [
       operation_1.Aspect.READ_OPERATION,
@@ -13163,7 +12687,7 @@ var require_list_collections_cursor = __commonJS({
     var execute_operation_1 = require_execute_operation();
     var list_collections_1 = require_list_collections();
     var abstract_cursor_1 = require_abstract_cursor();
-    var _ListCollectionsCursor = class _ListCollectionsCursor extends abstract_cursor_1.AbstractCursor {
+    var ListCollectionsCursor = class _ListCollectionsCursor extends abstract_cursor_1.AbstractCursor {
       constructor(db, filter, options) {
         super(db.client, db.s.namespace, options);
         this.parent = db;
@@ -13190,8 +12714,6 @@ var require_list_collections_cursor = __commonJS({
         });
       }
     };
-    __name(_ListCollectionsCursor, "ListCollectionsCursor");
-    var ListCollectionsCursor = _ListCollectionsCursor;
     exports2.ListCollectionsCursor = ListCollectionsCursor;
   }
 });
@@ -13208,7 +12730,7 @@ var require_run_command_cursor = __commonJS({
     var run_command_1 = require_run_command();
     var utils_1 = require_utils();
     var abstract_cursor_1 = require_abstract_cursor();
-    var _RunCommandCursor = class _RunCommandCursor extends abstract_cursor_1.AbstractCursor {
+    var RunCommandCursor = class extends abstract_cursor_1.AbstractCursor {
       /**
        * Controls the `getMore.comment` field
        * @param comment - any BSON value
@@ -13289,8 +12811,6 @@ var require_run_command_cursor = __commonJS({
         (0, execute_operation_1.executeOperation)(this.client, getMoreOperation, callback);
       }
     };
-    __name(_RunCommandCursor, "RunCommandCursor");
-    var RunCommandCursor = _RunCommandCursor;
     exports2.RunCommandCursor = RunCommandCursor;
   }
 });
@@ -13303,7 +12823,7 @@ var require_collections = __commonJS({
     exports2.CollectionsOperation = void 0;
     var collection_1 = require_collection();
     var operation_1 = require_operation();
-    var _CollectionsOperation = class _CollectionsOperation extends operation_1.AbstractCallbackOperation {
+    var CollectionsOperation = class extends operation_1.AbstractCallbackOperation {
       constructor(db, options) {
         super(options);
         this.options = options;
@@ -13321,8 +12841,6 @@ var require_collections = __commonJS({
         }, (error) => callback(error));
       }
     };
-    __name(_CollectionsOperation, "CollectionsOperation");
-    var CollectionsOperation = _CollectionsOperation;
     exports2.CollectionsOperation = CollectionsOperation;
   }
 });
@@ -13363,7 +12881,7 @@ var require_create_collection = __commonJS({
       "enableUtf8Validation"
     ]);
     var INVALID_QE_VERSION = "Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.";
-    var _CreateCollectionOperation = class _CreateCollectionOperation extends command_1.CommandCallbackOperation {
+    var CreateCollectionOperation = class _CreateCollectionOperation extends command_1.CommandCallbackOperation {
       constructor(db, name, options = {}) {
         super(db, options);
         this.options = options;
@@ -13409,12 +12927,12 @@ var require_create_collection = __commonJS({
           const db = this.db;
           const name = this.name;
           const options = this.options;
-          const done = /* @__PURE__ */ __name((err) => {
+          const done = (err) => {
             if (err) {
               return reject(err);
             }
             resolve(new collection_1.Collection(db, name, options));
-          }, "done");
+          };
           const cmd = { create: name };
           for (const n in options) {
             if (options[n] != null && typeof options[n] !== "function" && !ILLEGAL_COMMAND_FIELDS.has(n)) {
@@ -13425,8 +12943,6 @@ var require_create_collection = __commonJS({
         });
       }
     };
-    __name(_CreateCollectionOperation, "CreateCollectionOperation");
-    var CreateCollectionOperation = _CreateCollectionOperation;
     exports2.CreateCollectionOperation = CreateCollectionOperation;
     (0, operation_1.defineAspects)(CreateCollectionOperation, [operation_1.Aspect.WRITE_OPERATION]);
   }
@@ -13440,7 +12956,7 @@ var require_profiling_level = __commonJS({
     exports2.ProfilingLevelOperation = void 0;
     var error_1 = require_error();
     var command_1 = require_command();
-    var _ProfilingLevelOperation = class _ProfilingLevelOperation extends command_1.CommandCallbackOperation {
+    var ProfilingLevelOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, options) {
         super(db, options);
         this.options = options;
@@ -13462,8 +12978,6 @@ var require_profiling_level = __commonJS({
         });
       }
     };
-    __name(_ProfilingLevelOperation, "ProfilingLevelOperation");
-    var ProfilingLevelOperation = _ProfilingLevelOperation;
     exports2.ProfilingLevelOperation = ProfilingLevelOperation;
   }
 });
@@ -13483,7 +12997,7 @@ var require_set_profiling_level = __commonJS({
       slowOnly: "slow_only",
       all: "all"
     });
-    var _SetProfilingLevelOperation = class _SetProfilingLevelOperation extends command_1.CommandCallbackOperation {
+    var SetProfilingLevelOperation = class extends command_1.CommandCallbackOperation {
       constructor(db, level, options) {
         super(db, options);
         this.options = options;
@@ -13515,8 +13029,6 @@ var require_set_profiling_level = __commonJS({
         });
       }
     };
-    __name(_SetProfilingLevelOperation, "SetProfilingLevelOperation");
-    var SetProfilingLevelOperation = _SetProfilingLevelOperation;
     exports2.SetProfilingLevelOperation = SetProfilingLevelOperation;
   }
 });
@@ -13575,7 +13087,7 @@ var require_db = __commonJS({
       "compression",
       "retryWrites"
     ];
-    var _Db = class _Db {
+    var Db = class {
       /**
        * Creates a new Db instance
        *
@@ -13847,8 +13359,6 @@ var require_db = __commonJS({
         return new run_command_cursor_1.RunCommandCursor(this, command, options);
       }
     };
-    __name(_Db, "Db");
-    var Db = _Db;
     Db.SYSTEM_NAMESPACE_COLLECTION = CONSTANTS.SYSTEM_NAMESPACE_COLLECTION;
     Db.SYSTEM_INDEX_COLLECTION = CONSTANTS.SYSTEM_INDEX_COLLECTION;
     Db.SYSTEM_PROFILE_COLLECTION = CONSTANTS.SYSTEM_PROFILE_COLLECTION;
@@ -13869,7 +13379,6 @@ var require_db = __commonJS({
           throw new error_1.MongoAPIError(`database names cannot contain the character '${invalidChars[i]}'`);
       }
     }
-    __name(validateDatabaseName, "validateDatabaseName");
   }
 });
 
@@ -13877,9 +13386,9 @@ var require_db = __commonJS({
 var require_dist = __commonJS({
   "node_modules/@mongodb-js/saslprep/dist/index.js"(exports2, module2) {
     "use strict";
-    var getCodePoint = /* @__PURE__ */ __name((character) => character.codePointAt(0), "getCodePoint");
-    var first = /* @__PURE__ */ __name((x) => x[0], "first");
-    var last = /* @__PURE__ */ __name((x) => x[x.length - 1], "last");
+    var getCodePoint = (character) => character.codePointAt(0);
+    var first = (x) => x[0];
+    var last = (x) => x[x.length - 1];
     function toCodePoints(input) {
       const codepoints = [];
       const size = input.length;
@@ -13897,7 +13406,6 @@ var require_dist = __commonJS({
       }
       return codepoints;
     }
-    __name(toCodePoints, "toCodePoints");
     function saslprep({ unassigned_code_points, commonly_mapped_to_nothing, non_ASCII_space_characters, prohibited_characters, bidirectional_r_al, bidirectional_l }, input, opts = {}) {
       const mapping2space = non_ASCII_space_characters;
       const mapping2nothing = commonly_mapped_to_nothing;
@@ -13932,7 +13440,6 @@ var require_dist = __commonJS({
       }
       return normalized_input;
     }
-    __name(saslprep, "saslprep");
     saslprep.saslprep = saslprep;
     saslprep.default = saslprep;
     module2.exports = saslprep;
@@ -13955,7 +13462,6 @@ var require_memory_pager = __commonJS({
       this.deduplicate = opts ? opts.deduplicate : null;
       this.zeros = this.deduplicate ? alloc(this.deduplicate.length) : null;
     }
-    __name(Pager, "Pager");
     Pager.prototype.updated = function(page) {
       while (this.deduplicate && page.buffer[page.deduplicate] === this.deduplicate[page.deduplicate]) {
         page.deduplicate++;
@@ -14044,7 +13550,6 @@ var require_memory_pager = __commonJS({
         pager.maxPages *= 32768;
       }
     }
-    __name(grow, "grow");
     function truncate(buf, len) {
       if (buf.length === len) return buf;
       if (buf.length > len) return buf.slice(0, len);
@@ -14052,33 +13557,28 @@ var require_memory_pager = __commonJS({
       buf.copy(cpy);
       return cpy;
     }
-    __name(truncate, "truncate");
     function alloc(size) {
       if (Buffer.alloc) return Buffer.alloc(size);
       var buf = new Buffer(size);
       buf.fill(0);
       return buf;
     }
-    __name(alloc, "alloc");
     function copy(buf) {
       var cpy = Buffer.allocUnsafe ? Buffer.allocUnsafe(buf.length) : new Buffer(buf.length);
       buf.copy(cpy);
       return cpy;
     }
-    __name(copy, "copy");
     function Page(i, buf) {
       this.offset = i * buf.length;
       this.buffer = buf;
       this.updated = false;
       this.deduplicate = 0;
     }
-    __name(Page, "Page");
     function factor(n, out) {
       n = (n - (out[0] = n & 32767)) / 32768;
       n = (n - (out[1] = n & 32767)) / 32768;
       out[3] = (n - (out[2] = n & 32767)) / 32768 & 32767;
     }
-    __name(factor, "factor");
   }
 });
 
@@ -14107,7 +13607,6 @@ var require_sparse_bitfield = __commonJS({
         this.length = 8 * this.byteLength;
       }
     }
-    __name(Bitfield, "Bitfield");
     Bitfield.prototype.get = function(i) {
       var o = i & 7;
       var j = (i - o) / 8;
@@ -14154,11 +13653,9 @@ var require_sparse_bitfield = __commonJS({
       b.fill(0);
       return b;
     }
-    __name(alloc, "alloc");
     function powerOfTwo(x) {
       return !(x & x - 1);
     }
-    __name(powerOfTwo, "powerOfTwo");
   }
 });
 
@@ -14181,7 +13678,6 @@ var require_memory_code_points = __commonJS({
         offset += size;
         return (0, sparse_bitfield_1.default)({ buffer: codepoints });
       }
-      __name(read, "read");
       const unassigned_code_points = read();
       const commonly_mapped_to_nothing = read();
       const non_ASCII_space_characters = read();
@@ -14197,7 +13693,6 @@ var require_memory_code_points = __commonJS({
         bidirectional_l
       };
     }
-    __name(createMemoryCodePoints, "createMemoryCodePoints");
     exports2.createMemoryCodePoints = createMemoryCodePoints;
   }
 });
@@ -14226,7 +13721,6 @@ var require_node = __commonJS({
     function saslprep(input, opts) {
       return (0, index_1.default)(codePoints, input, opts);
     }
-    __name(saslprep, "saslprep");
     saslprep.saslprep = saslprep;
     saslprep.default = saslprep;
     module2.exports = saslprep;
@@ -14243,18 +13737,17 @@ var require_deps = __commonJS({
     function makeErrorModule(error) {
       const props = error ? { kModuleError: error } : {};
       return new Proxy(props, {
-        get: /* @__PURE__ */ __name((_, key) => {
+        get: (_, key) => {
           if (key === "kModuleError") {
             return error;
           }
           throw error;
-        }, "get"),
-        set: /* @__PURE__ */ __name(() => {
+        },
+        set: () => {
           throw error;
-        }, "set")
+        }
       });
     }
-    __name(makeErrorModule, "makeErrorModule");
     exports2.Kerberos = makeErrorModule(new error_1.MongoMissingDependencyError("Optional module `kerberos` not found. Please install it to enable kerberos authentication"));
     function getKerberos() {
       try {
@@ -14264,7 +13757,6 @@ var require_deps = __commonJS({
         return exports2.Kerberos;
       }
     }
-    __name(getKerberos, "getKerberos");
     exports2.getKerberos = getKerberos;
     exports2.ZStandard = makeErrorModule(new error_1.MongoMissingDependencyError("Optional module `@mongodb-js/zstd` not found. Please install it to enable zstd compression"));
     function getZstdLibrary() {
@@ -14275,7 +13767,6 @@ var require_deps = __commonJS({
         return exports2.ZStandard;
       }
     }
-    __name(getZstdLibrary, "getZstdLibrary");
     exports2.getZstdLibrary = getZstdLibrary;
     function getAwsCredentialProvider() {
       try {
@@ -14285,7 +13776,6 @@ var require_deps = __commonJS({
         return makeErrorModule(new error_1.MongoMissingDependencyError("Optional module `@aws-sdk/credential-providers` not found. Please install it to enable getting aws credentials via the official sdk."));
       }
     }
-    __name(getAwsCredentialProvider, "getAwsCredentialProvider");
     exports2.getAwsCredentialProvider = getAwsCredentialProvider;
     function getSnappy() {
       try {
@@ -14296,7 +13786,6 @@ var require_deps = __commonJS({
         return { kModuleError };
       }
     }
-    __name(getSnappy, "getSnappy");
     exports2.getSnappy = getSnappy;
     exports2.saslprep = makeErrorModule(new error_1.MongoMissingDependencyError("Optional module `saslprep` not found. Please install it to enable Stringprep Profile for User Names and Passwords"));
     try {
@@ -14325,7 +13814,7 @@ var require_auth_provider = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AuthProvider = exports2.AuthContext = void 0;
     var error_1 = require_error();
-    var _AuthContext = class _AuthContext {
+    var AuthContext = class {
       constructor(connection, credentials, options) {
         this.reauthenticating = false;
         this.connection = connection;
@@ -14333,10 +13822,8 @@ var require_auth_provider = __commonJS({
         this.options = options;
       }
     };
-    __name(_AuthContext, "AuthContext");
-    var AuthContext = _AuthContext;
     exports2.AuthContext = AuthContext;
-    var _AuthProvider = class _AuthProvider {
+    var AuthProvider = class {
       /**
        * Prepare the handshake document before the initial handshake.
        *
@@ -14362,8 +13849,6 @@ var require_auth_provider = __commonJS({
         }
       }
     };
-    __name(_AuthProvider, "AuthProvider");
-    var AuthProvider = _AuthProvider;
     exports2.AuthProvider = AuthProvider;
   }
 });
@@ -14389,9 +13874,8 @@ var require_gssapi = __commonJS({
     async function externalCommand(connection, command) {
       return connection.commandAsync((0, utils_1.ns)("$external.$cmd"), command, void 0);
     }
-    __name(externalCommand, "externalCommand");
     var krb;
-    var _GSSAPI = class _GSSAPI extends auth_provider_1.AuthProvider {
+    var GSSAPI = class extends auth_provider_1.AuthProvider {
       async auth(authContext) {
         const { connection, credentials } = authContext;
         if (credentials == null) {
@@ -14411,8 +13895,6 @@ var require_gssapi = __commonJS({
         });
       }
     };
-    __name(_GSSAPI, "GSSAPI");
-    var GSSAPI = _GSSAPI;
     exports2.GSSAPI = GSSAPI;
     async function makeKerberosClient(authContext) {
       const { hostAddress } = authContext.options;
@@ -14440,7 +13922,6 @@ var require_gssapi = __commonJS({
       }
       return initializeClient(spn, initOptions);
     }
-    __name(makeKerberosClient, "makeKerberosClient");
     function saslStart(payload) {
       return {
         saslStart: 1,
@@ -14449,7 +13930,6 @@ var require_gssapi = __commonJS({
         autoAuthorize: 1
       };
     }
-    __name(saslStart, "saslStart");
     function saslContinue(payload, conversationId) {
       return {
         saslContinue: 1,
@@ -14457,7 +13937,6 @@ var require_gssapi = __commonJS({
         payload
       };
     }
-    __name(saslContinue, "saslContinue");
     async function negotiate(client, retries, payload) {
       try {
         const response = await client.step(payload);
@@ -14469,12 +13948,10 @@ var require_gssapi = __commonJS({
         return negotiate(client, retries - 1, payload);
       }
     }
-    __name(negotiate, "negotiate");
     async function finalize(client, user, payload) {
       const response = await client.unwrap(payload);
       return client.wrap(response || "", { user });
     }
-    __name(finalize, "finalize");
     async function performGSSAPICanonicalizeHostName(host, mechanismProperties) {
       const mode = mechanismProperties.CANONICALIZE_HOST_NAME;
       if (!mode || mode === exports2.GSSAPICanonicalizationValue.none) {
@@ -14492,7 +13969,6 @@ var require_gssapi = __commonJS({
         return resolveCname(host);
       }
     }
-    __name(performGSSAPICanonicalizeHostName, "performGSSAPICanonicalizeHostName");
     exports2.performGSSAPICanonicalizeHostName = performGSSAPICanonicalizeHostName;
     async function resolveCname(host) {
       try {
@@ -14502,14 +13978,12 @@ var require_gssapi = __commonJS({
         return host;
       }
     }
-    __name(resolveCname, "resolveCname");
     exports2.resolveCname = resolveCname;
     function loadKrb() {
       if (!krb) {
         krb = (0, deps_1.getKerberos)();
       }
     }
-    __name(loadKrb, "loadKrb");
   }
 });
 
@@ -14560,7 +14034,6 @@ var require_mongo_credentials = __commonJS({
       }
       return providers_1.AuthMechanism.MONGODB_CR;
     }
-    __name(getDefaultAuthMechanism, "getDefaultAuthMechanism");
     var ALLOWED_PROVIDER_NAMES = ["aws", "azure"];
     var ALLOWED_HOSTS_ERROR = "Auth mechanism property ALLOWED_HOSTS must be an array of strings.";
     exports2.DEFAULT_ALLOWED_HOSTS = [
@@ -14572,7 +14045,7 @@ var require_mongo_credentials = __commonJS({
       "::1"
     ];
     var TOKEN_AUDIENCE_MISSING_ERROR = "TOKEN_AUDIENCE must be set in the auth mechanism properties when PROVIDER_NAME is azure.";
-    var _MongoCredentials = class _MongoCredentials {
+    var MongoCredentials = class _MongoCredentials {
       constructor(options) {
         this.username = options.username ?? "";
         this.password = options.password;
@@ -14689,8 +14162,6 @@ var require_mongo_credentials = __commonJS({
         });
       }
     };
-    __name(_MongoCredentials, "MongoCredentials");
-    var MongoCredentials = _MongoCredentials;
     exports2.MongoCredentials = MongoCredentials;
   }
 });
@@ -14705,7 +14176,6 @@ var require_lib = __commonJS({
       }
       return new ErrorType(`${options.context ? options.context : "Value"} ${message}.`);
     }
-    __name(makeException, "makeException");
     function toNumber(value, options) {
       if (typeof value === "bigint") {
         throw makeException(TypeError, "is a BigInt which cannot be converted to a number", options);
@@ -14715,22 +14185,18 @@ var require_lib = __commonJS({
       }
       return options.globals.Number(value);
     }
-    __name(toNumber, "toNumber");
     function evenRound(x) {
       if (x > 0 && x % 1 === 0.5 && (x & 1) === 0 || x < 0 && x % 1 === -0.5 && (x & 1) === 1) {
         return censorNegativeZero(Math.floor(x));
       }
       return censorNegativeZero(Math.round(x));
     }
-    __name(evenRound, "evenRound");
     function integerPart(n) {
       return censorNegativeZero(Math.trunc(n));
     }
-    __name(integerPart, "integerPart");
     function sign(x) {
       return x < 0 ? -1 : 1;
     }
-    __name(sign, "sign");
     function modulo(x, y) {
       const signMightNotMatch = x % y;
       if (sign(y) !== sign(signMightNotMatch)) {
@@ -14738,11 +14204,9 @@ var require_lib = __commonJS({
       }
       return signMightNotMatch;
     }
-    __name(modulo, "modulo");
     function censorNegativeZero(x) {
       return x === 0 ? 0 : x;
     }
-    __name(censorNegativeZero, "censorNegativeZero");
     function createIntegerConversion(bitLength, { unsigned }) {
       let lowerBound, upperBound;
       if (unsigned) {
@@ -14790,7 +14254,6 @@ var require_lib = __commonJS({
         return x;
       };
     }
-    __name(createIntegerConversion, "createIntegerConversion");
     function createLongLongConversion(bitLength, { unsigned }) {
       const upperBound = Number.MAX_SAFE_INTEGER;
       const lowerBound = unsigned ? 0 : Number.MIN_SAFE_INTEGER;
@@ -14825,7 +14288,6 @@ var require_lib = __commonJS({
         return Number(xBigInt);
       };
     }
-    __name(createLongLongConversion, "createLongLongConversion");
     exports2.any = (value) => {
       return value;
     };
@@ -14940,7 +14402,6 @@ var require_lib = __commonJS({
         return false;
       }
     }
-    __name(isNonSharedArrayBuffer, "isNonSharedArrayBuffer");
     function isSharedArrayBuffer(value) {
       try {
         sabByteLengthGetter.call(value);
@@ -14949,7 +14410,6 @@ var require_lib = __commonJS({
         return false;
       }
     }
-    __name(isSharedArrayBuffer, "isSharedArrayBuffer");
     function isArrayBufferDetached(value) {
       try {
         new Uint8Array(value);
@@ -14958,7 +14418,6 @@ var require_lib = __commonJS({
         return true;
       }
     }
-    __name(isArrayBufferDetached, "isArrayBufferDetached");
     exports2.ArrayBuffer = (value, options = {}) => {
       if (!isNonSharedArrayBuffer(value)) {
         if (options.allowShared && !isSharedArrayBuffer(value)) {
@@ -15060,7 +14519,6 @@ var require_utils2 = __commonJS({
     function isObject(value) {
       return typeof value === "object" && value !== null || typeof value === "function";
     }
-    __name(isObject, "isObject");
     var hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
     function define2(target, source) {
       for (const key of Reflect.ownKeys(source)) {
@@ -15070,7 +14528,6 @@ var require_utils2 = __commonJS({
         }
       }
     }
-    __name(define2, "define");
     function newObjectInRealm(globalObject, object) {
       const ctorRegistry = initCtorRegistry(globalObject);
       return Object.defineProperties(
@@ -15078,7 +14535,6 @@ var require_utils2 = __commonJS({
         Object.getOwnPropertyDescriptors(object)
       );
     }
-    __name(newObjectInRealm, "newObjectInRealm");
     var wrapperSymbol = Symbol("wrapper");
     var implSymbol = Symbol("impl");
     var sameObjectCaches = Symbol("SameObject caches");
@@ -15106,7 +14562,6 @@ var require_utils2 = __commonJS({
       globalObject[ctorRegistrySymbol] = ctorRegistry;
       return ctorRegistry;
     }
-    __name(initCtorRegistry, "initCtorRegistry");
     function getSameObject(wrapper, prop, creator) {
       if (!wrapper[sameObjectCaches]) {
         wrapper[sameObjectCaches] = /* @__PURE__ */ Object.create(null);
@@ -15117,25 +14572,20 @@ var require_utils2 = __commonJS({
       wrapper[sameObjectCaches][prop] = creator();
       return wrapper[sameObjectCaches][prop];
     }
-    __name(getSameObject, "getSameObject");
     function wrapperForImpl(impl) {
       return impl ? impl[wrapperSymbol] : null;
     }
-    __name(wrapperForImpl, "wrapperForImpl");
     function implForWrapper(wrapper) {
       return wrapper ? wrapper[implSymbol] : null;
     }
-    __name(implForWrapper, "implForWrapper");
     function tryWrapperForImpl(impl) {
       const wrapper = wrapperForImpl(impl);
       return wrapper ? wrapper : impl;
     }
-    __name(tryWrapperForImpl, "tryWrapperForImpl");
     function tryImplForWrapper(wrapper) {
       const impl = implForWrapper(wrapper);
       return impl ? impl : wrapper;
     }
-    __name(tryImplForWrapper, "tryImplForWrapper");
     var iterInternalSymbol = Symbol("internal");
     function isArrayIndexPropName(P) {
       if (typeof P !== "string") {
@@ -15151,7 +14601,6 @@ var require_utils2 = __commonJS({
       }
       return true;
     }
-    __name(isArrayIndexPropName, "isArrayIndexPropName");
     var byteLengthGetter = Object.getOwnPropertyDescriptor(ArrayBuffer.prototype, "byteLength").get;
     function isArrayBuffer(value) {
       try {
@@ -15161,7 +14610,6 @@ var require_utils2 = __commonJS({
         return false;
       }
     }
-    __name(isArrayBuffer, "isArrayBuffer");
     function iteratorResult([key, value], kind) {
       let result;
       switch (kind) {
@@ -15177,7 +14625,6 @@ var require_utils2 = __commonJS({
       }
       return { value: result, done: false };
     }
-    __name(iteratorResult, "iteratorResult");
     var supportsPropertyIndex = Symbol("supports property index");
     var supportedPropertyIndices = Symbol("supported property indices");
     var supportsPropertyName = Symbol("supports property name");
@@ -15297,7 +14744,6 @@ var require_tr46 = __commonJS({
     function containsNonASCII(str) {
       return /[^\x00-\x7F]/u.test(str);
     }
-    __name(containsNonASCII, "containsNonASCII");
     function findStatus(val, { useSTD3ASCIIRules }) {
       let start = 0;
       let end = mappingTable.length - 1;
@@ -15323,7 +14769,6 @@ var require_tr46 = __commonJS({
       }
       return null;
     }
-    __name(findStatus, "findStatus");
     function mapChars(domainName, { useSTD3ASCIIRules, processingOption }) {
       let hasError = false;
       let processed = "";
@@ -15356,7 +14801,6 @@ var require_tr46 = __commonJS({
         error: hasError
       };
     }
-    __name(mapChars, "mapChars");
     function validateLabel(label, { checkHyphens, checkBidi, checkJoiners, processingOption, useSTD3ASCIIRules }) {
       if (label.normalize("NFC") !== label) {
         return false;
@@ -15416,7 +14860,6 @@ var require_tr46 = __commonJS({
       }
       return true;
     }
-    __name(validateLabel, "validateLabel");
     function isBidiDomain(labels) {
       const domain = labels.map((label) => {
         if (label.startsWith("xn--")) {
@@ -15430,7 +14873,6 @@ var require_tr46 = __commonJS({
       }).join(".");
       return regexes.bidiDomain.test(domain);
     }
-    __name(isBidiDomain, "isBidiDomain");
     function processing(domainName, options) {
       const { processingOption } = options;
       let { string, error } = mapChars(domainName, options);
@@ -15467,7 +14909,6 @@ var require_tr46 = __commonJS({
         error
       };
     }
-    __name(processing, "processing");
     function toASCII(domainName, {
       checkHyphens = false,
       checkBidi = false,
@@ -15514,7 +14955,6 @@ var require_tr46 = __commonJS({
       }
       return labels.join(".");
     }
-    __name(toASCII, "toASCII");
     function toUnicode(domainName, {
       checkHyphens = false,
       checkBidi = false,
@@ -15534,7 +14974,6 @@ var require_tr46 = __commonJS({
         error: result.error
       };
     }
-    __name(toUnicode, "toUnicode");
     module2.exports = {
       toASCII,
       toUnicode
@@ -15549,19 +14988,15 @@ var require_infra = __commonJS({
     function isASCIIDigit(c) {
       return c >= 48 && c <= 57;
     }
-    __name(isASCIIDigit, "isASCIIDigit");
     function isASCIIAlpha(c) {
       return c >= 65 && c <= 90 || c >= 97 && c <= 122;
     }
-    __name(isASCIIAlpha, "isASCIIAlpha");
     function isASCIIAlphanumeric(c) {
       return isASCIIAlpha(c) || isASCIIDigit(c);
     }
-    __name(isASCIIAlphanumeric, "isASCIIAlphanumeric");
     function isASCIIHex(c) {
       return isASCIIDigit(c) || c >= 65 && c <= 70 || c >= 97 && c <= 102;
     }
-    __name(isASCIIHex, "isASCIIHex");
     module2.exports = {
       isASCIIDigit,
       isASCIIAlpha,
@@ -15580,11 +15015,9 @@ var require_encoding = __commonJS({
     function utf8Encode(string) {
       return utf8Encoder.encode(string);
     }
-    __name(utf8Encode, "utf8Encode");
     function utf8DecodeWithoutBOM(bytes) {
       return utf8Decoder.decode(bytes);
     }
-    __name(utf8DecodeWithoutBOM, "utf8DecodeWithoutBOM");
     module2.exports = {
       utf8Encode,
       utf8DecodeWithoutBOM
@@ -15601,7 +15034,6 @@ var require_percent_encoding = __commonJS({
     function p(char) {
       return char.codePointAt(0);
     }
-    __name(p, "p");
     function percentEncode(c) {
       let hex = c.toString(16).toUpperCase();
       if (hex.length === 1) {
@@ -15609,7 +15041,6 @@ var require_percent_encoding = __commonJS({
       }
       return `%${hex}`;
     }
-    __name(percentEncode, "percentEncode");
     function percentDecodeBytes(input) {
       const output = new Uint8Array(input.byteLength);
       let outputIndex = 0;
@@ -15627,50 +15058,40 @@ var require_percent_encoding = __commonJS({
       }
       return output.slice(0, outputIndex);
     }
-    __name(percentDecodeBytes, "percentDecodeBytes");
     function percentDecodeString(input) {
       const bytes = utf8Encode(input);
       return percentDecodeBytes(bytes);
     }
-    __name(percentDecodeString, "percentDecodeString");
     function isC0ControlPercentEncode(c) {
       return c <= 31 || c > 126;
     }
-    __name(isC0ControlPercentEncode, "isC0ControlPercentEncode");
     var extraFragmentPercentEncodeSet = /* @__PURE__ */ new Set([p(" "), p('"'), p("<"), p(">"), p("`")]);
     function isFragmentPercentEncode(c) {
       return isC0ControlPercentEncode(c) || extraFragmentPercentEncodeSet.has(c);
     }
-    __name(isFragmentPercentEncode, "isFragmentPercentEncode");
     var extraQueryPercentEncodeSet = /* @__PURE__ */ new Set([p(" "), p('"'), p("#"), p("<"), p(">")]);
     function isQueryPercentEncode(c) {
       return isC0ControlPercentEncode(c) || extraQueryPercentEncodeSet.has(c);
     }
-    __name(isQueryPercentEncode, "isQueryPercentEncode");
     function isSpecialQueryPercentEncode(c) {
       return isQueryPercentEncode(c) || c === p("'");
     }
-    __name(isSpecialQueryPercentEncode, "isSpecialQueryPercentEncode");
     var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([p("?"), p("`"), p("{"), p("}")]);
     function isPathPercentEncode(c) {
       return isQueryPercentEncode(c) || extraPathPercentEncodeSet.has(c);
     }
-    __name(isPathPercentEncode, "isPathPercentEncode");
     var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([p("/"), p(":"), p(";"), p("="), p("@"), p("["), p("\\"), p("]"), p("^"), p("|")]);
     function isUserinfoPercentEncode(c) {
       return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
     }
-    __name(isUserinfoPercentEncode, "isUserinfoPercentEncode");
     var extraComponentPercentEncodeSet = /* @__PURE__ */ new Set([p("$"), p("%"), p("&"), p("+"), p(",")]);
     function isComponentPercentEncode(c) {
       return isUserinfoPercentEncode(c) || extraComponentPercentEncodeSet.has(c);
     }
-    __name(isComponentPercentEncode, "isComponentPercentEncode");
     var extraURLEncodedPercentEncodeSet = /* @__PURE__ */ new Set([p("!"), p("'"), p("("), p(")"), p("~")]);
     function isURLEncodedPercentEncode(c) {
       return isComponentPercentEncode(c) || extraURLEncodedPercentEncodeSet.has(c);
     }
-    __name(isURLEncodedPercentEncode, "isURLEncodedPercentEncode");
     function utf8PercentEncodeCodePointInternal(codePoint, percentEncodePredicate) {
       const bytes = utf8Encode(codePoint);
       let output = "";
@@ -15683,11 +15104,9 @@ var require_percent_encoding = __commonJS({
       }
       return output;
     }
-    __name(utf8PercentEncodeCodePointInternal, "utf8PercentEncodeCodePointInternal");
     function utf8PercentEncodeCodePoint(codePoint, percentEncodePredicate) {
       return utf8PercentEncodeCodePointInternal(String.fromCodePoint(codePoint), percentEncodePredicate);
     }
-    __name(utf8PercentEncodeCodePoint, "utf8PercentEncodeCodePoint");
     function utf8PercentEncodeString(input, percentEncodePredicate, spaceAsPlus = false) {
       let output = "";
       for (const codePoint of input) {
@@ -15699,7 +15118,6 @@ var require_percent_encoding = __commonJS({
       }
       return output;
     }
-    __name(utf8PercentEncodeString, "utf8PercentEncodeString");
     module2.exports = {
       isC0ControlPercentEncode,
       isFragmentPercentEncode,
@@ -15737,7 +15155,6 @@ var require_url_state_machine = __commonJS({
     function p(char) {
       return char.codePointAt(0);
     }
-    __name(p, "p");
     var specialSchemes = {
       ftp: 21,
       file: null,
@@ -15750,57 +15167,44 @@ var require_url_state_machine = __commonJS({
     function countSymbols(str) {
       return [...str].length;
     }
-    __name(countSymbols, "countSymbols");
     function at(input, idx) {
       const c = input[idx];
       return isNaN(c) ? void 0 : String.fromCodePoint(c);
     }
-    __name(at, "at");
     function isSingleDot(buffer) {
       return buffer === "." || buffer.toLowerCase() === "%2e";
     }
-    __name(isSingleDot, "isSingleDot");
     function isDoubleDot(buffer) {
       buffer = buffer.toLowerCase();
       return buffer === ".." || buffer === "%2e." || buffer === ".%2e" || buffer === "%2e%2e";
     }
-    __name(isDoubleDot, "isDoubleDot");
     function isWindowsDriveLetterCodePoints(cp1, cp2) {
       return infra.isASCIIAlpha(cp1) && (cp2 === p(":") || cp2 === p("|"));
     }
-    __name(isWindowsDriveLetterCodePoints, "isWindowsDriveLetterCodePoints");
     function isWindowsDriveLetterString(string) {
       return string.length === 2 && infra.isASCIIAlpha(string.codePointAt(0)) && (string[1] === ":" || string[1] === "|");
     }
-    __name(isWindowsDriveLetterString, "isWindowsDriveLetterString");
     function isNormalizedWindowsDriveLetterString(string) {
       return string.length === 2 && infra.isASCIIAlpha(string.codePointAt(0)) && string[1] === ":";
     }
-    __name(isNormalizedWindowsDriveLetterString, "isNormalizedWindowsDriveLetterString");
     function containsForbiddenHostCodePoint(string) {
       return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|%|\/|:|<|>|\?|@|\[|\\|\]|\^|\|/u) !== -1;
     }
-    __name(containsForbiddenHostCodePoint, "containsForbiddenHostCodePoint");
     function containsForbiddenHostCodePointExcludingPercent(string) {
       return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|\/|:|<|>|\?|@|\[|\\|\]|\^|\|/u) !== -1;
     }
-    __name(containsForbiddenHostCodePointExcludingPercent, "containsForbiddenHostCodePointExcludingPercent");
     function isSpecialScheme(scheme) {
       return specialSchemes[scheme] !== void 0;
     }
-    __name(isSpecialScheme, "isSpecialScheme");
     function isSpecial(url) {
       return isSpecialScheme(url.scheme);
     }
-    __name(isSpecial, "isSpecial");
     function isNotSpecial(url) {
       return !isSpecialScheme(url.scheme);
     }
-    __name(isNotSpecial, "isNotSpecial");
     function defaultPort(scheme) {
       return specialSchemes[scheme];
     }
-    __name(defaultPort, "defaultPort");
     function parseIPv4Number(input) {
       if (input === "") {
         return failure;
@@ -15828,7 +15232,6 @@ var require_url_state_machine = __commonJS({
       }
       return parseInt(input, R);
     }
-    __name(parseIPv4Number, "parseIPv4Number");
     function parseIPv4(input) {
       const parts = input.split(".");
       if (parts[parts.length - 1] === "") {
@@ -15863,7 +15266,6 @@ var require_url_state_machine = __commonJS({
       }
       return ipv4;
     }
-    __name(parseIPv4, "parseIPv4");
     function serializeIPv4(address) {
       let output = "";
       let n = address;
@@ -15876,7 +15278,6 @@ var require_url_state_machine = __commonJS({
       }
       return output;
     }
-    __name(serializeIPv4, "serializeIPv4");
     function parseIPv6(input) {
       const address = [0, 0, 0, 0, 0, 0, 0, 0];
       let pieceIndex = 0;
@@ -15982,7 +15383,6 @@ var require_url_state_machine = __commonJS({
       }
       return address;
     }
-    __name(parseIPv6, "parseIPv6");
     function serializeIPv6(address) {
       let output = "";
       const compress = findLongestZeroSequence(address);
@@ -16006,7 +15406,6 @@ var require_url_state_machine = __commonJS({
       }
       return output;
     }
-    __name(serializeIPv6, "serializeIPv6");
     function parseHost(input, isNotSpecialArg = false) {
       if (input[0] === "[") {
         if (input[input.length - 1] !== "]") {
@@ -16030,7 +15429,6 @@ var require_url_state_machine = __commonJS({
       }
       return asciiDomain;
     }
-    __name(parseHost, "parseHost");
     function endsInANumber(input) {
       const parts = input.split(".");
       if (parts[parts.length - 1] === "") {
@@ -16048,14 +15446,12 @@ var require_url_state_machine = __commonJS({
       }
       return false;
     }
-    __name(endsInANumber, "endsInANumber");
     function parseOpaqueHost(input) {
       if (containsForbiddenHostCodePointExcludingPercent(input)) {
         return failure;
       }
       return utf8PercentEncodeString(input, isC0ControlPercentEncode);
     }
-    __name(parseOpaqueHost, "parseOpaqueHost");
     function findLongestZeroSequence(arr) {
       let maxIdx = null;
       let maxLen = 1;
@@ -16081,7 +15477,6 @@ var require_url_state_machine = __commonJS({
       }
       return maxIdx;
     }
-    __name(findLongestZeroSequence, "findLongestZeroSequence");
     function serializeHost(host) {
       if (typeof host === "number") {
         return serializeIPv4(host);
@@ -16091,7 +15486,6 @@ var require_url_state_machine = __commonJS({
       }
       return host;
     }
-    __name(serializeHost, "serializeHost");
     function domainToASCII(domain, beStrict = false) {
       const result = tr46.toASCII(domain, {
         checkBidi: true,
@@ -16105,15 +15499,12 @@ var require_url_state_machine = __commonJS({
       }
       return result;
     }
-    __name(domainToASCII, "domainToASCII");
     function trimControlChars(url) {
       return url.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/ug, "");
     }
-    __name(trimControlChars, "trimControlChars");
     function trimTabAndNewline(url) {
       return url.replace(/\u0009|\u000A|\u000D/ug, "");
     }
-    __name(trimTabAndNewline, "trimTabAndNewline");
     function shortenPath(url) {
       const { path } = url;
       if (path.length === 0) {
@@ -16124,23 +15515,18 @@ var require_url_state_machine = __commonJS({
       }
       path.pop();
     }
-    __name(shortenPath, "shortenPath");
     function includesCredentials(url) {
       return url.username !== "" || url.password !== "";
     }
-    __name(includesCredentials, "includesCredentials");
     function cannotHaveAUsernamePasswordPort(url) {
       return url.host === null || url.host === "" || hasAnOpaquePath(url) || url.scheme === "file";
     }
-    __name(cannotHaveAUsernamePasswordPort, "cannotHaveAUsernamePasswordPort");
     function hasAnOpaquePath(url) {
       return typeof url.path === "string";
     }
-    __name(hasAnOpaquePath, "hasAnOpaquePath");
     function isNormalizedWindowsDriveLetter(string) {
       return /^[A-Za-z]:$/u.test(string);
     }
-    __name(isNormalizedWindowsDriveLetter, "isNormalizedWindowsDriveLetter");
     function URLStateMachine(input, base, encodingOverride, url, stateOverride) {
       this.pointer = 0;
       this.input = input;
@@ -16190,8 +15576,7 @@ var require_url_state_machine = __commonJS({
         }
       }
     }
-    __name(URLStateMachine, "URLStateMachine");
-    URLStateMachine.prototype["parse scheme start"] = /* @__PURE__ */ __name(function parseSchemeStart(c, cStr) {
+    URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, cStr) {
       if (infra.isASCIIAlpha(c)) {
         this.buffer += cStr.toLowerCase();
         this.state = "scheme";
@@ -16203,8 +15588,8 @@ var require_url_state_machine = __commonJS({
         return failure;
       }
       return true;
-    }, "parseSchemeStart");
-    URLStateMachine.prototype["parse scheme"] = /* @__PURE__ */ __name(function parseScheme(c, cStr) {
+    };
+    URLStateMachine.prototype["parse scheme"] = function parseScheme(c, cStr) {
       if (infra.isASCIIAlphanumeric(c) || c === p("+") || c === p("-") || c === p(".")) {
         this.buffer += cStr.toLowerCase();
       } else if (c === p(":")) {
@@ -16255,8 +15640,8 @@ var require_url_state_machine = __commonJS({
         return failure;
       }
       return true;
-    }, "parseScheme");
-    URLStateMachine.prototype["parse no scheme"] = /* @__PURE__ */ __name(function parseNoScheme(c) {
+    };
+    URLStateMachine.prototype["parse no scheme"] = function parseNoScheme(c) {
       if (this.base === null || hasAnOpaquePath(this.base) && c !== p("#")) {
         return failure;
       } else if (hasAnOpaquePath(this.base) && c === p("#")) {
@@ -16273,8 +15658,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseNoScheme");
-    URLStateMachine.prototype["parse special relative or authority"] = /* @__PURE__ */ __name(function parseSpecialRelativeOrAuthority(c) {
+    };
+    URLStateMachine.prototype["parse special relative or authority"] = function parseSpecialRelativeOrAuthority(c) {
       if (c === p("/") && this.input[this.pointer + 1] === p("/")) {
         this.state = "special authority ignore slashes";
         ++this.pointer;
@@ -16284,8 +15669,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseSpecialRelativeOrAuthority");
-    URLStateMachine.prototype["parse path or authority"] = /* @__PURE__ */ __name(function parsePathOrAuthority(c) {
+    };
+    URLStateMachine.prototype["parse path or authority"] = function parsePathOrAuthority(c) {
       if (c === p("/")) {
         this.state = "authority";
       } else {
@@ -16293,8 +15678,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parsePathOrAuthority");
-    URLStateMachine.prototype["parse relative"] = /* @__PURE__ */ __name(function parseRelative(c) {
+    };
+    URLStateMachine.prototype["parse relative"] = function parseRelative(c) {
       this.url.scheme = this.base.scheme;
       if (c === p("/")) {
         this.state = "relative slash";
@@ -16322,8 +15707,8 @@ var require_url_state_machine = __commonJS({
         }
       }
       return true;
-    }, "parseRelative");
-    URLStateMachine.prototype["parse relative slash"] = /* @__PURE__ */ __name(function parseRelativeSlash(c) {
+    };
+    URLStateMachine.prototype["parse relative slash"] = function parseRelativeSlash(c) {
       if (isSpecial(this.url) && (c === p("/") || c === p("\\"))) {
         if (c === p("\\")) {
           this.parseError = true;
@@ -16340,8 +15725,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseRelativeSlash");
-    URLStateMachine.prototype["parse special authority slashes"] = /* @__PURE__ */ __name(function parseSpecialAuthoritySlashes(c) {
+    };
+    URLStateMachine.prototype["parse special authority slashes"] = function parseSpecialAuthoritySlashes(c) {
       if (c === p("/") && this.input[this.pointer + 1] === p("/")) {
         this.state = "special authority ignore slashes";
         ++this.pointer;
@@ -16351,8 +15736,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseSpecialAuthoritySlashes");
-    URLStateMachine.prototype["parse special authority ignore slashes"] = /* @__PURE__ */ __name(function parseSpecialAuthorityIgnoreSlashes(c) {
+    };
+    URLStateMachine.prototype["parse special authority ignore slashes"] = function parseSpecialAuthorityIgnoreSlashes(c) {
       if (c !== p("/") && c !== p("\\")) {
         this.state = "authority";
         --this.pointer;
@@ -16360,8 +15745,8 @@ var require_url_state_machine = __commonJS({
         this.parseError = true;
       }
       return true;
-    }, "parseSpecialAuthorityIgnoreSlashes");
-    URLStateMachine.prototype["parse authority"] = /* @__PURE__ */ __name(function parseAuthority(c, cStr) {
+    };
+    URLStateMachine.prototype["parse authority"] = function parseAuthority(c, cStr) {
       if (c === p("@")) {
         this.parseError = true;
         if (this.atFlag) {
@@ -16395,8 +15780,8 @@ var require_url_state_machine = __commonJS({
         this.buffer += cStr;
       }
       return true;
-    }, "parseAuthority");
-    URLStateMachine.prototype["parse hostname"] = URLStateMachine.prototype["parse host"] = /* @__PURE__ */ __name(function parseHostName(c, cStr) {
+    };
+    URLStateMachine.prototype["parse hostname"] = URLStateMachine.prototype["parse host"] = function parseHostName(c, cStr) {
       if (this.stateOverride && this.url.scheme === "file") {
         --this.pointer;
         this.state = "file host";
@@ -16443,8 +15828,8 @@ var require_url_state_machine = __commonJS({
         this.buffer += cStr;
       }
       return true;
-    }, "parseHostName");
-    URLStateMachine.prototype["parse port"] = /* @__PURE__ */ __name(function parsePort(c, cStr) {
+    };
+    URLStateMachine.prototype["parse port"] = function parsePort(c, cStr) {
       if (infra.isASCIIDigit(c)) {
         this.buffer += cStr;
       } else if (isNaN(c) || c === p("/") || c === p("?") || c === p("#") || isSpecial(this.url) && c === p("\\") || this.stateOverride) {
@@ -16467,14 +15852,13 @@ var require_url_state_machine = __commonJS({
         return failure;
       }
       return true;
-    }, "parsePort");
+    };
     var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([p("/"), p("\\"), p("?"), p("#")]);
     function startsWithWindowsDriveLetter(input, pointer) {
       const length = input.length - pointer;
       return length >= 2 && isWindowsDriveLetterCodePoints(input[pointer], input[pointer + 1]) && (length === 2 || fileOtherwiseCodePoints.has(input[pointer + 2]));
     }
-    __name(startsWithWindowsDriveLetter, "startsWithWindowsDriveLetter");
-    URLStateMachine.prototype["parse file"] = /* @__PURE__ */ __name(function parseFile(c) {
+    URLStateMachine.prototype["parse file"] = function parseFile(c) {
       this.url.scheme = "file";
       this.url.host = "";
       if (c === p("/") || c === p("\\")) {
@@ -16508,8 +15892,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseFile");
-    URLStateMachine.prototype["parse file slash"] = /* @__PURE__ */ __name(function parseFileSlash(c) {
+    };
+    URLStateMachine.prototype["parse file slash"] = function parseFileSlash(c) {
       if (c === p("/") || c === p("\\")) {
         if (c === p("\\")) {
           this.parseError = true;
@@ -16526,8 +15910,8 @@ var require_url_state_machine = __commonJS({
         --this.pointer;
       }
       return true;
-    }, "parseFileSlash");
-    URLStateMachine.prototype["parse file host"] = /* @__PURE__ */ __name(function parseFileHost(c, cStr) {
+    };
+    URLStateMachine.prototype["parse file host"] = function parseFileHost(c, cStr) {
       if (isNaN(c) || c === p("/") || c === p("\\") || c === p("?") || c === p("#")) {
         --this.pointer;
         if (!this.stateOverride && isWindowsDriveLetterString(this.buffer)) {
@@ -16558,8 +15942,8 @@ var require_url_state_machine = __commonJS({
         this.buffer += cStr;
       }
       return true;
-    }, "parseFileHost");
-    URLStateMachine.prototype["parse path start"] = /* @__PURE__ */ __name(function parsePathStart(c) {
+    };
+    URLStateMachine.prototype["parse path start"] = function parsePathStart(c) {
       if (isSpecial(this.url)) {
         if (c === p("\\")) {
           this.parseError = true;
@@ -16583,8 +15967,8 @@ var require_url_state_machine = __commonJS({
         this.url.path.push("");
       }
       return true;
-    }, "parsePathStart");
-    URLStateMachine.prototype["parse path"] = /* @__PURE__ */ __name(function parsePath(c) {
+    };
+    URLStateMachine.prototype["parse path"] = function parsePath(c) {
       if (isNaN(c) || c === p("/") || isSpecial(this.url) && c === p("\\") || !this.stateOverride && (c === p("?") || c === p("#"))) {
         if (isSpecial(this.url) && c === p("\\")) {
           this.parseError = true;
@@ -16618,8 +16002,8 @@ var require_url_state_machine = __commonJS({
         this.buffer += utf8PercentEncodeCodePoint(c, isPathPercentEncode);
       }
       return true;
-    }, "parsePath");
-    URLStateMachine.prototype["parse opaque path"] = /* @__PURE__ */ __name(function parseOpaquePath(c) {
+    };
+    URLStateMachine.prototype["parse opaque path"] = function parseOpaquePath(c) {
       if (c === p("?")) {
         this.url.query = "";
         this.state = "query";
@@ -16638,8 +16022,8 @@ var require_url_state_machine = __commonJS({
         }
       }
       return true;
-    }, "parseOpaquePath");
-    URLStateMachine.prototype["parse query"] = /* @__PURE__ */ __name(function parseQuery(c, cStr) {
+    };
+    URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
       if (!isSpecial(this.url) || this.url.scheme === "ws" || this.url.scheme === "wss") {
         this.encodingOverride = "utf-8";
       }
@@ -16658,8 +16042,8 @@ var require_url_state_machine = __commonJS({
         this.buffer += cStr;
       }
       return true;
-    }, "parseQuery");
-    URLStateMachine.prototype["parse fragment"] = /* @__PURE__ */ __name(function parseFragment(c) {
+    };
+    URLStateMachine.prototype["parse fragment"] = function parseFragment(c) {
       if (!isNaN(c)) {
         if (c === p("%") && (!infra.isASCIIHex(this.input[this.pointer + 1]) || !infra.isASCIIHex(this.input[this.pointer + 2]))) {
           this.parseError = true;
@@ -16667,7 +16051,7 @@ var require_url_state_machine = __commonJS({
         this.url.fragment += utf8PercentEncodeCodePoint(c, isFragmentPercentEncode);
       }
       return true;
-    }, "parseFragment");
+    };
     function serializeURL(url, excludeFragment) {
       let output = `${url.scheme}:`;
       if (url.host !== null) {
@@ -16696,7 +16080,6 @@ var require_url_state_machine = __commonJS({
       }
       return output;
     }
-    __name(serializeURL, "serializeURL");
     function serializeOrigin(tuple) {
       let result = `${tuple.scheme}://`;
       result += serializeHost(tuple.host);
@@ -16705,7 +16088,6 @@ var require_url_state_machine = __commonJS({
       }
       return result;
     }
-    __name(serializeOrigin, "serializeOrigin");
     function serializePath(url) {
       if (hasAnOpaquePath(url)) {
         return url.path;
@@ -16716,7 +16098,6 @@ var require_url_state_machine = __commonJS({
       }
       return output;
     }
-    __name(serializePath, "serializePath");
     module2.exports.serializeURL = serializeURL;
     module2.exports.serializePath = serializePath;
     module2.exports.serializeURLOrigin = function(url) {
@@ -16783,7 +16164,6 @@ var require_urlencoded = __commonJS({
     function p(char) {
       return char.codePointAt(0);
     }
-    __name(p, "p");
     function parseUrlencoded(input) {
       const sequences = strictlySplitByteSequence(input, p("&"));
       const output = [];
@@ -16808,11 +16188,9 @@ var require_urlencoded = __commonJS({
       }
       return output;
     }
-    __name(parseUrlencoded, "parseUrlencoded");
     function parseUrlencodedString(input) {
       return parseUrlencoded(utf8Encode(input));
     }
-    __name(parseUrlencodedString, "parseUrlencodedString");
     function serializeUrlencoded(tuples, encodingOverride = void 0) {
       let encoding = "utf-8";
       if (encodingOverride !== void 0) {
@@ -16837,7 +16215,6 @@ var require_urlencoded = __commonJS({
       }
       return output;
     }
-    __name(serializeUrlencoded, "serializeUrlencoded");
     function strictlySplitByteSequence(buf, cp) {
       const list = [];
       let last = 0;
@@ -16852,7 +16229,6 @@ var require_urlencoded = __commonJS({
       }
       return list;
     }
-    __name(strictlySplitByteSequence, "strictlySplitByteSequence");
     function replaceByteInByteSequence(buf, from, to) {
       let i = buf.indexOf(from);
       while (i >= 0) {
@@ -16861,7 +16237,6 @@ var require_urlencoded = __commonJS({
       }
       return buf;
     }
-    __name(replaceByteInByteSequence, "replaceByteInByteSequence");
     module2.exports = {
       parseUrlencodedString,
       serializeUrlencoded
@@ -16889,7 +16264,6 @@ var require_Function = __commonJS({
         callResult = conversions["any"](callResult, { context, globals: globalObject });
         return callResult;
       }
-      __name(invokeTheCallbackFunction, "invokeTheCallbackFunction");
       invokeTheCallbackFunction.construct = (...args) => {
         for (let i = 0; i < args.length; i++) {
           args[i] = utils.tryWrapperForImpl(args[i]);
@@ -16910,8 +16284,7 @@ var require_URLSearchParams_impl = __commonJS({
   "node_modules/whatwg-url/lib/URLSearchParams-impl.js"(exports2) {
     "use strict";
     var urlencoded = require_urlencoded();
-    var _a;
-    exports2.implementation = (_a = class {
+    exports2.implementation = class URLSearchParamsImpl {
       constructor(globalObject, constructorArgs, { doNotStripQMark = false }) {
         let init = constructorArgs[0];
         this._list = [];
@@ -17023,7 +16396,7 @@ var require_URLSearchParams_impl = __commonJS({
       toString() {
         return urlencoded.serializeUrlencoded(this._list);
       }
-    }, __name(_a, "URLSearchParamsImpl"), _a);
+    };
   }
 });
 
@@ -17070,7 +16443,6 @@ var require_URLSearchParams = __commonJS({
       }
       return Object.create(proto);
     }
-    __name(makeWrapper, "makeWrapper");
     exports2.create = (globalObject, constructorArgs, privateData) => {
       const wrapper = makeWrapper(globalObject);
       return exports2.setup(wrapper, globalObject, constructorArgs, privateData);
@@ -17113,7 +16485,7 @@ var require_URLSearchParams = __commonJS({
         return;
       }
       const ctorRegistry = utils.initCtorRegistry(globalObject);
-      const _URLSearchParams = class _URLSearchParams {
+      class URLSearchParams {
         constructor() {
           const args = [];
           {
@@ -17398,9 +16770,7 @@ var require_URLSearchParams = __commonJS({
             i++;
           }
         }
-      };
-      __name(_URLSearchParams, "URLSearchParams");
-      let URLSearchParams = _URLSearchParams;
+      }
       Object.defineProperties(URLSearchParams.prototype, {
         append: { enumerable: true },
         delete: { enumerable: true },
@@ -17458,8 +16828,7 @@ var require_URL_impl = __commonJS({
     var usm = require_url_state_machine();
     var urlencoded = require_urlencoded();
     var URLSearchParams = require_URLSearchParams();
-    var _a;
-    exports2.implementation = (_a = class {
+    exports2.implementation = class URLImpl {
       constructor(globalObject, constructorArgs) {
         const url = constructorArgs[0];
         const base = constructorArgs[1];
@@ -17614,7 +16983,7 @@ var require_URL_impl = __commonJS({
       toJSON() {
         return this.href;
       }
-    }, __name(_a, "URLImpl"), _a);
+    };
   }
 });
 
@@ -17649,7 +17018,6 @@ var require_URL = __commonJS({
       }
       return Object.create(proto);
     }
-    __name(makeWrapper, "makeWrapper");
     exports2.create = (globalObject, constructorArgs, privateData) => {
       const wrapper = makeWrapper(globalObject);
       return exports2.setup(wrapper, globalObject, constructorArgs, privateData);
@@ -17692,7 +17060,7 @@ var require_URL = __commonJS({
         return;
       }
       const ctorRegistry = utils.initCtorRegistry(globalObject);
-      const _URL = class _URL {
+      class URL {
         constructor(url) {
           if (arguments.length < 1) {
             throw new globalObject.TypeError(
@@ -17930,9 +17298,7 @@ var require_URL = __commonJS({
           });
           esValue[implSymbol]["hash"] = V;
         }
-      };
-      __name(_URL, "URL");
-      let URL = _URL;
+      }
       Object.defineProperties(URL.prototype, {
         toJSON: { enumerable: true },
         href: { enumerable: true },
@@ -18015,9 +17381,9 @@ var require_redact = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -18070,7 +17436,6 @@ var require_redact = __commonJS({
       }
       return url;
     }
-    __name(redactValidConnectionString, "redactValidConnectionString");
     exports2.redactValidConnectionString = redactValidConnectionString;
     function redactConnectionString(uri, options) {
       var _a, _b;
@@ -18098,7 +17463,6 @@ var require_redact = __commonJS({
       }
       return uri;
     }
-    __name(redactConnectionString, "redactConnectionString");
     exports2.redactConnectionString = redactConnectionString;
   }
 });
@@ -18111,16 +17475,15 @@ var require_lib2 = __commonJS({
     exports2.CommaAndColonSeparatedRecord = exports2.ConnectionString = exports2.redactConnectionString = void 0;
     var whatwg_url_1 = require_whatwg_url();
     var redact_1 = require_redact();
-    Object.defineProperty(exports2, "redactConnectionString", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "redactConnectionString", { enumerable: true, get: function() {
       return redact_1.redactConnectionString;
-    }, "get") });
+    } });
     var DUMMY_HOSTNAME = "__this_is_a_placeholder__";
     function connectionStringHasValidScheme(connectionString) {
       return connectionString.startsWith("mongodb://") || connectionString.startsWith("mongodb+srv://");
     }
-    __name(connectionStringHasValidScheme, "connectionStringHasValidScheme");
     var HOSTS_REGEX = /^(?<protocol>[^/]+):\/\/(?:(?<username>[^:@]*)(?::(?<password>[^@]*))?@)?(?<hosts>(?!:)[^/?@]*)(?<rest>.*)/;
-    var _CaseInsensitiveMap = class _CaseInsensitiveMap extends Map {
+    var CaseInsensitiveMap = class extends Map {
       delete(name) {
         return super.delete(this._normalizeKey(name));
       }
@@ -18144,11 +17507,8 @@ var require_lib2 = __commonJS({
         return name;
       }
     };
-    __name(_CaseInsensitiveMap, "CaseInsensitiveMap");
-    var CaseInsensitiveMap = _CaseInsensitiveMap;
     function caseInsenstiveURLSearchParams(Ctor) {
-      var _a;
-      return _a = class extends Ctor {
+      return class CaseInsenstiveURLSearchParams extends Ctor {
         append(name, value) {
           return super.append(this._normalizeKey(name), value);
         }
@@ -18182,21 +17542,16 @@ var require_lib2 = __commonJS({
         _normalizeKey(name) {
           return CaseInsensitiveMap.prototype._normalizeKey.call(this, name);
         }
-      }, __name(_a, "CaseInsenstiveURLSearchParams"), _a;
+      };
     }
-    __name(caseInsenstiveURLSearchParams, "caseInsenstiveURLSearchParams");
-    var _URLWithoutHost = class _URLWithoutHost extends whatwg_url_1.URL {
+    var URLWithoutHost = class extends whatwg_url_1.URL {
     };
-    __name(_URLWithoutHost, "URLWithoutHost");
-    var URLWithoutHost = _URLWithoutHost;
-    var _MongoParseError = class _MongoParseError extends Error {
+    var MongoParseError = class extends Error {
       get name() {
         return "MongoParseError";
       }
     };
-    __name(_MongoParseError, "MongoParseError");
-    var MongoParseError = _MongoParseError;
-    var _ConnectionString = class _ConnectionString extends URLWithoutHost {
+    var ConnectionString = class _ConnectionString extends URLWithoutHost {
       constructor(uri, options = {}) {
         var _a;
         const { looseValidation } = options;
@@ -18320,10 +17675,8 @@ var require_lib2 = __commonJS({
         return { href, origin, protocol, username, password, hosts, pathname, search, searchParams, hash };
       }
     };
-    __name(_ConnectionString, "ConnectionString");
-    var ConnectionString = _ConnectionString;
     exports2.ConnectionString = ConnectionString;
-    var _CommaAndColonSeparatedRecord = class _CommaAndColonSeparatedRecord extends CaseInsensitiveMap {
+    var CommaAndColonSeparatedRecord = class extends CaseInsensitiveMap {
       constructor(from) {
         super();
         for (const entry of (from !== null && from !== void 0 ? from : "").split(",")) {
@@ -18341,8 +17694,6 @@ var require_lib2 = __commonJS({
         return [...this].map((entry) => entry.join(":")).join(",");
       }
     };
-    __name(_CommaAndColonSeparatedRecord, "CommaAndColonSeparatedRecord");
-    var CommaAndColonSeparatedRecord = _CommaAndColonSeparatedRecord;
     exports2.CommaAndColonSeparatedRecord = CommaAndColonSeparatedRecord;
     exports2.default = ConnectionString;
   }
@@ -18528,7 +17879,7 @@ var require_client_metadata = __commonJS({
     var bson_1 = require_bson2();
     var error_1 = require_error();
     var NODE_DRIVER_VERSION = require_package().version;
-    var _LimitedSizeDocument = class _LimitedSizeDocument {
+    var LimitedSizeDocument = class {
       constructor(maxSize) {
         this.maxSize = maxSize;
         this.document = /* @__PURE__ */ new Map();
@@ -18553,8 +17904,6 @@ var require_client_metadata = __commonJS({
         });
       }
     };
-    __name(_LimitedSizeDocument, "LimitedSizeDocument");
-    var LimitedSizeDocument = _LimitedSizeDocument;
     exports2.LimitedSizeDocument = LimitedSizeDocument;
     function makeClientMetadata(options) {
       const metadataDocument = new LimitedSizeDocument(512);
@@ -18602,7 +17951,6 @@ var require_client_metadata = __commonJS({
       }
       return metadataDocument.toObject();
     }
-    __name(makeClientMetadata, "makeClientMetadata");
     exports2.makeClientMetadata = makeClientMetadata;
     function getFAASEnv() {
       const { AWS_EXECUTION_ENV = "", AWS_LAMBDA_RUNTIME_API = "", FUNCTIONS_WORKER_RUNTIME = "", K_SERVICE = "", FUNCTION_NAME = "", VERCEL = "", AWS_LAMBDA_FUNCTION_MEMORY_SIZE = "", AWS_REGION = "", FUNCTION_MEMORY_MB = "", FUNCTION_REGION = "", FUNCTION_TIMEOUT_SEC = "", VERCEL_REGION = "" } = process2.env;
@@ -18647,7 +17995,6 @@ var require_client_metadata = __commonJS({
       }
       return null;
     }
-    __name(getFAASEnv, "getFAASEnv");
     exports2.getFAASEnv = getFAASEnv;
     function getRuntimeInfo() {
       var _a, _b;
@@ -18661,7 +18008,6 @@ var require_client_metadata = __commonJS({
       }
       return `Node.js ${process2.version}, ${os.endianness()}`;
     }
-    __name(getRuntimeInfo, "getRuntimeInfo");
   }
 });
 
@@ -18709,7 +18055,6 @@ var require_compression = __commonJS({
       }
       return Snappy;
     }
-    __name(loadSnappy, "loadSnappy");
     async function compress(options, dataToBeCompressed) {
       const zlibOptions = {};
       switch (options.agreedCompressor) {
@@ -18735,7 +18080,6 @@ var require_compression = __commonJS({
         }
       }
     }
-    __name(compress, "compress");
     exports2.compress = compress;
     async function decompress(compressorID, compressedData) {
       if (compressorID !== exports2.Compressor.snappy && compressorID !== exports2.Compressor.zstd && compressorID !== exports2.Compressor.zlib && compressorID !== exports2.Compressor.none) {
@@ -18761,14 +18105,12 @@ var require_compression = __commonJS({
         }
       }
     }
-    __name(decompress, "decompress");
     exports2.decompress = decompress;
     function loadZstd() {
       if (!zstd) {
         zstd = (0, deps_1.getZstdLibrary)();
       }
     }
-    __name(loadZstd, "loadZstd");
   }
 });
 
@@ -18784,7 +18126,7 @@ var require_encrypter = __commonJS({
     var utils_1 = require_utils();
     var AutoEncrypterClass;
     var kInternalClient = Symbol("internalClient");
-    var _Encrypter = class _Encrypter {
+    var Encrypter = class {
       constructor(client, uri, options) {
         if (typeof options.autoEncryption !== "object") {
           throw new error_1.MongoInvalidArgumentError('Option "autoEncryption" must be specified');
@@ -18866,8 +18208,6 @@ var require_encrypter = __commonJS({
         AutoEncrypterClass = mongodbClientEncryption.extension(require_lib3()).AutoEncrypter;
       }
     };
-    __name(_Encrypter, "Encrypter");
-    var Encrypter = _Encrypter;
     exports2.Encrypter = Encrypter;
   }
 });
@@ -18895,7 +18235,7 @@ var require_mongo_logger = __commonJS({
       OFF: "off"
     });
     exports2.DEFAULT_MAX_DOCUMENT_LENGTH = 1e3;
-    var _SeverityLevelMap = class _SeverityLevelMap extends Map {
+    var SeverityLevelMap = class extends Map {
       constructor(entries) {
         const newEntries = [];
         for (const [level, value] of entries) {
@@ -18911,8 +18251,6 @@ var require_mongo_logger = __commonJS({
         return this.get(level);
       }
     };
-    __name(_SeverityLevelMap, "SeverityLevelMap");
-    var SeverityLevelMap = _SeverityLevelMap;
     exports2.SEVERITY_LEVEL_MAP = new SeverityLevelMap([
       [exports2.SeverityLevel.OFF, -Infinity],
       [exports2.SeverityLevel.EMERGENCY, 0],
@@ -18939,16 +18277,14 @@ var require_mongo_logger = __commonJS({
       }
       return null;
     }
-    __name(parseSeverityFromString, "parseSeverityFromString");
     function createStdioLogger(stream) {
       return {
-        write: /* @__PURE__ */ __name((log) => {
+        write: (log) => {
           stream.write((0, util_1.inspect)(log, { compact: true, breakLength: Infinity }), "utf-8");
           return;
-        }, "write")
+        }
       };
     }
-    __name(createStdioLogger, "createStdioLogger");
     exports2.createStdioLogger = createStdioLogger;
     function resolveLogPath({ MONGODB_LOG_PATH }, { mongodbLogPath }) {
       if (typeof mongodbLogPath === "string" && /^stderr$/i.test(mongodbLogPath)) {
@@ -18968,24 +18304,20 @@ var require_mongo_logger = __commonJS({
       }
       return createStdioLogger(process.stderr);
     }
-    __name(resolveLogPath, "resolveLogPath");
     function compareSeverity(s0, s1) {
       const s0Num = exports2.SEVERITY_LEVEL_MAP.getNumericSeverityLevel(s0);
       const s1Num = exports2.SEVERITY_LEVEL_MAP.getNumericSeverityLevel(s1);
       return s0Num < s1Num ? -1 : s0Num > s1Num ? 1 : 0;
     }
-    __name(compareSeverity, "compareSeverity");
     function stringifyWithMaxLen(value, maxDocumentLength) {
       const ejson = bson_1.EJSON.stringify(value);
       return maxDocumentLength !== 0 && ejson.length > maxDocumentLength ? `${ejson.slice(0, maxDocumentLength)}...` : ejson;
     }
-    __name(stringifyWithMaxLen, "stringifyWithMaxLen");
     exports2.stringifyWithMaxLen = stringifyWithMaxLen;
     function isLogConvertible(obj) {
       const objAsLogConvertible = obj;
       return objAsLogConvertible.toLog !== void 0 && typeof objAsLogConvertible.toLog === "function";
     }
-    __name(isLogConvertible, "isLogConvertible");
     function attachCommandFields(log, commandEvent) {
       log.commandName = commandEvent.commandName;
       log.requestId = commandEvent.requestId;
@@ -18998,14 +18330,12 @@ var require_mongo_logger = __commonJS({
       }
       return log;
     }
-    __name(attachCommandFields, "attachCommandFields");
     function attachConnectionFields(log, connectionPoolEvent) {
       const { host, port } = utils_1.HostAddress.fromString(connectionPoolEvent.address).toHostPort();
       log.serverHost = host;
       log.serverPort = port;
       return log;
     }
-    __name(attachConnectionFields, "attachConnectionFields");
     function defaultLogTransform(logObject, maxDocumentLength = exports2.DEFAULT_MAX_DOCUMENT_LENGTH) {
       var _a;
       let log = /* @__PURE__ */ Object.create(null);
@@ -19134,8 +18464,7 @@ var require_mongo_logger = __commonJS({
       }
       return log;
     }
-    __name(defaultLogTransform, "defaultLogTransform");
-    var _MongoLogger = class _MongoLogger {
+    var MongoLogger = class {
       constructor(options) {
         this.error = this.log.bind(this, "error");
         this.warn = this.log.bind(this, "warn");
@@ -19194,8 +18523,6 @@ var require_mongo_logger = __commonJS({
         };
       }
     };
-    __name(_MongoLogger, "MongoLogger");
-    var MongoLogger = _MongoLogger;
     exports2.MongoLogger = MongoLogger;
   }
 });
@@ -19283,16 +18610,15 @@ var require_connection_string = __commonJS({
       validateLoadBalancedOptions(hostAddresses, options, true);
       return hostAddresses;
     }
-    __name(resolveSRVRecord, "resolveSRVRecord");
     exports2.resolveSRVRecord = resolveSRVRecord;
     function checkTLSOptions(allOptions) {
       if (!allOptions)
         return;
-      const check = /* @__PURE__ */ __name((a, b) => {
+      const check = (a, b) => {
         if (allOptions.has(a) && allOptions.has(b)) {
           throw new error_1.MongoAPIError(`The '${a}' option cannot be used with the '${b}' option`);
         }
-      }, "check");
+      };
       check("tlsInsecure", "tlsAllowInvalidCertificates");
       check("tlsInsecure", "tlsAllowInvalidHostnames");
       check("tlsInsecure", "tlsDisableCertificateRevocationCheck");
@@ -19301,7 +18627,6 @@ var require_connection_string = __commonJS({
       check("tlsAllowInvalidCertificates", "tlsDisableOCSPEndpointCheck");
       check("tlsDisableCertificateRevocationCheck", "tlsDisableOCSPEndpointCheck");
     }
-    __name(checkTLSOptions, "checkTLSOptions");
     var TRUTHS = /* @__PURE__ */ new Set(["true", "t", "1", "y", "yes"]);
     var FALSEHOODS = /* @__PURE__ */ new Set(["false", "f", "0", "n", "no", "-1"]);
     function getBoolean(name, value) {
@@ -19322,7 +18647,6 @@ var require_connection_string = __commonJS({
       }
       throw new error_1.MongoParseError(`Expected ${name} to be stringified boolean value, got: ${value}`);
     }
-    __name(getBoolean, "getBoolean");
     function getIntFromOptions(name, value) {
       const parsedInt = (0, utils_1.parseInteger)(value);
       if (parsedInt != null) {
@@ -19330,7 +18654,6 @@ var require_connection_string = __commonJS({
       }
       throw new error_1.MongoParseError(`Expected ${name} to be stringified int value, got: ${value}`);
     }
-    __name(getIntFromOptions, "getIntFromOptions");
     function getUIntFromOptions(name, value) {
       const parsedValue = getIntFromOptions(name, value);
       if (parsedValue < 0) {
@@ -19338,7 +18661,6 @@ var require_connection_string = __commonJS({
       }
       return parsedValue;
     }
-    __name(getUIntFromOptions, "getUIntFromOptions");
     function* entriesFromString(value) {
       const keyValuePairs = value.split(",");
       for (const keyValue of keyValuePairs) {
@@ -19349,8 +18671,7 @@ var require_connection_string = __commonJS({
         yield [key, value2];
       }
     }
-    __name(entriesFromString, "entriesFromString");
-    var _CaseInsensitiveMap = class _CaseInsensitiveMap extends Map {
+    var CaseInsensitiveMap = class extends Map {
       constructor(entries = []) {
         super(entries.map(([k, v]) => [k.toLowerCase(), v]));
       }
@@ -19367,8 +18688,6 @@ var require_connection_string = __commonJS({
         return super.delete(k.toLowerCase());
       }
     };
-    __name(_CaseInsensitiveMap, "CaseInsensitiveMap");
-    var CaseInsensitiveMap = _CaseInsensitiveMap;
     function parseOptions(uri, mongoClient = void 0, options = {}) {
       if (mongoClient != null && !(mongoClient instanceof mongo_client_1.MongoClient)) {
         options = mongoClient;
@@ -19561,7 +18880,6 @@ var require_connection_string = __commonJS({
       mongoOptions.metadata = (0, client_metadata_1.makeClientMetadata)(mongoOptions);
       return mongoOptions;
     }
-    __name(parseOptions, "parseOptions");
     exports2.parseOptions = parseOptions;
     function validateLoadBalancedOptions(hosts, mongoOptions, isSrv) {
       if (mongoOptions.loadBalanced) {
@@ -19580,7 +18898,6 @@ var require_connection_string = __commonJS({
       }
       return;
     }
-    __name(validateLoadBalancedOptions, "validateLoadBalancedOptions");
     function setOption(mongoOptions, key, descriptor, values) {
       const { target, type, transform } = descriptor;
       const name = target ?? key;
@@ -19619,7 +18936,6 @@ var require_connection_string = __commonJS({
         }
       }
     }
-    __name(setOption, "setOption");
     exports2.OPTIONS = {
       appName: {
         type: "string"
@@ -20243,7 +19559,7 @@ var require_events = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ServerHeartbeatFailedEvent = exports2.ServerHeartbeatSucceededEvent = exports2.ServerHeartbeatStartedEvent = exports2.TopologyClosedEvent = exports2.TopologyOpeningEvent = exports2.TopologyDescriptionChangedEvent = exports2.ServerClosedEvent = exports2.ServerOpeningEvent = exports2.ServerDescriptionChangedEvent = void 0;
-    var _ServerDescriptionChangedEvent = class _ServerDescriptionChangedEvent {
+    var ServerDescriptionChangedEvent = class {
       /** @internal */
       constructor(topologyId, address, previousDescription, newDescription) {
         this.topologyId = topologyId;
@@ -20252,30 +19568,24 @@ var require_events = __commonJS({
         this.newDescription = newDescription;
       }
     };
-    __name(_ServerDescriptionChangedEvent, "ServerDescriptionChangedEvent");
-    var ServerDescriptionChangedEvent = _ServerDescriptionChangedEvent;
     exports2.ServerDescriptionChangedEvent = ServerDescriptionChangedEvent;
-    var _ServerOpeningEvent = class _ServerOpeningEvent {
+    var ServerOpeningEvent = class {
       /** @internal */
       constructor(topologyId, address) {
         this.topologyId = topologyId;
         this.address = address;
       }
     };
-    __name(_ServerOpeningEvent, "ServerOpeningEvent");
-    var ServerOpeningEvent = _ServerOpeningEvent;
     exports2.ServerOpeningEvent = ServerOpeningEvent;
-    var _ServerClosedEvent = class _ServerClosedEvent {
+    var ServerClosedEvent = class {
       /** @internal */
       constructor(topologyId, address) {
         this.topologyId = topologyId;
         this.address = address;
       }
     };
-    __name(_ServerClosedEvent, "ServerClosedEvent");
-    var ServerClosedEvent = _ServerClosedEvent;
     exports2.ServerClosedEvent = ServerClosedEvent;
-    var _TopologyDescriptionChangedEvent = class _TopologyDescriptionChangedEvent {
+    var TopologyDescriptionChangedEvent = class {
       /** @internal */
       constructor(topologyId, previousDescription, newDescription) {
         this.topologyId = topologyId;
@@ -20283,37 +19593,29 @@ var require_events = __commonJS({
         this.newDescription = newDescription;
       }
     };
-    __name(_TopologyDescriptionChangedEvent, "TopologyDescriptionChangedEvent");
-    var TopologyDescriptionChangedEvent = _TopologyDescriptionChangedEvent;
     exports2.TopologyDescriptionChangedEvent = TopologyDescriptionChangedEvent;
-    var _TopologyOpeningEvent = class _TopologyOpeningEvent {
+    var TopologyOpeningEvent = class {
       /** @internal */
       constructor(topologyId) {
         this.topologyId = topologyId;
       }
     };
-    __name(_TopologyOpeningEvent, "TopologyOpeningEvent");
-    var TopologyOpeningEvent = _TopologyOpeningEvent;
     exports2.TopologyOpeningEvent = TopologyOpeningEvent;
-    var _TopologyClosedEvent = class _TopologyClosedEvent {
+    var TopologyClosedEvent = class {
       /** @internal */
       constructor(topologyId) {
         this.topologyId = topologyId;
       }
     };
-    __name(_TopologyClosedEvent, "TopologyClosedEvent");
-    var TopologyClosedEvent = _TopologyClosedEvent;
     exports2.TopologyClosedEvent = TopologyClosedEvent;
-    var _ServerHeartbeatStartedEvent = class _ServerHeartbeatStartedEvent {
+    var ServerHeartbeatStartedEvent = class {
       /** @internal */
       constructor(connectionId) {
         this.connectionId = connectionId;
       }
     };
-    __name(_ServerHeartbeatStartedEvent, "ServerHeartbeatStartedEvent");
-    var ServerHeartbeatStartedEvent = _ServerHeartbeatStartedEvent;
     exports2.ServerHeartbeatStartedEvent = ServerHeartbeatStartedEvent;
-    var _ServerHeartbeatSucceededEvent = class _ServerHeartbeatSucceededEvent {
+    var ServerHeartbeatSucceededEvent = class {
       /** @internal */
       constructor(connectionId, duration, reply) {
         this.connectionId = connectionId;
@@ -20321,10 +19623,8 @@ var require_events = __commonJS({
         this.reply = reply ?? {};
       }
     };
-    __name(_ServerHeartbeatSucceededEvent, "ServerHeartbeatSucceededEvent");
-    var ServerHeartbeatSucceededEvent = _ServerHeartbeatSucceededEvent;
     exports2.ServerHeartbeatSucceededEvent = ServerHeartbeatSucceededEvent;
-    var _ServerHeartbeatFailedEvent = class _ServerHeartbeatFailedEvent {
+    var ServerHeartbeatFailedEvent = class {
       /** @internal */
       constructor(connectionId, duration, failure) {
         this.connectionId = connectionId;
@@ -20332,8 +19632,6 @@ var require_events = __commonJS({
         this.failure = failure;
       }
     };
-    __name(_ServerHeartbeatFailedEvent, "ServerHeartbeatFailedEvent");
-    var ServerHeartbeatFailedEvent = _ServerHeartbeatFailedEvent;
     exports2.ServerHeartbeatFailedEvent = ServerHeartbeatFailedEvent;
   }
 });
@@ -20361,7 +19659,7 @@ var require_commands = __commonJS({
     var QUERY_FAILURE = 2;
     var SHARD_CONFIG_STALE = 4;
     var AWAIT_CAPABLE = 8;
-    var _Query = class _Query {
+    var Query = class _Query {
       constructor(ns, query, options) {
         if (ns == null)
           throw new error_1.MongoRuntimeError("Namespace must be specified for query");
@@ -20494,10 +19792,8 @@ var require_commands = __commonJS({
         return buffers;
       }
     };
-    __name(_Query, "Query");
-    var Query = _Query;
     exports2.Query = Query;
-    var _Response = class _Response {
+    var Response = class {
       constructor(message, msgHeader, msgBody, opts) {
         this.documents = new Array(0);
         this.parsed = false;
@@ -20572,13 +19868,11 @@ var require_commands = __commonJS({
         this.parsed = true;
       }
     };
-    __name(_Response, "Response");
-    var Response = _Response;
     exports2.Response = Response;
     var OPTS_CHECKSUM_PRESENT = 1;
     var OPTS_MORE_TO_COME = 2;
     var OPTS_EXHAUST_ALLOWED = 1 << 16;
-    var _Msg = class _Msg {
+    var Msg = class _Msg {
       constructor(ns, command, options) {
         if (command == null)
           throw new error_1.MongoInvalidArgumentError("Query document must be specified for query");
@@ -20646,10 +19940,8 @@ var require_commands = __commonJS({
         return _requestId;
       }
     };
-    __name(_Msg, "Msg");
-    var Msg = _Msg;
     exports2.Msg = Msg;
-    var _BinMsg = class _BinMsg {
+    var BinMsg = class {
       constructor(message, msgHeader, msgBody, opts) {
         this.parsed = false;
         this.raw = message;
@@ -20729,8 +20021,6 @@ var require_commands = __commonJS({
         return { utf8: { writeErrors: false } };
       }
     };
-    __name(_BinMsg, "BinMsg");
-    var BinMsg = _BinMsg;
     exports2.BinMsg = BinMsg;
   }
 });
@@ -20744,7 +20034,7 @@ var require_command_monitoring_events = __commonJS({
     var constants_1 = require_constants2();
     var utils_1 = require_utils();
     var commands_1 = require_commands();
-    var _CommandStartedEvent = class _CommandStartedEvent {
+    var CommandStartedEvent = class {
       /**
        * Create a started event
        *
@@ -20774,10 +20064,8 @@ var require_command_monitoring_events = __commonJS({
         return !!this.serviceId;
       }
     };
-    __name(_CommandStartedEvent, "CommandStartedEvent");
-    var CommandStartedEvent = _CommandStartedEvent;
     exports2.CommandStartedEvent = CommandStartedEvent;
-    var _CommandSucceededEvent = class _CommandSucceededEvent {
+    var CommandSucceededEvent = class {
       /**
        * Create a succeeded event
        *
@@ -20805,10 +20093,8 @@ var require_command_monitoring_events = __commonJS({
         return !!this.serviceId;
       }
     };
-    __name(_CommandSucceededEvent, "CommandSucceededEvent");
-    var CommandSucceededEvent = _CommandSucceededEvent;
     exports2.CommandSucceededEvent = CommandSucceededEvent;
-    var _CommandFailedEvent = class _CommandFailedEvent {
+    var CommandFailedEvent = class {
       /**
        * Create a failure event
        *
@@ -20836,8 +20122,6 @@ var require_command_monitoring_events = __commonJS({
         return !!this.serviceId;
       }
     };
-    __name(_CommandFailedEvent, "CommandFailedEvent");
-    var CommandFailedEvent = _CommandFailedEvent;
     exports2.CommandFailedEvent = CommandFailedEvent;
     exports2.SENSITIVE_COMMANDS = /* @__PURE__ */ new Set([
       "authenticate",
@@ -20851,11 +20135,11 @@ var require_command_monitoring_events = __commonJS({
       "copydb"
     ]);
     var HELLO_COMMANDS = /* @__PURE__ */ new Set(["hello", constants_1.LEGACY_HELLO_COMMAND, constants_1.LEGACY_HELLO_COMMAND_CAMEL_CASE]);
-    var extractCommandName = /* @__PURE__ */ __name((commandDoc) => Object.keys(commandDoc)[0], "extractCommandName");
-    var namespace = /* @__PURE__ */ __name((command) => command.ns, "namespace");
-    var databaseName = /* @__PURE__ */ __name((command) => command.ns.split(".")[0], "databaseName");
-    var collectionName = /* @__PURE__ */ __name((command) => command.ns.split(".")[1], "collectionName");
-    var maybeRedact = /* @__PURE__ */ __name((commandName, commandDoc, result) => exports2.SENSITIVE_COMMANDS.has(commandName) || HELLO_COMMANDS.has(commandName) && commandDoc.speculativeAuthenticate ? {} : result, "maybeRedact");
+    var extractCommandName = (commandDoc) => Object.keys(commandDoc)[0];
+    var namespace = (command) => command.ns;
+    var databaseName = (command) => command.ns.split(".")[0];
+    var collectionName = (command) => command.ns.split(".")[1];
+    var maybeRedact = (commandName, commandDoc, result) => exports2.SENSITIVE_COMMANDS.has(commandName) || HELLO_COMMANDS.has(commandName) && commandDoc.speculativeAuthenticate ? {} : result;
     var LEGACY_FIND_QUERY_MAP = {
       $query: "filter",
       $orderby: "sort",
@@ -20933,7 +20217,6 @@ var require_command_monitoring_events = __commonJS({
       }
       return command.query ? clonedQuery : clonedCommand;
     }
-    __name(extractCommand, "extractCommand");
     function extractReply(command, reply) {
       if (!reply) {
         return reply;
@@ -20953,7 +20236,6 @@ var require_command_monitoring_events = __commonJS({
       }
       return (0, utils_1.deepCopy)(reply.result ? reply.result : reply);
     }
-    __name(extractReply, "extractReply");
     function extractConnectionDetails(connection) {
       let connectionId;
       if ("id" in connection) {
@@ -20965,7 +20247,6 @@ var require_command_monitoring_events = __commonJS({
         connectionId
       };
     }
-    __name(extractConnectionDetails, "extractConnectionDetails");
   }
 });
 
@@ -20985,7 +20266,7 @@ var require_message_stream = __commonJS({
     var COMPRESSION_DETAILS_SIZE = 9;
     var kDefaultMaxBsonMessageSize = 1024 * 1024 * 16 * 4;
     var kBuffer = Symbol("buffer");
-    var _MessageStream = class _MessageStream extends stream_1.Duplex {
+    var MessageStream = class extends stream_1.Duplex {
       constructor(options = {}) {
         super(options);
         this.isMonitoringConnection = false;
@@ -21032,15 +20313,12 @@ var require_message_stream = __commonJS({
         });
       }
     };
-    __name(_MessageStream, "MessageStream");
-    var MessageStream = _MessageStream;
     exports2.MessageStream = MessageStream;
     function canCompress(command) {
       const commandDoc = command instanceof commands_1.Msg ? command.command : command.query;
       const commandName = Object.keys(commandDoc)[0];
       return !compression_1.uncompressibleCommands.has(commandName);
     }
-    __name(canCompress, "canCompress");
     function processIncomingData(stream, callback) {
       const buffer = stream[kBuffer];
       const sizeOfMessage = buffer.getInt32();
@@ -21063,7 +20341,7 @@ var require_message_stream = __commonJS({
         responseTo: message.readInt32LE(8),
         opCode: message.readInt32LE(12)
       };
-      const monitorHasAnotherHello = /* @__PURE__ */ __name(() => {
+      const monitorHasAnotherHello = () => {
         if (stream.isMonitoringConnection) {
           const sizeOfMessage2 = buffer.getInt32();
           if (sizeOfMessage2 != null && sizeOfMessage2 <= buffer.length) {
@@ -21071,7 +20349,7 @@ var require_message_stream = __commonJS({
           }
         }
         return false;
-      }, "monitorHasAnotherHello");
+      };
       let ResponseType = messageHeader.opCode === constants_1.OP_MSG ? commands_1.BinMsg : commands_1.Response;
       if (messageHeader.opCode !== constants_1.OP_COMPRESSED) {
         const messageBody = message.subarray(MESSAGE_HEADER_SIZE);
@@ -21106,7 +20384,6 @@ var require_message_stream = __commonJS({
         return callback(error);
       });
     }
-    __name(processIncomingData, "processIncomingData");
   }
 });
 
@@ -21126,7 +20403,7 @@ var require_stream_description = __commonJS({
       "maxWriteBatchSize",
       "logicalSessionTimeoutMinutes"
     ];
-    var _StreamDescription = class _StreamDescription {
+    var StreamDescription = class {
       constructor(address, options) {
         this.address = address;
         this.type = common_1.ServerType.Unknown;
@@ -21160,8 +20437,6 @@ var require_stream_description = __commonJS({
         }
       }
     };
-    __name(_StreamDescription, "StreamDescription");
-    var StreamDescription = _StreamDescription;
     exports2.StreamDescription = StreamDescription;
   }
 });
@@ -21195,7 +20470,7 @@ var require_connection = __commonJS({
     var kAutoEncrypter = Symbol("autoEncrypter");
     var kDelayedTimeoutId = Symbol("delayedTimeoutId");
     var INVALID_QUEUE_SIZE = "Connection internal queue contains more than 1 operation description";
-    var _Connection = class _Connection extends mongo_types_1.TypedEventEmitter {
+    var Connection = class _Connection extends mongo_types_1.TypedEventEmitter {
       constructor(stream, options) {
         var _a;
         super();
@@ -21369,13 +20644,13 @@ var require_connection = __commonJS({
           return;
         }
         this.closed = true;
-        const completeCleanup = /* @__PURE__ */ __name(() => {
+        const completeCleanup = () => {
           for (const op of this[kQueue].values()) {
             op.cb(error);
           }
           this[kQueue].clear();
           this.emit(_Connection.CLOSE);
-        }, "completeCleanup");
+        };
         this[kStream].removeAllListeners();
         this[kMessageStream].removeAllListeners();
         this[kMessageStream].destroy();
@@ -21443,8 +20718,6 @@ var require_connection = __commonJS({
         }
       }
     };
-    __name(_Connection, "Connection");
-    var Connection = _Connection;
     Connection.COMMAND_STARTED = constants_1.COMMAND_STARTED;
     Connection.COMMAND_SUCCEEDED = constants_1.COMMAND_SUCCEEDED;
     Connection.COMMAND_FAILED = constants_1.COMMAND_FAILED;
@@ -21454,7 +20727,7 @@ var require_connection = __commonJS({
     Connection.PINNED = constants_1.PINNED;
     Connection.UNPINNED = constants_1.UNPINNED;
     exports2.Connection = Connection;
-    var _CryptoConnection = class _CryptoConnection extends Connection {
+    var CryptoConnection = class extends Connection {
       constructor(stream, options) {
         super(stream, options);
         this[kAutoEncrypter] = options.autoEncrypter;
@@ -21498,14 +20771,11 @@ var require_connection = __commonJS({
         });
       }
     };
-    __name(_CryptoConnection, "CryptoConnection");
-    var CryptoConnection = _CryptoConnection;
     exports2.CryptoConnection = CryptoConnection;
     function hasSessionSupport(conn) {
       const description = conn.description;
       return description.logicalSessionTimeoutMinutes != null;
     }
-    __name(hasSessionSupport, "hasSessionSupport");
     exports2.hasSessionSupport = hasSessionSupport;
     function supportsOpMsg(conn) {
       const description = conn.description;
@@ -21514,7 +20784,6 @@ var require_connection = __commonJS({
       }
       return (0, utils_1.maxWireVersion)(conn) >= 6 && !description.__nodejs_mock_server__;
     }
-    __name(supportsOpMsg, "supportsOpMsg");
     function streamIdentifier(stream, options) {
       if (options.proxyHost) {
         return options.hostAddress.toString();
@@ -21525,7 +20794,6 @@ var require_connection = __commonJS({
       }
       return (0, utils_1.uuidV4)().toString("hex");
     }
-    __name(streamIdentifier, "streamIdentifier");
     function write(conn, command, options, callback) {
       options = options ?? {};
       const operationDescription = {
@@ -21589,7 +20857,6 @@ var require_connection = __commonJS({
         operationDescription.cb();
       }
     }
-    __name(write, "write");
   }
 });
 
@@ -21619,12 +20886,10 @@ var require_utils3 = __commonJS({
         throw new Error(ERRORS.INVALID_ENCODING);
       }
     }
-    __name(checkEncoding, "checkEncoding");
     exports2.checkEncoding = checkEncoding;
     function isFiniteInteger(value) {
       return typeof value === "number" && isFinite(value) && isInteger(value);
     }
-    __name(isFiniteInteger, "isFiniteInteger");
     exports2.isFiniteInteger = isFiniteInteger;
     function checkOffsetOrLengthValue(value, offset) {
       if (typeof value === "number") {
@@ -21635,28 +20900,23 @@ var require_utils3 = __commonJS({
         throw new Error(offset ? ERRORS.INVALID_OFFSET_NON_NUMBER : ERRORS.INVALID_LENGTH_NON_NUMBER);
       }
     }
-    __name(checkOffsetOrLengthValue, "checkOffsetOrLengthValue");
     function checkLengthValue(length) {
       checkOffsetOrLengthValue(length, false);
     }
-    __name(checkLengthValue, "checkLengthValue");
     exports2.checkLengthValue = checkLengthValue;
     function checkOffsetValue(offset) {
       checkOffsetOrLengthValue(offset, true);
     }
-    __name(checkOffsetValue, "checkOffsetValue");
     exports2.checkOffsetValue = checkOffsetValue;
     function checkTargetOffset(offset, buff) {
       if (offset < 0 || offset > buff.length) {
         throw new Error(ERRORS.INVALID_TARGET_OFFSET);
       }
     }
-    __name(checkTargetOffset, "checkTargetOffset");
     exports2.checkTargetOffset = checkTargetOffset;
     function isInteger(value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     }
-    __name(isInteger, "isInteger");
     function bigIntAndBufferInt64Check(bufferMethod) {
       if (typeof BigInt === "undefined") {
         throw new Error("Platform does not support JS BigInt type.");
@@ -21665,7 +20925,6 @@ var require_utils3 = __commonJS({
         throw new Error(`Platform does not support Buffer.prototype.${bufferMethod}.`);
       }
     }
-    __name(bigIntAndBufferInt64Check, "bigIntAndBufferInt64Check");
     exports2.bigIntAndBufferInt64Check = bigIntAndBufferInt64Check;
   }
 });
@@ -21678,7 +20937,7 @@ var require_smartbuffer = __commonJS({
     var utils_1 = require_utils3();
     var DEFAULT_SMARTBUFFER_SIZE = 4096;
     var DEFAULT_SMARTBUFFER_ENCODING = "utf8";
-    var _SmartBuffer = class _SmartBuffer {
+    var SmartBuffer = class _SmartBuffer {
       /**
        * Creates a new SmartBuffer instance.
        *
@@ -22824,8 +22083,6 @@ var require_smartbuffer = __commonJS({
         return this;
       }
     };
-    __name(_SmartBuffer, "SmartBuffer");
-    var SmartBuffer = _SmartBuffer;
     exports2.SmartBuffer = SmartBuffer;
   }
 });
@@ -22878,7 +22135,7 @@ var require_constants3 = __commonJS({
       // 4 header + 4 ip + 2 port
       Socks5ResponseIPv6: 22,
       // 4 header + 16 ip + 2 port
-      Socks5ResponseHostname: /* @__PURE__ */ __name((hostNameLength) => hostNameLength + 7, "Socks5ResponseHostname"),
+      Socks5ResponseHostname: (hostNameLength) => hostNameLength + 7,
       // 4 header + 1 host length + host + 2 port
       // Command response + incoming connection (bind)
       Socks4Response: 8
@@ -22953,14 +22210,12 @@ var require_util = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.shuffleArray = exports2.SocksClientError = void 0;
-    var _SocksClientError = class _SocksClientError extends Error {
+    var SocksClientError = class extends Error {
       constructor(message, options) {
         super(message);
         this.options = options;
       }
     };
-    __name(_SocksClientError, "SocksClientError");
-    var SocksClientError = _SocksClientError;
     exports2.SocksClientError = SocksClientError;
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -22968,7 +22223,6 @@ var require_util = __commonJS({
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-    __name(shuffleArray, "shuffleArray");
     exports2.shuffleArray = shuffleArray;
   }
 });
@@ -22988,7 +22242,6 @@ var require_common3 = __commonJS({
       }
       return false;
     }
-    __name(isInSubnet, "isInSubnet");
     exports2.isInSubnet = isInSubnet;
     function isCorrect(defaultBits) {
       return function() {
@@ -23001,7 +22254,6 @@ var require_common3 = __commonJS({
         return this.parsedSubnet === String(this.subnetMask);
       };
     }
-    __name(isCorrect, "isCorrect");
     exports2.isCorrect = isCorrect;
   }
 });
@@ -23025,7 +22277,7 @@ var require_address_error = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AddressError = void 0;
-    var _AddressError = class _AddressError extends Error {
+    var AddressError = class extends Error {
       constructor(message, parseMessage) {
         super(message);
         this.name = "AddressError";
@@ -23034,8 +22286,6 @@ var require_address_error = __commonJS({
         }
       }
     };
-    __name(_AddressError, "AddressError");
-    var AddressError = _AddressError;
     exports2.AddressError = AddressError;
   }
 });
@@ -23053,11 +22303,9 @@ var require_jsbn = __commonJS({
           else if (b == null && "string" != typeof a) this.fromString(a, 256);
           else this.fromString(a, b);
       }
-      __name(BigInteger, "BigInteger");
       function nbi() {
         return new BigInteger(null);
       }
-      __name(nbi, "nbi");
       function am1(i, x, w, j, c, n) {
         while (--n >= 0) {
           var v = x * this[i++] + w[j] + c;
@@ -23066,7 +22314,6 @@ var require_jsbn = __commonJS({
         }
         return c;
       }
-      __name(am1, "am1");
       function am2(i, x, w, j, c, n) {
         var xl = x & 32767, xh = x >> 15;
         while (--n >= 0) {
@@ -23079,7 +22326,6 @@ var require_jsbn = __commonJS({
         }
         return c;
       }
-      __name(am2, "am2");
       function am3(i, x, w, j, c, n) {
         var xl = x & 16383, xh = x >> 14;
         while (--n >= 0) {
@@ -23092,7 +22338,6 @@ var require_jsbn = __commonJS({
         }
         return c;
       }
-      __name(am3, "am3");
       var inBrowser = typeof navigator !== "undefined";
       if (inBrowser && j_lm && navigator.appName == "Microsoft Internet Explorer") {
         BigInteger.prototype.am = am2;
@@ -23123,18 +22368,15 @@ var require_jsbn = __commonJS({
       function int2char(n) {
         return BI_RM.charAt(n);
       }
-      __name(int2char, "int2char");
       function intAt(s, i) {
         var c = BI_RC[s.charCodeAt(i)];
         return c == null ? -1 : c;
       }
-      __name(intAt, "intAt");
       function bnpCopyTo(r) {
         for (var i = this.t - 1; i >= 0; --i) r[i] = this[i];
         r.t = this.t;
         r.s = this.s;
       }
-      __name(bnpCopyTo, "bnpCopyTo");
       function bnpFromInt(x) {
         this.t = 1;
         this.s = x < 0 ? -1 : 0;
@@ -23142,13 +22384,11 @@ var require_jsbn = __commonJS({
         else if (x < -1) this[0] = x + this.DV;
         else this.t = 0;
       }
-      __name(bnpFromInt, "bnpFromInt");
       function nbv(i) {
         var r = nbi();
         r.fromInt(i);
         return r;
       }
-      __name(nbv, "nbv");
       function bnpFromString(s, b) {
         var k;
         if (b == 16) k = 4;
@@ -23188,12 +22428,10 @@ var require_jsbn = __commonJS({
         this.clamp();
         if (mi) BigInteger.ZERO.subTo(this, this);
       }
-      __name(bnpFromString, "bnpFromString");
       function bnpClamp() {
         var c = this.s & this.DM;
         while (this.t > 0 && this[this.t - 1] == c) --this.t;
       }
-      __name(bnpClamp, "bnpClamp");
       function bnToString(b) {
         if (this.s < 0) return "-" + this.negate().toString(b);
         var k;
@@ -23227,17 +22465,14 @@ var require_jsbn = __commonJS({
         }
         return m ? r : "0";
       }
-      __name(bnToString, "bnToString");
       function bnNegate() {
         var r = nbi();
         BigInteger.ZERO.subTo(this, r);
         return r;
       }
-      __name(bnNegate, "bnNegate");
       function bnAbs() {
         return this.s < 0 ? this.negate() : this;
       }
-      __name(bnAbs, "bnAbs");
       function bnCompareTo(a) {
         var r = this.s - a.s;
         if (r != 0) return r;
@@ -23247,7 +22482,6 @@ var require_jsbn = __commonJS({
         while (--i >= 0) if ((r = this[i] - a[i]) != 0) return r;
         return 0;
       }
-      __name(bnCompareTo, "bnCompareTo");
       function nbits(x) {
         var r = 1, t2;
         if ((t2 = x >>> 16) != 0) {
@@ -23272,12 +22506,10 @@ var require_jsbn = __commonJS({
         }
         return r;
       }
-      __name(nbits, "nbits");
       function bnBitLength() {
         if (this.t <= 0) return 0;
         return this.DB * (this.t - 1) + nbits(this[this.t - 1] ^ this.s & this.DM);
       }
-      __name(bnBitLength, "bnBitLength");
       function bnpDLShiftTo(n, r) {
         var i;
         for (i = this.t - 1; i >= 0; --i) r[i + n] = this[i];
@@ -23285,13 +22517,11 @@ var require_jsbn = __commonJS({
         r.t = this.t + n;
         r.s = this.s;
       }
-      __name(bnpDLShiftTo, "bnpDLShiftTo");
       function bnpDRShiftTo(n, r) {
         for (var i = n; i < this.t; ++i) r[i - n] = this[i];
         r.t = Math.max(this.t - n, 0);
         r.s = this.s;
       }
-      __name(bnpDRShiftTo, "bnpDRShiftTo");
       function bnpLShiftTo(n, r) {
         var bs = n % this.DB;
         var cbs = this.DB - bs;
@@ -23307,7 +22537,6 @@ var require_jsbn = __commonJS({
         r.s = this.s;
         r.clamp();
       }
-      __name(bnpLShiftTo, "bnpLShiftTo");
       function bnpRShiftTo(n, r) {
         r.s = this.s;
         var ds = Math.floor(n / this.DB);
@@ -23327,7 +22556,6 @@ var require_jsbn = __commonJS({
         r.t = this.t - ds;
         r.clamp();
       }
-      __name(bnpRShiftTo, "bnpRShiftTo");
       function bnpSubTo(a, r) {
         var i = 0, c = 0, m = Math.min(a.t, this.t);
         while (i < m) {
@@ -23358,7 +22586,6 @@ var require_jsbn = __commonJS({
         r.t = i;
         r.clamp();
       }
-      __name(bnpSubTo, "bnpSubTo");
       function bnpMultiplyTo(a, r) {
         var x = this.abs(), y = a.abs();
         var i = x.t;
@@ -23369,7 +22596,6 @@ var require_jsbn = __commonJS({
         r.clamp();
         if (this.s != a.s) BigInteger.ZERO.subTo(r, r);
       }
-      __name(bnpMultiplyTo, "bnpMultiplyTo");
       function bnpSquareTo(r) {
         var x = this.abs();
         var i = r.t = 2 * x.t;
@@ -23385,7 +22611,6 @@ var require_jsbn = __commonJS({
         r.s = 0;
         r.clamp();
       }
-      __name(bnpSquareTo, "bnpSquareTo");
       function bnpDivRemTo(m, q, r) {
         var pm = m.abs();
         if (pm.t <= 0) return;
@@ -23436,41 +22661,33 @@ var require_jsbn = __commonJS({
         if (nsh > 0) r.rShiftTo(nsh, r);
         if (ts < 0) BigInteger.ZERO.subTo(r, r);
       }
-      __name(bnpDivRemTo, "bnpDivRemTo");
       function bnMod(a) {
         var r = nbi();
         this.abs().divRemTo(a, null, r);
         if (this.s < 0 && r.compareTo(BigInteger.ZERO) > 0) a.subTo(r, r);
         return r;
       }
-      __name(bnMod, "bnMod");
       function Classic(m) {
         this.m = m;
       }
-      __name(Classic, "Classic");
       function cConvert(x) {
         if (x.s < 0 || x.compareTo(this.m) >= 0) return x.mod(this.m);
         else return x;
       }
-      __name(cConvert, "cConvert");
       function cRevert(x) {
         return x;
       }
-      __name(cRevert, "cRevert");
       function cReduce(x) {
         x.divRemTo(this.m, null, x);
       }
-      __name(cReduce, "cReduce");
       function cMulTo(x, y, r) {
         x.multiplyTo(y, r);
         this.reduce(r);
       }
-      __name(cMulTo, "cMulTo");
       function cSqrTo(x, r) {
         x.squareTo(r);
         this.reduce(r);
       }
-      __name(cSqrTo, "cSqrTo");
       Classic.prototype.convert = cConvert;
       Classic.prototype.revert = cRevert;
       Classic.prototype.reduce = cReduce;
@@ -23487,7 +22704,6 @@ var require_jsbn = __commonJS({
         y = y * (2 - x * y % this.DV) % this.DV;
         return y > 0 ? this.DV - y : -y;
       }
-      __name(bnpInvDigit, "bnpInvDigit");
       function Montgomery(m) {
         this.m = m;
         this.mp = m.invDigit();
@@ -23496,7 +22712,6 @@ var require_jsbn = __commonJS({
         this.um = (1 << m.DB - 15) - 1;
         this.mt2 = 2 * m.t;
       }
-      __name(Montgomery, "Montgomery");
       function montConvert(x) {
         var r = nbi();
         x.abs().dlShiftTo(this.m.t, r);
@@ -23504,14 +22719,12 @@ var require_jsbn = __commonJS({
         if (x.s < 0 && r.compareTo(BigInteger.ZERO) > 0) this.m.subTo(r, r);
         return r;
       }
-      __name(montConvert, "montConvert");
       function montRevert(x) {
         var r = nbi();
         x.copyTo(r);
         this.reduce(r);
         return r;
       }
-      __name(montRevert, "montRevert");
       function montReduce(x) {
         while (x.t <= this.mt2)
           x[x.t++] = 0;
@@ -23529,17 +22742,14 @@ var require_jsbn = __commonJS({
         x.drShiftTo(this.m.t, x);
         if (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
       }
-      __name(montReduce, "montReduce");
       function montSqrTo(x, r) {
         x.squareTo(r);
         this.reduce(r);
       }
-      __name(montSqrTo, "montSqrTo");
       function montMulTo(x, y, r) {
         x.multiplyTo(y, r);
         this.reduce(r);
       }
-      __name(montMulTo, "montMulTo");
       Montgomery.prototype.convert = montConvert;
       Montgomery.prototype.revert = montRevert;
       Montgomery.prototype.reduce = montReduce;
@@ -23548,7 +22758,6 @@ var require_jsbn = __commonJS({
       function bnpIsEven() {
         return (this.t > 0 ? this[0] & 1 : this.s) == 0;
       }
-      __name(bnpIsEven, "bnpIsEven");
       function bnpExp(e, z2) {
         if (e > 4294967295 || e < 1) return BigInteger.ONE;
         var r = nbi(), r2 = nbi(), g = z2.convert(this), i = nbits(e) - 1;
@@ -23564,14 +22773,12 @@ var require_jsbn = __commonJS({
         }
         return z2.revert(r);
       }
-      __name(bnpExp, "bnpExp");
       function bnModPowInt(e, m) {
         var z2;
         if (e < 256 || m.isEven()) z2 = new Classic(m);
         else z2 = new Montgomery(m);
         return this.exp(e, z2);
       }
-      __name(bnModPowInt, "bnModPowInt");
       BigInteger.prototype.copyTo = bnpCopyTo;
       BigInteger.prototype.fromInt = bnpFromInt;
       BigInteger.prototype.fromString = bnpFromString;
@@ -23601,7 +22808,6 @@ var require_jsbn = __commonJS({
         this.copyTo(r);
         return r;
       }
-      __name(bnClone, "bnClone");
       function bnIntValue() {
         if (this.s < 0) {
           if (this.t == 1) return this[0] - this.DV;
@@ -23610,25 +22816,20 @@ var require_jsbn = __commonJS({
         else if (this.t == 0) return 0;
         return (this[1] & (1 << 32 - this.DB) - 1) << this.DB | this[0];
       }
-      __name(bnIntValue, "bnIntValue");
       function bnByteValue() {
         return this.t == 0 ? this.s : this[0] << 24 >> 24;
       }
-      __name(bnByteValue, "bnByteValue");
       function bnShortValue() {
         return this.t == 0 ? this.s : this[0] << 16 >> 16;
       }
-      __name(bnShortValue, "bnShortValue");
       function bnpChunkSize(r) {
         return Math.floor(Math.LN2 * this.DB / Math.log(r));
       }
-      __name(bnpChunkSize, "bnpChunkSize");
       function bnSigNum() {
         if (this.s < 0) return -1;
         else if (this.t <= 0 || this.t == 1 && this[0] <= 0) return 0;
         else return 1;
       }
-      __name(bnSigNum, "bnSigNum");
       function bnpToRadix(b) {
         if (b == null) b = 10;
         if (this.signum() == 0 || b < 2 || b > 36) return "0";
@@ -23642,7 +22843,6 @@ var require_jsbn = __commonJS({
         }
         return z2.intValue().toString(b) + r;
       }
-      __name(bnpToRadix, "bnpToRadix");
       function bnpFromRadix(s, b) {
         this.fromInt(0);
         if (b == null) b = 10;
@@ -23668,7 +22868,6 @@ var require_jsbn = __commonJS({
         }
         if (mi) BigInteger.ZERO.subTo(this, this);
       }
-      __name(bnpFromRadix, "bnpFromRadix");
       function bnpFromNumber(a, b, c) {
         if ("number" == typeof b) {
           if (a < 2) this.fromInt(1);
@@ -23691,7 +22890,6 @@ var require_jsbn = __commonJS({
           this.fromString(x, 256);
         }
       }
-      __name(bnpFromNumber, "bnpFromNumber");
       function bnToByteArray() {
         var i = this.t, r = new Array();
         r[0] = this.s;
@@ -23717,19 +22915,15 @@ var require_jsbn = __commonJS({
         }
         return r;
       }
-      __name(bnToByteArray, "bnToByteArray");
       function bnEquals(a) {
         return this.compareTo(a) == 0;
       }
-      __name(bnEquals, "bnEquals");
       function bnMin(a) {
         return this.compareTo(a) < 0 ? this : a;
       }
-      __name(bnMin, "bnMin");
       function bnMax(a) {
         return this.compareTo(a) > 0 ? this : a;
       }
-      __name(bnMax, "bnMax");
       function bnpBitwiseTo(a, op, r) {
         var i, f, m = Math.min(a.t, this.t);
         for (i = 0; i < m; ++i) r[i] = op(this[i], a[i]);
@@ -23745,47 +22939,38 @@ var require_jsbn = __commonJS({
         r.s = op(this.s, a.s);
         r.clamp();
       }
-      __name(bnpBitwiseTo, "bnpBitwiseTo");
       function op_and(x, y) {
         return x & y;
       }
-      __name(op_and, "op_and");
       function bnAnd(a) {
         var r = nbi();
         this.bitwiseTo(a, op_and, r);
         return r;
       }
-      __name(bnAnd, "bnAnd");
       function op_or(x, y) {
         return x | y;
       }
-      __name(op_or, "op_or");
       function bnOr(a) {
         var r = nbi();
         this.bitwiseTo(a, op_or, r);
         return r;
       }
-      __name(bnOr, "bnOr");
       function op_xor(x, y) {
         return x ^ y;
       }
-      __name(op_xor, "op_xor");
       function bnXor(a) {
         var r = nbi();
         this.bitwiseTo(a, op_xor, r);
         return r;
       }
-      __name(bnXor, "bnXor");
       function op_andnot(x, y) {
         return x & ~y;
       }
-      __name(op_andnot, "op_andnot");
       function bnAndNot(a) {
         var r = nbi();
         this.bitwiseTo(a, op_andnot, r);
         return r;
       }
-      __name(bnAndNot, "bnAndNot");
       function bnNot() {
         var r = nbi();
         for (var i = 0; i < this.t; ++i) r[i] = this.DM & ~this[i];
@@ -23793,21 +22978,18 @@ var require_jsbn = __commonJS({
         r.s = ~this.s;
         return r;
       }
-      __name(bnNot, "bnNot");
       function bnShiftLeft(n) {
         var r = nbi();
         if (n < 0) this.rShiftTo(-n, r);
         else this.lShiftTo(n, r);
         return r;
       }
-      __name(bnShiftLeft, "bnShiftLeft");
       function bnShiftRight(n) {
         var r = nbi();
         if (n < 0) this.lShiftTo(-n, r);
         else this.rShiftTo(n, r);
         return r;
       }
-      __name(bnShiftRight, "bnShiftRight");
       function lbit(x) {
         if (x == 0) return -1;
         var r = 0;
@@ -23830,14 +23012,12 @@ var require_jsbn = __commonJS({
         if ((x & 1) == 0) ++r;
         return r;
       }
-      __name(lbit, "lbit");
       function bnGetLowestSetBit() {
         for (var i = 0; i < this.t; ++i)
           if (this[i] != 0) return i * this.DB + lbit(this[i]);
         if (this.s < 0) return this.t * this.DB;
         return -1;
       }
-      __name(bnGetLowestSetBit, "bnGetLowestSetBit");
       function cbit(x) {
         var r = 0;
         while (x != 0) {
@@ -23846,37 +23026,30 @@ var require_jsbn = __commonJS({
         }
         return r;
       }
-      __name(cbit, "cbit");
       function bnBitCount() {
         var r = 0, x = this.s & this.DM;
         for (var i = 0; i < this.t; ++i) r += cbit(this[i] ^ x);
         return r;
       }
-      __name(bnBitCount, "bnBitCount");
       function bnTestBit(n) {
         var j = Math.floor(n / this.DB);
         if (j >= this.t) return this.s != 0;
         return (this[j] & 1 << n % this.DB) != 0;
       }
-      __name(bnTestBit, "bnTestBit");
       function bnpChangeBit(n, op) {
         var r = BigInteger.ONE.shiftLeft(n);
         this.bitwiseTo(r, op, r);
         return r;
       }
-      __name(bnpChangeBit, "bnpChangeBit");
       function bnSetBit(n) {
         return this.changeBit(n, op_or);
       }
-      __name(bnSetBit, "bnSetBit");
       function bnClearBit(n) {
         return this.changeBit(n, op_andnot);
       }
-      __name(bnClearBit, "bnClearBit");
       function bnFlipBit(n) {
         return this.changeBit(n, op_xor);
       }
-      __name(bnFlipBit, "bnFlipBit");
       function bnpAddTo(a, r) {
         var i = 0, c = 0, m = Math.min(a.t, this.t);
         while (i < m) {
@@ -23907,55 +23080,46 @@ var require_jsbn = __commonJS({
         r.t = i;
         r.clamp();
       }
-      __name(bnpAddTo, "bnpAddTo");
       function bnAdd(a) {
         var r = nbi();
         this.addTo(a, r);
         return r;
       }
-      __name(bnAdd, "bnAdd");
       function bnSubtract(a) {
         var r = nbi();
         this.subTo(a, r);
         return r;
       }
-      __name(bnSubtract, "bnSubtract");
       function bnMultiply(a) {
         var r = nbi();
         this.multiplyTo(a, r);
         return r;
       }
-      __name(bnMultiply, "bnMultiply");
       function bnSquare() {
         var r = nbi();
         this.squareTo(r);
         return r;
       }
-      __name(bnSquare, "bnSquare");
       function bnDivide(a) {
         var r = nbi();
         this.divRemTo(a, r, null);
         return r;
       }
-      __name(bnDivide, "bnDivide");
       function bnRemainder(a) {
         var r = nbi();
         this.divRemTo(a, null, r);
         return r;
       }
-      __name(bnRemainder, "bnRemainder");
       function bnDivideAndRemainder(a) {
         var q = nbi(), r = nbi();
         this.divRemTo(a, q, r);
         return new Array(q, r);
       }
-      __name(bnDivideAndRemainder, "bnDivideAndRemainder");
       function bnpDMultiply(n) {
         this[this.t] = this.am(0, n - 1, this, 0, 0, this.t);
         ++this.t;
         this.clamp();
       }
-      __name(bnpDMultiply, "bnpDMultiply");
       function bnpDAddOffset(n, w) {
         if (n == 0) return;
         while (this.t <= w) this[this.t++] = 0;
@@ -23966,22 +23130,17 @@ var require_jsbn = __commonJS({
           ++this[w];
         }
       }
-      __name(bnpDAddOffset, "bnpDAddOffset");
       function NullExp() {
       }
-      __name(NullExp, "NullExp");
       function nNop(x) {
         return x;
       }
-      __name(nNop, "nNop");
       function nMulTo(x, y, r) {
         x.multiplyTo(y, r);
       }
-      __name(nMulTo, "nMulTo");
       function nSqrTo(x, r) {
         x.squareTo(r);
       }
-      __name(nSqrTo, "nSqrTo");
       NullExp.prototype.convert = nNop;
       NullExp.prototype.revert = nNop;
       NullExp.prototype.mulTo = nMulTo;
@@ -23989,7 +23148,6 @@ var require_jsbn = __commonJS({
       function bnPow(e) {
         return this.exp(e, new NullExp());
       }
-      __name(bnPow, "bnPow");
       function bnpMultiplyLowerTo(a, n, r) {
         var i = Math.min(this.t + a.t, n);
         r.s = 0;
@@ -24000,7 +23158,6 @@ var require_jsbn = __commonJS({
         for (j = Math.min(a.t, n); i < j; ++i) this.am(0, a[i], r, i, 0, n - i);
         r.clamp();
       }
-      __name(bnpMultiplyLowerTo, "bnpMultiplyLowerTo");
       function bnpMultiplyUpperTo(a, n, r) {
         --n;
         var i = r.t = this.t + a.t - n;
@@ -24011,7 +23168,6 @@ var require_jsbn = __commonJS({
         r.clamp();
         r.drShiftTo(1, r);
       }
-      __name(bnpMultiplyUpperTo, "bnpMultiplyUpperTo");
       function Barrett(m) {
         this.r2 = nbi();
         this.q3 = nbi();
@@ -24019,7 +23175,6 @@ var require_jsbn = __commonJS({
         this.mu = this.r2.divide(m);
         this.m = m;
       }
-      __name(Barrett, "Barrett");
       function barrettConvert(x) {
         if (x.s < 0 || x.t > 2 * this.m.t) return x.mod(this.m);
         else if (x.compareTo(this.m) < 0) return x;
@@ -24030,11 +23185,9 @@ var require_jsbn = __commonJS({
           return r;
         }
       }
-      __name(barrettConvert, "barrettConvert");
       function barrettRevert(x) {
         return x;
       }
-      __name(barrettRevert, "barrettRevert");
       function barrettReduce(x) {
         x.drShiftTo(this.m.t - 1, this.r2);
         if (x.t > this.m.t + 1) {
@@ -24047,17 +23200,14 @@ var require_jsbn = __commonJS({
         x.subTo(this.r2, x);
         while (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
       }
-      __name(barrettReduce, "barrettReduce");
       function barrettSqrTo(x, r) {
         x.squareTo(r);
         this.reduce(r);
       }
-      __name(barrettSqrTo, "barrettSqrTo");
       function barrettMulTo(x, y, r) {
         x.multiplyTo(y, r);
         this.reduce(r);
       }
-      __name(barrettMulTo, "barrettMulTo");
       Barrett.prototype.convert = barrettConvert;
       Barrett.prototype.revert = barrettRevert;
       Barrett.prototype.reduce = barrettReduce;
@@ -24135,7 +23285,6 @@ var require_jsbn = __commonJS({
         }
         return z2.revert(r);
       }
-      __name(bnModPow, "bnModPow");
       function bnGCD(a) {
         var x = this.s < 0 ? this.negate() : this.clone();
         var y = a.s < 0 ? a.negate() : a.clone();
@@ -24165,7 +23314,6 @@ var require_jsbn = __commonJS({
         if (g > 0) y.lShiftTo(g, y);
         return y;
       }
-      __name(bnGCD, "bnGCD");
       function bnpModInt(n) {
         if (n <= 0) return 0;
         var d = this.DV % n, r = this.s < 0 ? n - 1 : 0;
@@ -24174,7 +23322,6 @@ var require_jsbn = __commonJS({
           else for (var i = this.t - 1; i >= 0; --i) r = (d * r + this[i]) % n;
         return r;
       }
-      __name(bnpModInt, "bnpModInt");
       function bnModInverse(m) {
         var ac = m.isEven();
         if (this.isEven() && ac || m.signum() == 0) return BigInteger.ZERO;
@@ -24220,7 +23367,6 @@ var require_jsbn = __commonJS({
         if (d.signum() < 0) return d.add(m);
         else return d;
       }
-      __name(bnModInverse, "bnModInverse");
       var lowprimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997];
       var lplim = (1 << 26) / lowprimes[lowprimes.length - 1];
       function bnIsProbablePrime(t2) {
@@ -24240,7 +23386,6 @@ var require_jsbn = __commonJS({
         }
         return x.millerRabin(t2);
       }
-      __name(bnIsProbablePrime, "bnIsProbablePrime");
       function bnpMillerRabin(t2) {
         var n1 = this.subtract(BigInteger.ONE);
         var k = n1.getLowestSetBit();
@@ -24263,7 +23408,6 @@ var require_jsbn = __commonJS({
         }
         return true;
       }
-      __name(bnpMillerRabin, "bnpMillerRabin");
       BigInteger.prototype.chunkSize = bnpChunkSize;
       BigInteger.prototype.toRadix = bnpToRadix;
       BigInteger.prototype.fromRadix = bnpFromRadix;
@@ -24322,11 +23466,9 @@ var require_jsbn = __commonJS({
         rng_pool[rng_pptr++] ^= x >> 24 & 255;
         if (rng_pptr >= rng_psize) rng_pptr -= rng_psize;
       }
-      __name(rng_seed_int, "rng_seed_int");
       function rng_seed_time() {
         rng_seed_int((/* @__PURE__ */ new Date()).getTime());
       }
-      __name(rng_seed_time, "rng_seed_time");
       if (rng_pool == null) {
         rng_pool = new Array();
         rng_pptr = 0;
@@ -24362,22 +23504,18 @@ var require_jsbn = __commonJS({
         }
         return rng_state.next();
       }
-      __name(rng_get_byte, "rng_get_byte");
       function rng_get_bytes(ba) {
         var i;
         for (i = 0; i < ba.length; ++i) ba[i] = rng_get_byte();
       }
-      __name(rng_get_bytes, "rng_get_bytes");
       function SecureRandom() {
       }
-      __name(SecureRandom, "SecureRandom");
       SecureRandom.prototype.nextBytes = rng_get_bytes;
       function Arcfour() {
         this.i = 0;
         this.j = 0;
         this.S = new Array();
       }
-      __name(Arcfour, "Arcfour");
       function ARC4init(key) {
         var i, j, t2;
         for (i = 0; i < 256; ++i)
@@ -24392,7 +23530,6 @@ var require_jsbn = __commonJS({
         this.i = 0;
         this.j = 0;
       }
-      __name(ARC4init, "ARC4init");
       function ARC4next() {
         var t2;
         this.i = this.i + 1 & 255;
@@ -24402,13 +23539,11 @@ var require_jsbn = __commonJS({
         this.S[this.j] = t2;
         return this.S[t2 + this.S[this.i] & 255];
       }
-      __name(ARC4next, "ARC4next");
       Arcfour.prototype.init = ARC4init;
       Arcfour.prototype.next = ARC4next;
       function prng_newstate() {
         return new Arcfour();
       }
-      __name(prng_newstate, "prng_newstate");
       var rng_psize = 256;
       if (typeof exports2 !== "undefined") {
         exports2 = module2.exports = {
@@ -24451,11 +23586,9 @@ var require_sprintf = __commonJS({
       function sprintf(key) {
         return sprintf_format(sprintf_parse(key), arguments);
       }
-      __name(sprintf, "sprintf");
       function vsprintf(fmt, argv) {
         return sprintf.apply(null, [fmt].concat(argv || []));
       }
-      __name(vsprintf, "vsprintf");
       function sprintf_format(parse_tree, argv) {
         var cursor = 1, tree_length = parse_tree.length, arg, output = "", i, k, ph, pad, pad_character, pad_length, is_positive, sign;
         for (i = 0; i < tree_length; i++) {
@@ -24555,7 +23688,6 @@ var require_sprintf = __commonJS({
         }
         return output;
       }
-      __name(sprintf_format, "sprintf_format");
       var sprintf_cache = /* @__PURE__ */ Object.create(null);
       function sprintf_parse(fmt) {
         if (sprintf_cache[fmt]) {
@@ -24612,7 +23744,6 @@ var require_sprintf = __commonJS({
         }
         return sprintf_cache[fmt] = parse_tree;
       }
-      __name(sprintf_parse, "sprintf_parse");
       if (typeof exports2 !== "undefined") {
         exports2["sprintf"] = sprintf;
         exports2["vsprintf"] = vsprintf;
@@ -24641,9 +23772,9 @@ var require_ipv4 = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -24671,7 +23802,7 @@ var require_ipv4 = __commonJS({
     var address_error_1 = require_address_error();
     var jsbn_1 = require_jsbn();
     var sprintf_js_1 = require_sprintf();
-    var _Address4 = class _Address4 {
+    var Address4 = class _Address4 {
       constructor(address) {
         this.groups = constants.GROUPS;
         this.parsedAddress = [];
@@ -24943,8 +24074,6 @@ var require_ipv4 = __commonJS({
         return this.address.replace(constants.RE_ADDRESS, (0, sprintf_js_1.sprintf)('<span class="hover-group group-v4 group-6">%s</span>.<span class="hover-group group-v4 group-7">%s</span>', segments.slice(0, 2).join("."), segments.slice(2, 4).join(".")));
       }
     };
-    __name(_Address4, "Address4");
-    var Address4 = _Address4;
     exports2.Address4 = Address4;
   }
 });
@@ -25010,7 +24139,6 @@ var require_helpers = __commonJS({
     function spanAllZeroes(s) {
       return s.replace(/(0+)/g, '<span class="zero">$1</span>');
     }
-    __name(spanAllZeroes, "spanAllZeroes");
     exports2.spanAllZeroes = spanAllZeroes;
     function spanAll(s, offset = 0) {
       const letters = s.split("");
@@ -25019,17 +24147,14 @@ var require_helpers = __commonJS({
         // XXX Use #base-2 .value-0 instead?
       ).join("");
     }
-    __name(spanAll, "spanAll");
     exports2.spanAll = spanAll;
     function spanLeadingZeroesSimple(group) {
       return group.replace(/^(0+)/, '<span class="zero">$1</span>');
     }
-    __name(spanLeadingZeroesSimple, "spanLeadingZeroesSimple");
     function spanLeadingZeroes(address) {
       const groups = address.split(":");
       return groups.map((g) => spanLeadingZeroesSimple(g)).join(":");
     }
-    __name(spanLeadingZeroes, "spanLeadingZeroes");
     exports2.spanLeadingZeroes = spanLeadingZeroes;
     function simpleGroup(addressString, offset = 0) {
       const groups = addressString.split(":");
@@ -25040,7 +24165,6 @@ var require_helpers = __commonJS({
         return (0, sprintf_js_1.sprintf)('<span class="hover-group group-%d">%s</span>', i + offset, spanLeadingZeroesSimple(g));
       });
     }
-    __name(simpleGroup, "simpleGroup");
     exports2.simpleGroup = simpleGroup;
   }
 });
@@ -25053,9 +24177,9 @@ var require_regular_expressions = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -25083,7 +24207,6 @@ var require_regular_expressions = __commonJS({
     function groupPossibilities(possibilities) {
       return (0, sprintf_js_1.sprintf)("(%s)", possibilities.join("|"));
     }
-    __name(groupPossibilities, "groupPossibilities");
     exports2.groupPossibilities = groupPossibilities;
     function padGroup(group) {
       if (group.length < 4) {
@@ -25091,7 +24214,6 @@ var require_regular_expressions = __commonJS({
       }
       return group;
     }
-    __name(padGroup, "padGroup");
     exports2.padGroup = padGroup;
     exports2.ADDRESS_BOUNDARY = "[^A-Fa-f0-9:]";
     function simpleRegularExpression(groups) {
@@ -25112,7 +24234,6 @@ var require_regular_expressions = __commonJS({
       possibilities.push(groups.map(padGroup).join(":"));
       return groupPossibilities(possibilities);
     }
-    __name(simpleRegularExpression, "simpleRegularExpression");
     exports2.simpleRegularExpression = simpleRegularExpression;
     function possibleElisions(elidedGroups, moreLeft, moreRight) {
       const left = moreLeft ? "" : ":";
@@ -25137,7 +24258,6 @@ var require_regular_expressions = __commonJS({
       }
       return groupPossibilities(possibilities);
     }
-    __name(possibleElisions, "possibleElisions");
     exports2.possibleElisions = possibleElisions;
   }
 });
@@ -25150,9 +24270,9 @@ var require_ipv6 = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -25189,7 +24309,6 @@ var require_ipv6 = __commonJS({
         throw new Error("Assertion failed.");
       }
     }
-    __name(assert, "assert");
     function addCommas(number) {
       const r = /(\d+)(\d{3})/;
       while (r.test(number)) {
@@ -25197,13 +24316,11 @@ var require_ipv6 = __commonJS({
       }
       return number;
     }
-    __name(addCommas, "addCommas");
     function spanLeadingZeroes4(n) {
       n = n.replace(/^(0{1,})([1-9]+)$/, '<span class="parse-error">$1</span>$2');
       n = n.replace(/^(0{1,})(0)$/, '<span class="parse-error">$1</span>$2');
       return n;
     }
-    __name(spanLeadingZeroes4, "spanLeadingZeroes4");
     function compact(address, slice) {
       const s1 = [];
       const s2 = [];
@@ -25217,16 +24334,13 @@ var require_ipv6 = __commonJS({
       }
       return s1.concat(["compact"]).concat(s2);
     }
-    __name(compact, "compact");
     function paddedHex(octet) {
       return (0, sprintf_js_1.sprintf)("%04x", parseInt(octet, 16));
     }
-    __name(paddedHex, "paddedHex");
     function unsignByte(b) {
       return b & 255;
     }
-    __name(unsignByte, "unsignByte");
-    var _Address6 = class _Address6 {
+    var Address6 = class _Address6 {
       constructor(address, optionalGroups) {
         this.addressMinusSuffix = "";
         this.parsedSubnet = "";
@@ -26054,8 +25168,6 @@ var require_ipv6 = __commonJS({
         return new RegExp(this.regularExpressionString(substringSearch), "i");
       }
     };
-    __name(_Address6, "Address6");
-    var Address6 = _Address6;
     exports2.Address6 = Address6;
   }
 });
@@ -26068,9 +25180,9 @@ var require_ip_address = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -26094,17 +25206,17 @@ var require_ip_address = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.v6 = exports2.AddressError = exports2.Address6 = exports2.Address4 = void 0;
     var ipv4_1 = require_ipv4();
-    Object.defineProperty(exports2, "Address4", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Address4", { enumerable: true, get: function() {
       return ipv4_1.Address4;
-    }, "get") });
+    } });
     var ipv6_1 = require_ipv6();
-    Object.defineProperty(exports2, "Address6", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Address6", { enumerable: true, get: function() {
       return ipv6_1.Address6;
-    }, "get") });
+    } });
     var address_error_1 = require_address_error();
-    Object.defineProperty(exports2, "AddressError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "AddressError", { enumerable: true, get: function() {
       return address_error_1.AddressError;
-    }, "get") });
+    } });
     var helpers = __importStar(require_helpers());
     exports2.v6 = { helpers };
   }
@@ -26142,7 +25254,6 @@ var require_helpers2 = __commonJS({
         throw new util_1.SocksClientError(constants_1.ERRORS.InvalidSocksClientOptionsExistingSocket, options);
       }
     }
-    __name(validateSocksClientOptions, "validateSocksClientOptions");
     exports2.validateSocksClientOptions = validateSocksClientOptions;
     function validateSocksClientChainOptions(options) {
       if (options.command !== "connect") {
@@ -26164,7 +25275,6 @@ var require_helpers2 = __commonJS({
         throw new util_1.SocksClientError(constants_1.ERRORS.InvalidSocksClientOptionsTimeout, options);
       }
     }
-    __name(validateSocksClientChainOptions, "validateSocksClientChainOptions");
     exports2.validateSocksClientChainOptions = validateSocksClientChainOptions;
     function validateCustomProxyAuth(proxy, options) {
       if (proxy.custom_auth_method !== void 0) {
@@ -26182,24 +25292,19 @@ var require_helpers2 = __commonJS({
         }
       }
     }
-    __name(validateCustomProxyAuth, "validateCustomProxyAuth");
     function isValidSocksRemoteHost(remoteHost) {
       return remoteHost && typeof remoteHost.host === "string" && typeof remoteHost.port === "number" && remoteHost.port >= 0 && remoteHost.port <= 65535;
     }
-    __name(isValidSocksRemoteHost, "isValidSocksRemoteHost");
     function isValidSocksProxy(proxy) {
       return proxy && (typeof proxy.host === "string" || typeof proxy.ipaddress === "string") && typeof proxy.port === "number" && proxy.port >= 0 && proxy.port <= 65535 && (proxy.type === 4 || proxy.type === 5);
     }
-    __name(isValidSocksProxy, "isValidSocksProxy");
     function isValidTimeoutValue(value) {
       return typeof value === "number" && value > 0;
     }
-    __name(isValidTimeoutValue, "isValidTimeoutValue");
     function ipv4ToInt32(ip) {
       const address = new ip_address_1.Address4(ip);
       return address.toArray().reduce((acc, part) => (acc << 8) + part, 0);
     }
-    __name(ipv4ToInt32, "ipv4ToInt32");
     exports2.ipv4ToInt32 = ipv4ToInt32;
     function int32ToIpv4(int32) {
       const octet1 = int32 >>> 24 & 255;
@@ -26208,7 +25313,6 @@ var require_helpers2 = __commonJS({
       const octet4 = int32 & 255;
       return [octet1, octet2, octet3, octet4].join(".");
     }
-    __name(int32ToIpv4, "int32ToIpv4");
     exports2.int32ToIpv4 = int32ToIpv4;
     function ipToBuffer(ip) {
       if (net.isIPv4(ip)) {
@@ -26221,7 +25325,6 @@ var require_helpers2 = __commonJS({
         throw new Error("Invalid IP address format");
       }
     }
-    __name(ipToBuffer, "ipToBuffer");
     exports2.ipToBuffer = ipToBuffer;
   }
 });
@@ -26232,7 +25335,7 @@ var require_receivebuffer = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ReceiveBuffer = void 0;
-    var _ReceiveBuffer = class _ReceiveBuffer {
+    var ReceiveBuffer = class {
       constructor(size = 4096) {
         this.buffer = Buffer.allocUnsafe(size);
         this.offset = 0;
@@ -26270,8 +25373,6 @@ var require_receivebuffer = __commonJS({
         return value;
       }
     };
-    __name(_ReceiveBuffer, "ReceiveBuffer");
-    var ReceiveBuffer = _ReceiveBuffer;
     exports2.ReceiveBuffer = ReceiveBuffer;
   }
 });
@@ -26286,7 +25387,6 @@ var require_socksclient = __commonJS({
           resolve(value);
         });
       }
-      __name(adopt, "adopt");
       return new (P || (P = Promise))(function(resolve, reject) {
         function fulfilled(value) {
           try {
@@ -26295,7 +25395,6 @@ var require_socksclient = __commonJS({
             reject(e);
           }
         }
-        __name(fulfilled, "fulfilled");
         function rejected(value) {
           try {
             step(generator["throw"](value));
@@ -26303,11 +25402,9 @@ var require_socksclient = __commonJS({
             reject(e);
           }
         }
-        __name(rejected, "rejected");
         function step(result) {
           result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
         }
-        __name(step, "step");
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
@@ -26320,11 +25417,11 @@ var require_socksclient = __commonJS({
     var helpers_1 = require_helpers2();
     var receivebuffer_1 = require_receivebuffer();
     var util_1 = require_util();
-    Object.defineProperty(exports2, "SocksClientError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "SocksClientError", { enumerable: true, get: function() {
       return util_1.SocksClientError;
-    }, "get") });
+    } });
     var ip_address_1 = require_ip_address();
-    var _SocksClient = class _SocksClient extends events_1.EventEmitter {
+    var SocksClient = class _SocksClient extends events_1.EventEmitter {
       constructor(options) {
         super();
         this.options = Object.assign({}, options);
@@ -26955,8 +26052,6 @@ var require_socksclient = __commonJS({
         return Object.assign({}, this.options);
       }
     };
-    __name(_SocksClient, "SocksClient");
-    var SocksClient = _SocksClient;
     exports2.SocksClient = SocksClient;
   }
 });
@@ -26969,9 +26064,9 @@ var require_build = __commonJS({
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: /* @__PURE__ */ __name(function() {
+        desc = { enumerable: true, get: function() {
           return m[k];
-        }, "get") };
+        } };
       }
       Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
@@ -26996,7 +26091,7 @@ var require_mongocr = __commonJS({
     var error_1 = require_error();
     var utils_1 = require_utils();
     var auth_provider_1 = require_auth_provider();
-    var _MongoCR = class _MongoCR extends auth_provider_1.AuthProvider {
+    var MongoCR = class extends auth_provider_1.AuthProvider {
       async auth(authContext) {
         const { connection, credentials } = authContext;
         if (!credentials) {
@@ -27015,8 +26110,6 @@ var require_mongocr = __commonJS({
         await connection.commandAsync((0, utils_1.ns)(`${source}.$cmd`), authenticateCommand, void 0);
       }
     };
-    __name(_MongoCR, "MongoCR");
-    var MongoCR = _MongoCR;
     exports2.MongoCR = MongoCR;
   }
 });
@@ -27066,7 +26159,7 @@ var require_mongodb_aws = __commonJS({
       promoteBuffers: false,
       bsonRegExp: false
     };
-    var _MongoDBAWS = class _MongoDBAWS extends auth_provider_1.AuthProvider {
+    var MongoDBAWS = class extends auth_provider_1.AuthProvider {
       constructor() {
         super();
         this.randomBytesAsync = (0, util_1.promisify)(crypto.randomBytes);
@@ -27141,8 +26234,6 @@ var require_mongodb_aws = __commonJS({
         await connection.commandAsync((0, utils_1.ns)(`${db}.$cmd`), saslContinue, void 0);
       }
     };
-    __name(_MongoDBAWS, "MongoDBAWS");
-    var MongoDBAWS = _MongoDBAWS;
     MongoDBAWS.credentialProvider = null;
     exports2.MongoDBAWS = MongoDBAWS;
     async function makeTempCredentials(credentials) {
@@ -27160,7 +26251,6 @@ var require_mongodb_aws = __commonJS({
           }
         });
       }
-      __name(makeMongoCredentialsFromAWSTemp, "makeMongoCredentialsFromAWSTemp");
       MongoDBAWS.credentialProvider ?? (MongoDBAWS.credentialProvider = (0, deps_1.getAwsCredentialProvider)());
       if ("kModuleError" in MongoDBAWS.credentialProvider) {
         if (process2.env.AWS_CONTAINER_CREDENTIALS_RELATIVE_URI) {
@@ -27201,7 +26291,6 @@ var require_mongodb_aws = __commonJS({
         }
       }
     }
-    __name(makeTempCredentials, "makeTempCredentials");
     function deriveRegion(host) {
       const parts = host.split(".");
       if (parts.length === 1 || parts[1] === "amazonaws") {
@@ -27209,7 +26298,6 @@ var require_mongodb_aws = __commonJS({
       }
       return parts[1];
     }
-    __name(deriveRegion, "deriveRegion");
   }
 });
 
@@ -27222,7 +26310,7 @@ var require_service_workflow = __commonJS({
     var bson_1 = require_bson();
     var utils_1 = require_utils();
     var providers_1 = require_providers();
-    var _ServiceWorkflow = class _ServiceWorkflow {
+    var ServiceWorkflow = class {
       /**
        * Execute the workflow. Looks for AWS_WEB_IDENTITY_TOKEN_FILE in the environment
        * and then attempts to read the token from that path.
@@ -27242,8 +26330,6 @@ var require_service_workflow = __commonJS({
         return { speculativeAuthenticate: document };
       }
     };
-    __name(_ServiceWorkflow, "ServiceWorkflow");
-    var ServiceWorkflow = _ServiceWorkflow;
     exports2.ServiceWorkflow = ServiceWorkflow;
     function commandDocument(token) {
       return {
@@ -27252,7 +26338,6 @@ var require_service_workflow = __commonJS({
         payload: bson_1.BSON.serialize({ jwt: token })
       };
     }
-    __name(commandDocument, "commandDocument");
     exports2.commandDocument = commandDocument;
   }
 });
@@ -27267,7 +26352,7 @@ var require_aws_service_workflow = __commonJS({
     var error_1 = require_error();
     var service_workflow_1 = require_service_workflow();
     var TOKEN_MISSING_ERROR = "AWS_WEB_IDENTITY_TOKEN_FILE must be set in the environment.";
-    var _AwsServiceWorkflow = class _AwsServiceWorkflow extends service_workflow_1.ServiceWorkflow {
+    var AwsServiceWorkflow = class extends service_workflow_1.ServiceWorkflow {
       constructor() {
         super();
       }
@@ -27282,8 +26367,6 @@ var require_aws_service_workflow = __commonJS({
         return fs.promises.readFile(tokenFile, "utf8");
       }
     };
-    __name(_AwsServiceWorkflow, "AwsServiceWorkflow");
-    var AwsServiceWorkflow = _AwsServiceWorkflow;
     exports2.AwsServiceWorkflow = AwsServiceWorkflow;
   }
 });
@@ -27295,7 +26378,7 @@ var require_cache = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Cache = exports2.ExpiringCacheEntry = void 0;
     var EXPIRATION_BUFFER_MS = 3e5;
-    var _ExpiringCacheEntry = class _ExpiringCacheEntry {
+    var ExpiringCacheEntry = class {
       /**
        * Create a new expiring token entry.
        */
@@ -27316,10 +26399,8 @@ var require_cache = __commonJS({
         return Date.now() + expiresInSeconds * 1e3;
       }
     };
-    __name(_ExpiringCacheEntry, "ExpiringCacheEntry");
-    var ExpiringCacheEntry = _ExpiringCacheEntry;
     exports2.ExpiringCacheEntry = ExpiringCacheEntry;
-    var _Cache = class _Cache {
+    var Cache = class {
       /**
        * Create a new cache.
        */
@@ -27339,8 +26420,6 @@ var require_cache = __commonJS({
         return JSON.stringify([address, username, callbackHash]);
       }
     };
-    __name(_Cache, "Cache");
-    var Cache = _Cache;
     exports2.Cache = Cache;
   }
 });
@@ -27352,7 +26431,7 @@ var require_azure_token_cache = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AzureTokenCache = exports2.AzureTokenEntry = void 0;
     var cache_1 = require_cache();
-    var _AzureTokenEntry = class _AzureTokenEntry extends cache_1.ExpiringCacheEntry {
+    var AzureTokenEntry = class extends cache_1.ExpiringCacheEntry {
       /**
        * Instantiate the entry.
        */
@@ -27361,10 +26440,8 @@ var require_azure_token_cache = __commonJS({
         this.token = token;
       }
     };
-    __name(_AzureTokenEntry, "AzureTokenEntry");
-    var AzureTokenEntry = _AzureTokenEntry;
     exports2.AzureTokenEntry = AzureTokenEntry;
-    var _AzureTokenCache = class _AzureTokenCache extends cache_1.Cache {
+    var AzureTokenCache = class extends cache_1.Cache {
       /**
        * Add an entry to the cache.
        */
@@ -27392,8 +26469,6 @@ var require_azure_token_cache = __commonJS({
         return this.entries.get(tokenAudience);
       }
     };
-    __name(_AzureTokenCache, "AzureTokenCache");
-    var AzureTokenCache = _AzureTokenCache;
     exports2.AzureTokenCache = AzureTokenCache;
   }
 });
@@ -27412,7 +26487,7 @@ var require_azure_service_workflow = __commonJS({
     var AZURE_HEADERS = Object.freeze({ Metadata: "true", Accept: "application/json" });
     var ENDPOINT_RESULT_ERROR = "Azure endpoint did not return a value with only access_token and expires_in properties";
     var TOKEN_AUDIENCE_MISSING_ERROR = "TOKEN_AUDIENCE must be set in the auth mechanism properties when PROVIDER_NAME is azure.";
-    var _AzureServiceWorkflow = class _AzureServiceWorkflow extends service_workflow_1.ServiceWorkflow {
+    var AzureServiceWorkflow = class extends service_workflow_1.ServiceWorkflow {
       constructor() {
         super(...arguments);
         this.cache = new azure_token_cache_1.AzureTokenCache();
@@ -27441,8 +26516,6 @@ var require_azure_service_workflow = __commonJS({
         return token;
       }
     };
-    __name(_AzureServiceWorkflow, "AzureServiceWorkflow");
-    var AzureServiceWorkflow = _AzureServiceWorkflow;
     exports2.AzureServiceWorkflow = AzureServiceWorkflow;
     async function getAzureTokenData(tokenAudience) {
       const url = `${AZURE_BASE_URL}&resource=${tokenAudience}`;
@@ -27452,13 +26525,11 @@ var require_azure_service_workflow = __commonJS({
       });
       return data;
     }
-    __name(getAzureTokenData, "getAzureTokenData");
     function isEndpointResultValid(token) {
       if (token == null || typeof token !== "object")
         return false;
       return "access_token" in token && "expires_in" in token;
     }
-    __name(isEndpointResultValid, "isEndpointResultValid");
   }
 });
 
@@ -27472,10 +26543,10 @@ var require_callback_lock_cache = __commonJS({
     var cache_1 = require_cache();
     var REQUEST_CALLBACK_REQUIRED_ERROR = "Auth mechanism property REQUEST_TOKEN_CALLBACK is required.";
     var FN_HASH_COUNTER = 0;
-    var NO_FUNCTION = /* @__PURE__ */ __name(async () => ({ accessToken: "test" }), "NO_FUNCTION");
+    var NO_FUNCTION = async () => ({ accessToken: "test" });
     var FN_HASHES = /* @__PURE__ */ new WeakMap();
     FN_HASHES.set(NO_FUNCTION, FN_HASH_COUNTER);
-    var _CallbackLockCache = class _CallbackLockCache extends cache_1.Cache {
+    var CallbackLockCache = class extends cache_1.Cache {
       /**
        * Get the callbacks for the connection and credentials. If an entry does not
        * exist a new one will get set.
@@ -27513,8 +26584,6 @@ var require_callback_lock_cache = __commonJS({
         return this.hashedCacheKey(address, username, callbackHash);
       }
     };
-    __name(_CallbackLockCache, "CallbackLockCache");
-    var CallbackLockCache = _CallbackLockCache;
     exports2.CallbackLockCache = CallbackLockCache;
     function withLock(callback) {
       let lock = Promise.resolve();
@@ -27524,7 +26593,6 @@ var require_callback_lock_cache = __commonJS({
         return lock;
       };
     }
-    __name(withLock, "withLock");
     function hashFunctions(requestFn, refreshFn) {
       let requestHash = FN_HASHES.get(requestFn);
       let refreshHash = FN_HASHES.get(refreshFn ?? NO_FUNCTION);
@@ -27540,7 +26608,6 @@ var require_callback_lock_cache = __commonJS({
       }
       return `${requestHash}-${refreshHash}`;
     }
-    __name(hashFunctions, "hashFunctions");
   }
 });
 
@@ -27552,7 +26619,7 @@ var require_token_entry_cache = __commonJS({
     exports2.TokenEntryCache = exports2.TokenEntry = void 0;
     var cache_1 = require_cache();
     var DEFAULT_EXPIRATION_SECS = 0;
-    var _TokenEntry = class _TokenEntry extends cache_1.ExpiringCacheEntry {
+    var TokenEntry = class extends cache_1.ExpiringCacheEntry {
       /**
        * Instantiate the entry.
        */
@@ -27562,10 +26629,8 @@ var require_token_entry_cache = __commonJS({
         this.serverInfo = serverInfo;
       }
     };
-    __name(_TokenEntry, "TokenEntry");
-    var TokenEntry = _TokenEntry;
     exports2.TokenEntry = TokenEntry;
-    var _TokenEntryCache = class _TokenEntryCache extends cache_1.Cache {
+    var TokenEntryCache = class extends cache_1.Cache {
       /**
        * Set an entry in the token cache.
        */
@@ -27603,8 +26668,6 @@ var require_token_entry_cache = __commonJS({
         return this.hashedCacheKey(address, username, callbackHash);
       }
     };
-    __name(_TokenEntryCache, "TokenEntryCache");
-    var TokenEntryCache = _TokenEntryCache;
     exports2.TokenEntryCache = TokenEntryCache;
   }
 });
@@ -27625,7 +26688,7 @@ var require_callback_workflow = __commonJS({
     var TIMEOUT_S = 300;
     var RESULT_PROPERTIES = ["accessToken", "expiresInSeconds", "refreshToken"];
     var CALLBACK_RESULT_ERROR = "User provided OIDC callbacks must return a valid object with an accessToken.";
-    var _CallbackWorkflow = class _CallbackWorkflow {
+    var CallbackWorkflow = class {
       /**
        * Instantiate the workflow
        */
@@ -27726,8 +26789,6 @@ var require_callback_workflow = __commonJS({
         return result;
       }
     };
-    __name(_CallbackWorkflow, "CallbackWorkflow");
-    var CallbackWorkflow = _CallbackWorkflow;
     exports2.CallbackWorkflow = CallbackWorkflow;
     function finishCommandDocument(token, conversationId) {
       if (conversationId != null && typeof conversationId === "number") {
@@ -27743,7 +26804,6 @@ var require_callback_workflow = __commonJS({
         payload: new bson_1.Binary(bson_1.BSON.serialize({ jwt: token }))
       };
     }
-    __name(finishCommandDocument, "finishCommandDocument");
     function isCallbackResultInvalid(tokenResult) {
       if (tokenResult == null || typeof tokenResult !== "object")
         return true;
@@ -27751,7 +26811,6 @@ var require_callback_workflow = __commonJS({
         return true;
       return !Object.getOwnPropertyNames(tokenResult).every((prop) => RESULT_PROPERTIES.includes(prop));
     }
-    __name(isCallbackResultInvalid, "isCallbackResultInvalid");
     function startCommandDocument(credentials) {
       const payload = {};
       if (credentials.username) {
@@ -27764,7 +26823,6 @@ var require_callback_workflow = __commonJS({
         payload: new bson_1.Binary(bson_1.BSON.serialize(payload))
       };
     }
-    __name(startCommandDocument, "startCommandDocument");
   }
 });
 
@@ -27784,7 +26842,7 @@ var require_mongodb_oidc = __commonJS({
     exports2.OIDC_WORKFLOWS.set("callback", new callback_workflow_1.CallbackWorkflow());
     exports2.OIDC_WORKFLOWS.set("aws", new aws_service_workflow_1.AwsServiceWorkflow());
     exports2.OIDC_WORKFLOWS.set("azure", new azure_service_workflow_1.AzureServiceWorkflow());
-    var _MongoDBOIDC = class _MongoDBOIDC extends auth_provider_1.AuthProvider {
+    var MongoDBOIDC = class extends auth_provider_1.AuthProvider {
       /**
        * Instantiate the auth provider.
        */
@@ -27810,8 +26868,6 @@ var require_mongodb_oidc = __commonJS({
         return { ...handshakeDoc, ...result };
       }
     };
-    __name(_MongoDBOIDC, "MongoDBOIDC");
-    var MongoDBOIDC = _MongoDBOIDC;
     exports2.MongoDBOIDC = MongoDBOIDC;
     function getCredentials(authContext) {
       const { credentials } = authContext;
@@ -27820,7 +26876,6 @@ var require_mongodb_oidc = __commonJS({
       }
       return credentials;
     }
-    __name(getCredentials, "getCredentials");
     function getWorkflow(credentials) {
       const providerName = credentials.mechanismProperties.PROVIDER_NAME;
       const workflow = exports2.OIDC_WORKFLOWS.get(providerName || "callback");
@@ -27829,7 +26884,6 @@ var require_mongodb_oidc = __commonJS({
       }
       return workflow;
     }
-    __name(getWorkflow, "getWorkflow");
   }
 });
 
@@ -27843,7 +26897,7 @@ var require_plain = __commonJS({
     var error_1 = require_error();
     var utils_1 = require_utils();
     var auth_provider_1 = require_auth_provider();
-    var _Plain = class _Plain extends auth_provider_1.AuthProvider {
+    var Plain = class extends auth_provider_1.AuthProvider {
       async auth(authContext) {
         const { connection, credentials } = authContext;
         if (!credentials) {
@@ -27860,8 +26914,6 @@ var require_plain = __commonJS({
         await connection.commandAsync((0, utils_1.ns)("$external.$cmd"), command, void 0);
       }
     };
-    __name(_Plain, "Plain");
-    var Plain = _Plain;
     exports2.Plain = Plain;
   }
 });
@@ -27880,7 +26932,7 @@ var require_scram = __commonJS({
     var utils_1 = require_utils();
     var auth_provider_1 = require_auth_provider();
     var providers_1 = require_providers();
-    var _ScramSHA = class _ScramSHA extends auth_provider_1.AuthProvider {
+    var ScramSHA = class extends auth_provider_1.AuthProvider {
       constructor(cryptoMethod) {
         super();
         this.cryptoMethod = cryptoMethod || "sha1";
@@ -27914,12 +26966,9 @@ var require_scram = __commonJS({
         return executeScram(this.cryptoMethod, authContext);
       }
     };
-    __name(_ScramSHA, "ScramSHA");
-    var ScramSHA = _ScramSHA;
     function cleanUsername(username) {
       return username.replace("=", "=3D").replace(",", "=2C");
     }
-    __name(cleanUsername, "cleanUsername");
     function clientFirstMessageBare(username, nonce) {
       return Buffer.concat([
         Buffer.from("n=", "utf8"),
@@ -27928,7 +26977,6 @@ var require_scram = __commonJS({
         Buffer.from(nonce.toString("base64"), "utf8")
       ]);
     }
-    __name(clientFirstMessageBare, "clientFirstMessageBare");
     function makeFirstMessage(cryptoMethod, credentials, nonce) {
       const username = cleanUsername(credentials.username);
       const mechanism = cryptoMethod === "sha1" ? providers_1.AuthMechanism.MONGODB_SCRAM_SHA1 : providers_1.AuthMechanism.MONGODB_SCRAM_SHA256;
@@ -27940,7 +26988,6 @@ var require_scram = __commonJS({
         options: { skipEmptyExchange: true }
       };
     }
-    __name(makeFirstMessage, "makeFirstMessage");
     async function executeScram(cryptoMethod, authContext) {
       const { connection, credentials } = authContext;
       if (!credentials) {
@@ -27955,7 +27002,6 @@ var require_scram = __commonJS({
       const response = await connection.commandAsync((0, utils_1.ns)(`${db}.$cmd`), saslStartCmd, void 0);
       await continueScramConversation(cryptoMethod, response, authContext);
     }
-    __name(executeScram, "executeScram");
     async function continueScramConversation(cryptoMethod, response, authContext) {
       const connection = authContext.connection;
       const credentials = authContext.credentials;
@@ -28016,7 +27062,6 @@ var require_scram = __commonJS({
       };
       await connection.commandAsync((0, utils_1.ns)(`${db}.$cmd`), retrySaslContinueCmd, void 0);
     }
-    __name(continueScramConversation, "continueScramConversation");
     function parsePayload(payload) {
       const dict = {};
       const parts = payload.split(",");
@@ -28026,7 +27071,6 @@ var require_scram = __commonJS({
       }
       return dict;
     }
-    __name(parsePayload, "parsePayload");
     function passwordDigest(username, password) {
       if (typeof username !== "string") {
         throw new error_1.MongoInvalidArgumentError("Username must be a string");
@@ -28049,7 +27093,6 @@ var require_scram = __commonJS({
       md5.update(`${username}:mongo:${password}`, "utf8");
       return md5.digest("hex");
     }
-    __name(passwordDigest, "passwordDigest");
     function xor(a, b) {
       if (!Buffer.isBuffer(a)) {
         a = Buffer.from(a);
@@ -28064,22 +27107,18 @@ var require_scram = __commonJS({
       }
       return Buffer.from(res).toString("base64");
     }
-    __name(xor, "xor");
     function H(method, text) {
       return crypto.createHash(method).update(text).digest();
     }
-    __name(H, "H");
     function HMAC(method, key, text) {
       return crypto.createHmac(method, key).update(text).digest();
     }
-    __name(HMAC, "HMAC");
     var _hiCache = {};
     var _hiCacheCount = 0;
     function _hiCachePurge() {
       _hiCache = {};
       _hiCacheCount = 0;
     }
-    __name(_hiCachePurge, "_hiCachePurge");
     var hiLengthMap = {
       sha256: 32,
       sha1: 20
@@ -28097,7 +27136,6 @@ var require_scram = __commonJS({
       _hiCacheCount += 1;
       return saltedData;
     }
-    __name(HI, "HI");
     function compareDigest(lhs, rhs) {
       if (lhs.length !== rhs.length) {
         return false;
@@ -28111,22 +27149,17 @@ var require_scram = __commonJS({
       }
       return result === 0;
     }
-    __name(compareDigest, "compareDigest");
-    var _ScramSHA1 = class _ScramSHA1 extends ScramSHA {
+    var ScramSHA1 = class extends ScramSHA {
       constructor() {
         super("sha1");
       }
     };
-    __name(_ScramSHA1, "ScramSHA1");
-    var ScramSHA1 = _ScramSHA1;
     exports2.ScramSHA1 = ScramSHA1;
-    var _ScramSHA256 = class _ScramSHA256 extends ScramSHA {
+    var ScramSHA256 = class extends ScramSHA {
       constructor() {
         super("sha256");
       }
     };
-    __name(_ScramSHA256, "ScramSHA256");
-    var ScramSHA256 = _ScramSHA256;
     exports2.ScramSHA256 = ScramSHA256;
   }
 });
@@ -28140,7 +27173,7 @@ var require_x509 = __commonJS({
     var error_1 = require_error();
     var utils_1 = require_utils();
     var auth_provider_1 = require_auth_provider();
-    var _X509 = class _X509 extends auth_provider_1.AuthProvider {
+    var X509 = class extends auth_provider_1.AuthProvider {
       async prepare(handshakeDoc, authContext) {
         const { credentials } = authContext;
         if (!credentials) {
@@ -28161,8 +27194,6 @@ var require_x509 = __commonJS({
         await connection.commandAsync((0, utils_1.ns)("$external.$cmd"), x509AuthenticateCommand(credentials), void 0);
       }
     };
-    __name(_X509, "X509");
-    var X509 = _X509;
     exports2.X509 = X509;
     function x509AuthenticateCommand(credentials) {
       const command = { authenticate: 1, mechanism: "MONGODB-X509" };
@@ -28171,7 +27202,6 @@ var require_x509 = __commonJS({
       }
       return command;
     }
-    __name(x509AuthenticateCommand, "x509AuthenticateCommand");
   }
 });
 
@@ -28224,7 +27254,6 @@ var require_connect = __commonJS({
         });
       });
     }
-    __name(connect, "connect");
     exports2.connect = connect;
     function checkSupportedServer(hello, options) {
       const maxWireVersion = Number(hello.maxWireVersion);
@@ -28241,7 +27270,6 @@ var require_connect = __commonJS({
       const message = `Server at ${options.hostAddress} reports maximum wire version ${JSON.stringify(hello.maxWireVersion) ?? 0}, but this version of the Node.js Driver requires at least ${constants_2.MIN_SUPPORTED_WIRE_VERSION} (MongoDB ${constants_2.MIN_SUPPORTED_SERVER_VERSION})`;
       return new error_1.MongoCompatibilityError(message);
     }
-    __name(checkSupportedServer, "checkSupportedServer");
     async function performInitialHandshake(conn, options) {
       const credentials = options.credentials;
       if (credentials) {
@@ -28295,7 +27323,6 @@ var require_connect = __commonJS({
         }
       }
     }
-    __name(performInitialHandshake, "performInitialHandshake");
     async function prepareHandshakeDocument(authContext) {
       const options = authContext.options;
       const compressors = options.compressors ? options.compressors : [];
@@ -28327,7 +27354,6 @@ var require_connect = __commonJS({
       }
       return handshakeDoc;
     }
-    __name(prepareHandshakeDocument, "prepareHandshakeDocument");
     exports2.prepareHandshakeDocument = prepareHandshakeDocument;
     exports2.LEGAL_TLS_SOCKET_OPTIONS = [
       "ALPNProtocols",
@@ -28375,7 +27401,6 @@ var require_connect = __commonJS({
         throw new error_1.MongoRuntimeError(`Unexpected HostAddress ${JSON.stringify(hostAddress)}`);
       }
     }
-    __name(parseConnectOptions, "parseConnectOptions");
     function parseSslOptions(options) {
       const result = parseConnectOptions(options);
       for (const name of exports2.LEGAL_TLS_SOCKET_OPTIONS) {
@@ -28391,7 +27416,6 @@ var require_connect = __commonJS({
       }
       return result;
     }
-    __name(parseSslOptions, "parseSslOptions");
     var SOCKET_ERROR_EVENT_LIST = ["error", "close", "timeout", "parseError"];
     var SOCKET_ERROR_EVENTS = new Set(SOCKET_ERROR_EVENT_LIST);
     function makeConnection(options, _callback) {
@@ -28404,12 +27428,12 @@ var require_connect = __commonJS({
       const keepAliveInitialDelay = ((options.keepAliveInitialDelay ?? 12e4) > socketTimeoutMS ? Math.round(socketTimeoutMS / 2) : options.keepAliveInitialDelay) ?? 12e4;
       const existingSocket = options.existingSocket;
       let socket;
-      const callback = /* @__PURE__ */ __name(function(err, ret) {
+      const callback = function(err, ret) {
         if (err && socket) {
           socket.destroy();
         }
         _callback(err, ret);
-      }, "callback");
+      };
       if (options.proxyHost != null) {
         return makeSocks5Connection({
           ...options,
@@ -28443,7 +27467,6 @@ var require_connect = __commonJS({
           callback(connectionFailureError(eventName, err));
         };
       }
-      __name(errorHandler, "errorHandler");
       function connectHandler() {
         SOCKET_ERROR_EVENTS.forEach((event) => socket.removeAllListeners(event));
         if (cancellationHandler && options.cancellationToken) {
@@ -28457,7 +27480,6 @@ var require_connect = __commonJS({
         socket.setTimeout(0);
         callback(void 0, socket);
       }
-      __name(connectHandler, "connectHandler");
       SOCKET_ERROR_EVENTS.forEach((event) => socket.once(event, errorHandler(event)));
       if (options.cancellationToken) {
         cancellationHandler = errorHandler("cancel");
@@ -28469,7 +27491,6 @@ var require_connect = __commonJS({
         socket.once(connectEvent, connectHandler);
       }
     }
-    __name(makeConnection, "makeConnection");
     function makeSocks5Connection(options, callback) {
       const hostAddress = utils_1.HostAddress.fromHostPort(
         options.proxyHost ?? "",
@@ -28514,7 +27535,6 @@ var require_connect = __commonJS({
         }, (error) => callback(connectionFailureError("error", error)));
       });
     }
-    __name(makeSocks5Connection, "makeSocks5Connection");
     function connectionFailureError(type, err) {
       switch (type) {
         case "error":
@@ -28529,7 +27549,6 @@ var require_connect = __commonJS({
           return new error_1.MongoNetworkError("unknown network error");
       }
     }
-    __name(connectionFailureError, "connectionFailureError");
   }
 });
 
@@ -28540,17 +27559,15 @@ var require_connection_pool_events = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ConnectionPoolClearedEvent = exports2.ConnectionCheckedInEvent = exports2.ConnectionCheckedOutEvent = exports2.ConnectionCheckOutFailedEvent = exports2.ConnectionCheckOutStartedEvent = exports2.ConnectionClosedEvent = exports2.ConnectionReadyEvent = exports2.ConnectionCreatedEvent = exports2.ConnectionPoolClosedEvent = exports2.ConnectionPoolReadyEvent = exports2.ConnectionPoolCreatedEvent = exports2.ConnectionPoolMonitoringEvent = void 0;
     var constants_1 = require_constants2();
-    var _ConnectionPoolMonitoringEvent = class _ConnectionPoolMonitoringEvent {
+    var ConnectionPoolMonitoringEvent = class {
       /** @internal */
       constructor(pool) {
         this.time = /* @__PURE__ */ new Date();
         this.address = pool.address;
       }
     };
-    __name(_ConnectionPoolMonitoringEvent, "ConnectionPoolMonitoringEvent");
-    var ConnectionPoolMonitoringEvent = _ConnectionPoolMonitoringEvent;
     exports2.ConnectionPoolMonitoringEvent = ConnectionPoolMonitoringEvent;
-    var _ConnectionPoolCreatedEvent = class _ConnectionPoolCreatedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionPoolCreatedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool) {
         super(pool);
@@ -28562,30 +27579,24 @@ var require_connection_pool_events = __commonJS({
         }
       }
     };
-    __name(_ConnectionPoolCreatedEvent, "ConnectionPoolCreatedEvent");
-    var ConnectionPoolCreatedEvent = _ConnectionPoolCreatedEvent;
     exports2.ConnectionPoolCreatedEvent = ConnectionPoolCreatedEvent;
-    var _ConnectionPoolReadyEvent = class _ConnectionPoolReadyEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionPoolReadyEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool) {
         super(pool);
         this.name = constants_1.CONNECTION_POOL_READY;
       }
     };
-    __name(_ConnectionPoolReadyEvent, "ConnectionPoolReadyEvent");
-    var ConnectionPoolReadyEvent = _ConnectionPoolReadyEvent;
     exports2.ConnectionPoolReadyEvent = ConnectionPoolReadyEvent;
-    var _ConnectionPoolClosedEvent = class _ConnectionPoolClosedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionPoolClosedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool) {
         super(pool);
         this.name = constants_1.CONNECTION_POOL_CLOSED;
       }
     };
-    __name(_ConnectionPoolClosedEvent, "ConnectionPoolClosedEvent");
-    var ConnectionPoolClosedEvent = _ConnectionPoolClosedEvent;
     exports2.ConnectionPoolClosedEvent = ConnectionPoolClosedEvent;
-    var _ConnectionCreatedEvent = class _ConnectionCreatedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionCreatedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, connection) {
         super(pool);
@@ -28593,10 +27604,8 @@ var require_connection_pool_events = __commonJS({
         this.connectionId = connection.id;
       }
     };
-    __name(_ConnectionCreatedEvent, "ConnectionCreatedEvent");
-    var ConnectionCreatedEvent = _ConnectionCreatedEvent;
     exports2.ConnectionCreatedEvent = ConnectionCreatedEvent;
-    var _ConnectionReadyEvent = class _ConnectionReadyEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionReadyEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, connection) {
         super(pool);
@@ -28604,10 +27613,8 @@ var require_connection_pool_events = __commonJS({
         this.connectionId = connection.id;
       }
     };
-    __name(_ConnectionReadyEvent, "ConnectionReadyEvent");
-    var ConnectionReadyEvent = _ConnectionReadyEvent;
     exports2.ConnectionReadyEvent = ConnectionReadyEvent;
-    var _ConnectionClosedEvent = class _ConnectionClosedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionClosedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, connection, reason, error) {
         super(pool);
@@ -28618,20 +27625,16 @@ var require_connection_pool_events = __commonJS({
         this.error = error ?? null;
       }
     };
-    __name(_ConnectionClosedEvent, "ConnectionClosedEvent");
-    var ConnectionClosedEvent = _ConnectionClosedEvent;
     exports2.ConnectionClosedEvent = ConnectionClosedEvent;
-    var _ConnectionCheckOutStartedEvent = class _ConnectionCheckOutStartedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionCheckOutStartedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool) {
         super(pool);
         this.name = constants_1.CONNECTION_CHECK_OUT_STARTED;
       }
     };
-    __name(_ConnectionCheckOutStartedEvent, "ConnectionCheckOutStartedEvent");
-    var ConnectionCheckOutStartedEvent = _ConnectionCheckOutStartedEvent;
     exports2.ConnectionCheckOutStartedEvent = ConnectionCheckOutStartedEvent;
-    var _ConnectionCheckOutFailedEvent = class _ConnectionCheckOutFailedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionCheckOutFailedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, reason, error) {
         super(pool);
@@ -28640,10 +27643,8 @@ var require_connection_pool_events = __commonJS({
         this.error = error;
       }
     };
-    __name(_ConnectionCheckOutFailedEvent, "ConnectionCheckOutFailedEvent");
-    var ConnectionCheckOutFailedEvent = _ConnectionCheckOutFailedEvent;
     exports2.ConnectionCheckOutFailedEvent = ConnectionCheckOutFailedEvent;
-    var _ConnectionCheckedOutEvent = class _ConnectionCheckedOutEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionCheckedOutEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, connection) {
         super(pool);
@@ -28651,10 +27652,8 @@ var require_connection_pool_events = __commonJS({
         this.connectionId = connection.id;
       }
     };
-    __name(_ConnectionCheckedOutEvent, "ConnectionCheckedOutEvent");
-    var ConnectionCheckedOutEvent = _ConnectionCheckedOutEvent;
     exports2.ConnectionCheckedOutEvent = ConnectionCheckedOutEvent;
-    var _ConnectionCheckedInEvent = class _ConnectionCheckedInEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionCheckedInEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, connection) {
         super(pool);
@@ -28662,10 +27661,8 @@ var require_connection_pool_events = __commonJS({
         this.connectionId = connection.id;
       }
     };
-    __name(_ConnectionCheckedInEvent, "ConnectionCheckedInEvent");
-    var ConnectionCheckedInEvent = _ConnectionCheckedInEvent;
     exports2.ConnectionCheckedInEvent = ConnectionCheckedInEvent;
-    var _ConnectionPoolClearedEvent = class _ConnectionPoolClearedEvent extends ConnectionPoolMonitoringEvent {
+    var ConnectionPoolClearedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
       constructor(pool, options = {}) {
         super(pool);
@@ -28674,8 +27671,6 @@ var require_connection_pool_events = __commonJS({
         this.interruptInUseConnections = options.interruptInUseConnections;
       }
     };
-    __name(_ConnectionPoolClearedEvent, "ConnectionPoolClearedEvent");
-    var ConnectionPoolClearedEvent = _ConnectionPoolClearedEvent;
     exports2.ConnectionPoolClearedEvent = ConnectionPoolClearedEvent;
   }
 });
@@ -28687,7 +27682,7 @@ var require_errors = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WaitQueueTimeoutError = exports2.PoolClearedOnNetworkError = exports2.PoolClearedError = exports2.PoolClosedError = void 0;
     var error_1 = require_error();
-    var _PoolClosedError = class _PoolClosedError extends error_1.MongoDriverError {
+    var PoolClosedError = class extends error_1.MongoDriverError {
       constructor(pool) {
         super("Attempted to check out a connection from closed connection pool");
         this.address = pool.address;
@@ -28696,10 +27691,8 @@ var require_errors = __commonJS({
         return "MongoPoolClosedError";
       }
     };
-    __name(_PoolClosedError, "PoolClosedError");
-    var PoolClosedError = _PoolClosedError;
     exports2.PoolClosedError = PoolClosedError;
-    var _PoolClearedError = class _PoolClearedError extends error_1.MongoNetworkError {
+    var PoolClearedError = class extends error_1.MongoNetworkError {
       constructor(pool, message) {
         var _a;
         const errorMessage = message ? message : `Connection pool for ${pool.address} was cleared because another operation failed with: "${(_a = pool.serverError) == null ? void 0 : _a.message}"`;
@@ -28711,10 +27704,8 @@ var require_errors = __commonJS({
         return "MongoPoolClearedError";
       }
     };
-    __name(_PoolClearedError, "PoolClearedError");
-    var PoolClearedError = _PoolClearedError;
     exports2.PoolClearedError = PoolClearedError;
-    var _PoolClearedOnNetworkError = class _PoolClearedOnNetworkError extends PoolClearedError {
+    var PoolClearedOnNetworkError = class extends PoolClearedError {
       constructor(pool) {
         super(pool, `Connection to ${pool.address} interrupted due to server monitor timeout`);
       }
@@ -28722,10 +27713,8 @@ var require_errors = __commonJS({
         return "PoolClearedOnNetworkError";
       }
     };
-    __name(_PoolClearedOnNetworkError, "PoolClearedOnNetworkError");
-    var PoolClearedOnNetworkError = _PoolClearedOnNetworkError;
     exports2.PoolClearedOnNetworkError = PoolClearedOnNetworkError;
-    var _WaitQueueTimeoutError = class _WaitQueueTimeoutError extends error_1.MongoDriverError {
+    var WaitQueueTimeoutError = class extends error_1.MongoDriverError {
       constructor(message, address) {
         super(message);
         this.address = address;
@@ -28734,8 +27723,6 @@ var require_errors = __commonJS({
         return "MongoWaitQueueTimeoutError";
       }
     };
-    __name(_WaitQueueTimeoutError, "WaitQueueTimeoutError");
-    var WaitQueueTimeoutError = _WaitQueueTimeoutError;
     exports2.WaitQueueTimeoutError = WaitQueueTimeoutError;
   }
 });
@@ -28775,7 +27762,7 @@ var require_connection_pool = __commonJS({
       ready: "ready",
       closed: "closed"
     });
-    var _ConnectionPool = class _ConnectionPool extends mongo_types_1.TypedEventEmitter {
+    var ConnectionPool = class _ConnectionPool extends mongo_types_1.TypedEventEmitter {
       constructor(server, options) {
         super();
         this.options = Object.freeze({
@@ -29281,8 +28268,6 @@ var require_connection_pool = __commonJS({
         this[kProcessingWaitQueue] = false;
       }
     };
-    __name(_ConnectionPool, "ConnectionPool");
-    var ConnectionPool = _ConnectionPool;
     ConnectionPool.CONNECTION_POOL_CREATED = constants_1.CONNECTION_POOL_CREATED;
     ConnectionPool.CONNECTION_POOL_CLOSED = constants_1.CONNECTION_POOL_CLOSED;
     ConnectionPool.CONNECTION_POOL_CLEARED = constants_1.CONNECTION_POOL_CLEARED;
@@ -29332,8 +28317,7 @@ var require_monitor = __commonJS({
     function isInCloseState(monitor) {
       return monitor.s.state === common_1.STATE_CLOSED || monitor.s.state === common_1.STATE_CLOSING;
     }
-    __name(isInCloseState, "isInCloseState");
-    var _Monitor = class _Monitor extends mongo_types_1.TypedEventEmitter {
+    var Monitor = class extends mongo_types_1.TypedEventEmitter {
       get connection() {
         return this[kConnection];
       }
@@ -29422,8 +28406,6 @@ var require_monitor = __commonJS({
         stateTransition(this, common_1.STATE_CLOSED);
       }
     };
-    __name(_Monitor, "Monitor");
-    var Monitor = _Monitor;
     exports2.Monitor = Monitor;
     function resetMonitorState(monitor) {
       var _a, _b, _c;
@@ -29435,7 +28417,6 @@ var require_monitor = __commonJS({
       (_c = monitor[kConnection]) == null ? void 0 : _c.destroy({ force: true });
       monitor[kConnection] = void 0;
     }
-    __name(resetMonitorState, "resetMonitorState");
     function checkServer(monitor, callback) {
       let start = (0, utils_1.now)();
       monitor.emit(server_1.Server.SERVER_HEARTBEAT_STARTED, new events_1.ServerHeartbeatStartedEvent(monitor.address));
@@ -29452,7 +28433,6 @@ var require_monitor = __commonJS({
         monitor.emit("resetServer", error);
         callback(err);
       }
-      __name(failureHandler, "failureHandler");
       const connection = monitor[kConnection];
       if (connection && !connection.closed) {
         const { serverApi, helloOk } = connection;
@@ -29510,7 +28490,6 @@ var require_monitor = __commonJS({
         }
       });
     }
-    __name(checkServer, "checkServer");
     function monitorServer(monitor) {
       return (callback) => {
         if (monitor.s.state === STATE_MONITORING) {
@@ -29524,7 +28503,6 @@ var require_monitor = __commonJS({
           }
           callback();
         }
-        __name(done, "done");
         checkServer(monitor, (err, hello) => {
           if (err) {
             if (monitor[kServer].description.type === common_1.ServerType.Unknown) {
@@ -29543,7 +28521,6 @@ var require_monitor = __commonJS({
         });
       };
     }
-    __name(monitorServer, "monitorServer");
     function makeTopologyVersion(tv) {
       return {
         processId: tv.processId,
@@ -29552,8 +28529,7 @@ var require_monitor = __commonJS({
         counter: bson_1.Long.isLong(tv.counter) ? tv.counter : bson_1.Long.fromNumber(tv.counter)
       };
     }
-    __name(makeTopologyVersion, "makeTopologyVersion");
-    var _RTTPinger = class _RTTPinger {
+    var RTTPinger = class {
       constructor(cancellationToken, options) {
         this.connection = void 0;
         this[kCancellationToken] = cancellationToken;
@@ -29573,8 +28549,6 @@ var require_monitor = __commonJS({
         this.connection = void 0;
       }
     };
-    __name(_RTTPinger, "RTTPinger");
-    var RTTPinger = _RTTPinger;
     exports2.RTTPinger = RTTPinger;
     function measureRoundTripTime(rttPinger, options) {
       var _a;
@@ -29595,7 +28569,6 @@ var require_monitor = __commonJS({
         rttPinger[kRoundTripTime] = (0, utils_1.calculateDurationInMs)(start);
         rttPinger[kMonitorId] = (0, timers_1.setTimeout)(() => measureRoundTripTime(rttPinger, options), heartbeatFrequencyMS);
       }
-      __name(measureAndReschedule, "measureAndReschedule");
       const connection = rttPinger.connection;
       if (connection == null) {
         (0, connect_1.connect)(options, (err, conn) => {
@@ -29616,8 +28589,7 @@ var require_monitor = __commonJS({
         rttPinger[kRoundTripTime] = 0;
       });
     }
-    __name(measureRoundTripTime, "measureRoundTripTime");
-    var _MonitorInterval = class _MonitorInterval {
+    var MonitorInterval = class {
       constructor(fn, options = {}) {
         this.isExpeditedCallToFnScheduled = false;
         this.stopped = false;
@@ -29701,8 +28673,6 @@ var require_monitor = __commonJS({
         this.timerId = (0, timers_1.setTimeout)(this._executeAndReschedule, ms || this.heartbeatFrequencyMS);
       }
     };
-    __name(_MonitorInterval, "MonitorInterval");
-    var MonitorInterval = _MonitorInterval;
     exports2.MonitorInterval = MonitorInterval;
   }
 });
@@ -29731,7 +28701,7 @@ var require_server = __commonJS({
       [common_1.STATE_CONNECTED]: [common_1.STATE_CONNECTED, common_1.STATE_CLOSING, common_1.STATE_CLOSED],
       [common_1.STATE_CLOSING]: [common_1.STATE_CLOSING, common_1.STATE_CLOSED]
     });
-    var _Server = class _Server extends mongo_types_1.TypedEventEmitter {
+    var Server = class _Server extends mongo_types_1.TypedEventEmitter {
       /**
        * Create a server
        */
@@ -29950,8 +28920,6 @@ var require_server = __commonJS({
         return this.s.operationCount += 1;
       }
     };
-    __name(_Server, "Server");
-    var Server = _Server;
     Server.SERVER_HEARTBEAT_STARTED = constants_1.SERVER_HEARTBEAT_STARTED;
     Server.SERVER_HEARTBEAT_SUCCEEDED = constants_1.SERVER_HEARTBEAT_SUCCEEDED;
     Server.SERVER_HEARTBEAT_FAILED = constants_1.SERVER_HEARTBEAT_FAILED;
@@ -29967,7 +28935,6 @@ var require_server = __commonJS({
       const alpha = 0.2;
       return alpha * duration + (1 - alpha) * oldRtt;
     }
-    __name(calculateRoundTripTime, "calculateRoundTripTime");
     function markServerUnknown(server, error) {
       var _a;
       if (server.loadBalanced) {
@@ -29978,38 +28945,32 @@ var require_server = __commonJS({
       }
       server.emit(Server.DESCRIPTION_RECEIVED, new server_description_1.ServerDescription(server.description.hostAddress, void 0, { error }));
     }
-    __name(markServerUnknown, "markServerUnknown");
     function isPinnableCommand(cmd, session) {
       if (session) {
         return session.inTransaction() || "aggregate" in cmd || "find" in cmd || "getMore" in cmd || "listCollections" in cmd || "listIndexes" in cmd;
       }
       return false;
     }
-    __name(isPinnableCommand, "isPinnableCommand");
     function connectionIsStale(pool, connection) {
       if (connection.serviceId) {
         return connection.generation !== pool.serviceGenerations.get(connection.serviceId.toHexString());
       }
       return connection.generation !== pool.generation;
     }
-    __name(connectionIsStale, "connectionIsStale");
     function shouldHandleStateChangeError(server, err) {
       const etv = err.topologyVersion;
       const stv = server.description.topologyVersion;
       return (0, server_description_1.compareTopologyVersion)(stv, etv) < 0;
     }
-    __name(shouldHandleStateChangeError, "shouldHandleStateChangeError");
     function inActiveTransaction(session, cmd) {
       return session && session.inTransaction() && !(0, transactions_1.isTransactionCommand)(cmd);
     }
-    __name(inActiveTransaction, "inActiveTransaction");
     function isRetryableWritesEnabled(topology) {
       return topology.s.options.retryWrites !== false;
     }
-    __name(isRetryableWritesEnabled, "isRetryableWritesEnabled");
     function makeOperationHandler(server, connection, cmd, options, callback) {
       const session = options == null ? void 0 : options.session;
-      return /* @__PURE__ */ __name(function handleOperationResult(error, result) {
+      return function handleOperationResult(error, result) {
         if (error == null && result != null) {
           return callback(void 0, result);
         }
@@ -30045,9 +29006,8 @@ var require_server = __commonJS({
         }
         server.handleError(error, connection);
         return callback(error);
-      }, "handleOperationResult");
+      };
     }
-    __name(makeOperationHandler, "makeOperationHandler");
   }
 });
 
@@ -30062,7 +29022,7 @@ var require_srv_polling = __commonJS({
     var error_1 = require_error();
     var mongo_types_1 = require_mongo_types();
     var utils_1 = require_utils();
-    var _SrvPollingEvent = class _SrvPollingEvent {
+    var SrvPollingEvent = class {
       constructor(srvRecords) {
         this.srvRecords = srvRecords;
       }
@@ -30070,10 +29030,8 @@ var require_srv_polling = __commonJS({
         return new Set(this.srvRecords.map((r) => utils_1.HostAddress.fromSrvRecord(r).toString()));
       }
     };
-    __name(_SrvPollingEvent, "SrvPollingEvent");
-    var SrvPollingEvent = _SrvPollingEvent;
     exports2.SrvPollingEvent = SrvPollingEvent;
-    var _SrvPoller = class _SrvPoller extends mongo_types_1.TypedEventEmitter {
+    var SrvPoller = class _SrvPoller extends mongo_types_1.TypedEventEmitter {
       constructor(options) {
         super();
         if (!options || !options.srvHost) {
@@ -30149,8 +29107,6 @@ var require_srv_polling = __commonJS({
         this.success(finalAddresses);
       }
     };
-    __name(_SrvPoller, "SrvPoller");
-    var SrvPoller = _SrvPoller;
     SrvPoller.SRV_RECORD_DISCOVERY = "srvRecordDiscovery";
     exports2.SrvPoller = SrvPoller;
   }
@@ -30186,7 +29142,7 @@ var require_topology = __commonJS({
     });
     var kCancelled = Symbol("cancelled");
     var kWaitQueue = Symbol("waitQueue");
-    var _Topology = class _Topology extends mongo_types_1.TypedEventEmitter {
+    var Topology = class _Topology extends mongo_types_1.TypedEventEmitter {
       /**
        * @param seedlist - a list of HostAddress instances to connect to
        */
@@ -30242,8 +29198,8 @@ var require_topology = __commonJS({
           clusterTime: void 0,
           // timer management
           connectionTimers: /* @__PURE__ */ new Set(),
-          detectShardedTopology: /* @__PURE__ */ __name((ev) => this.detectShardedTopology(ev), "detectShardedTopology"),
-          detectSrvRecords: /* @__PURE__ */ __name((ev) => this.detectSrvRecords(ev), "detectSrvRecords")
+          detectShardedTopology: (ev) => this.detectShardedTopology(ev),
+          detectSrvRecords: (ev) => this.detectSrvRecords(ev)
         };
         if (options.srvHost && !options.loadBalanced) {
           this.s.srvPoller = options.srvPoller ?? new srv_polling_1.SrvPoller({
@@ -30319,7 +29275,7 @@ var require_topology = __commonJS({
             this.serverUpdateHandler(newDescription);
           }
         }
-        const exitWithError = /* @__PURE__ */ __name((error) => callback ? callback(error) : this.emit(_Topology.ERROR, error), "exitWithError");
+        const exitWithError = (error) => callback ? callback(error) : this.emit(_Topology.ERROR, error);
         const readPreference = options.readPreference ?? read_preference_1.ReadPreference.primary;
         this.selectServer((0, server_selection_1.readPreferenceServerSelector)(readPreference), options, (err, server) => {
           if (err) {
@@ -30497,8 +29453,6 @@ var require_topology = __commonJS({
         this.s.clusterTime = clusterTime;
       }
     };
-    __name(_Topology, "Topology");
-    var Topology = _Topology;
     Topology.SERVER_OPENING = constants_1.SERVER_OPENING;
     Topology.SERVER_CLOSED = constants_1.SERVER_CLOSED;
     Topology.SERVER_DESCRIPTION_CHANGED = constants_1.SERVER_DESCRIPTION_CHANGED;
@@ -30526,7 +29480,6 @@ var require_topology = __commonJS({
         }
       });
     }
-    __name(destroyServer, "destroyServer");
     function topologyTypeFromOptions(options) {
       if (options == null ? void 0 : options.directConnection) {
         return common_1.TopologyType.Single;
@@ -30539,7 +29492,6 @@ var require_topology = __commonJS({
       }
       return common_1.TopologyType.Unknown;
     }
-    __name(topologyTypeFromOptions, "topologyTypeFromOptions");
     function createAndConnectServer(topology, serverDescription) {
       topology.emit(Topology.SERVER_OPENING, new events_1.ServerOpeningEvent(topology.s.id, serverDescription.address));
       const server = new server_1.Server(topology, serverDescription, topology.s.options);
@@ -30550,7 +29502,6 @@ var require_topology = __commonJS({
       server.connect();
       return server;
     }
-    __name(createAndConnectServer, "createAndConnectServer");
     function updateServers(topology, incomingServerDescription) {
       if (incomingServerDescription && topology.s.servers.has(incomingServerDescription.address)) {
         const server = topology.s.servers.get(incomingServerDescription.address);
@@ -30589,7 +29540,6 @@ var require_topology = __commonJS({
         }
       }
     }
-    __name(updateServers, "updateServers");
     function drainWaitQueue(queue, err) {
       while (queue.length) {
         const waitQueueMember = queue.shift();
@@ -30604,7 +29554,6 @@ var require_topology = __commonJS({
         }
       }
     }
-    __name(drainWaitQueue, "drainWaitQueue");
     function processWaitQueue(topology) {
       if (topology.s.state === common_1.STATE_CLOSED) {
         drainWaitQueue(topology[kWaitQueue], new error_1.MongoTopologyClosedError());
@@ -30659,20 +29608,18 @@ var require_topology = __commonJS({
       }
       if (topology[kWaitQueue].length > 0) {
         for (const [, server] of topology.s.servers) {
-          process.nextTick(/* @__PURE__ */ __name(function scheduleServerCheck() {
+          process.nextTick(function scheduleServerCheck() {
             return server.requestCheck();
-          }, "scheduleServerCheck"));
+          });
         }
       }
     }
-    __name(processWaitQueue, "processWaitQueue");
     function isStaleServerDescription(topologyDescription, incomingServerDescription) {
       const currentServerDescription = topologyDescription.servers.get(incomingServerDescription.address);
       const currentTopologyVersion = currentServerDescription == null ? void 0 : currentServerDescription.topologyVersion;
       return (0, server_description_1.compareTopologyVersion)(currentTopologyVersion, incomingServerDescription.topologyVersion) > 0;
     }
-    __name(isStaleServerDescription, "isStaleServerDescription");
-    var _ServerCapabilities = class _ServerCapabilities {
+    var ServerCapabilities = class {
       constructor(hello) {
         this.minWireVersion = hello.minWireVersion || 0;
         this.maxWireVersion = hello.maxWireVersion || 0;
@@ -30705,8 +29652,6 @@ var require_topology = __commonJS({
         return this.maxWireVersion >= 5;
       }
     };
-    __name(_ServerCapabilities, "ServerCapabilities");
-    var ServerCapabilities = _ServerCapabilities;
     exports2.ServerCapabilities = ServerCapabilities;
   }
 });
@@ -30737,7 +29682,7 @@ var require_mongo_client = __commonJS({
       v1: "1"
     });
     var kOptions = Symbol("options");
-    var _MongoClient = class _MongoClient extends mongo_types_1.TypedEventEmitter {
+    var MongoClient2 = class extends mongo_types_1.TypedEventEmitter {
       constructor(url, options) {
         super();
         this[kOptions] = (0, connection_string_1.parseOptions)(url, this, options);
@@ -30853,7 +29798,7 @@ var require_mongo_client = __commonJS({
         for (const event of constants_1.MONGO_CLIENT_EVENTS) {
           this.topology.on(event, (...args) => this.emit(event, ...args));
         }
-        const topologyConnect = /* @__PURE__ */ __name(async () => {
+        const topologyConnect = async () => {
           var _a2;
           try {
             await (0, util_1.promisify)((callback) => {
@@ -30864,7 +29809,7 @@ var require_mongo_client = __commonJS({
             (_a2 = this.topology) == null ? void 0 : _a2.close({ force: true });
             throw error;
           }
-        }, "topologyConnect");
+        };
         if (this.autoEncrypter) {
           const initAutoEncrypter = (0, util_1.promisify)((callback) => {
             var _a2;
@@ -31004,8 +29949,6 @@ var require_mongo_client = __commonJS({
         return new change_stream_1.ChangeStream(this, pipeline, (0, utils_1.resolveOptions)(this, options));
       }
     };
-    __name(_MongoClient, "MongoClient");
-    var MongoClient2 = _MongoClient;
     exports2.MongoClient = MongoClient2;
   }
 });
@@ -31043,7 +29986,7 @@ var require_change_stream = __commonJS({
     var CHANGE_STREAM_EVENTS = [constants_1.RESUME_TOKEN_CHANGED, constants_1.END, constants_1.CLOSE];
     var NO_RESUME_TOKEN_ERROR = "A change stream document has been received that lacks a resume token (_id).";
     var CHANGESTREAM_CLOSED_ERROR = "ChangeStream is closed";
-    var _ChangeStream = class _ChangeStream extends mongo_types_1.TypedEventEmitter {
+    var ChangeStream = class _ChangeStream extends mongo_types_1.TypedEventEmitter {
       /**
        * @internal
        *
@@ -31321,8 +30264,6 @@ var require_change_stream = __commonJS({
         }
       }
     };
-    __name(_ChangeStream, "ChangeStream");
-    var ChangeStream = _ChangeStream;
     ChangeStream.RESPONSE = constants_1.RESPONSE;
     ChangeStream.MORE = constants_1.MORE;
     ChangeStream.INIT = constants_1.INIT;
@@ -31343,7 +30284,7 @@ var require_download = __commonJS({
     exports2.GridFSBucketReadStream = void 0;
     var stream_1 = require("stream");
     var error_1 = require_error();
-    var _GridFSBucketReadStream = class _GridFSBucketReadStream extends stream_1.Readable {
+    var GridFSBucketReadStream = class _GridFSBucketReadStream extends stream_1.Readable {
       /**
        * @param chunks - Handle for chunks collection
        * @param files - Handle for files collection
@@ -31426,8 +30367,6 @@ var require_download = __commonJS({
         }
       }
     };
-    __name(_GridFSBucketReadStream, "GridFSBucketReadStream");
-    var GridFSBucketReadStream = _GridFSBucketReadStream;
     GridFSBucketReadStream.ERROR = "error";
     GridFSBucketReadStream.FILE = "file";
     GridFSBucketReadStream.DATA = "data";
@@ -31439,7 +30378,6 @@ var require_download = __commonJS({
         throw new error_1.MongoGridFSStreamError("Options cannot be changed after the stream is initialized");
       }
     }
-    __name(throwIfInitialized, "throwIfInitialized");
     function doRead(stream) {
       if (stream.destroyed)
         return;
@@ -31447,7 +30385,7 @@ var require_download = __commonJS({
         return;
       if (!stream.s.file)
         return;
-      const handleReadResult = /* @__PURE__ */ __name(({ error, doc }) => {
+      const handleReadResult = ({ error, doc }) => {
         var _a;
         if (stream.destroyed) {
           return;
@@ -31505,10 +30443,9 @@ var require_download = __commonJS({
         }
         stream.push(buf);
         return;
-      }, "handleReadResult");
+      };
       stream.s.cursor.next().then((doc) => handleReadResult({ error: null, doc }), (error) => handleReadResult({ error, doc: null }));
     }
-    __name(doRead, "doRead");
     function init(stream) {
       const findOneOptions = {};
       if (stream.s.readPreference) {
@@ -31520,7 +30457,7 @@ var require_download = __commonJS({
       if (stream.s.options && stream.s.options.skip) {
         findOneOptions.skip = stream.s.options.skip;
       }
-      const handleReadResult = /* @__PURE__ */ __name(({ error, doc }) => {
+      const handleReadResult = ({ error, doc }) => {
         if (error) {
           return stream.emit(GridFSBucketReadStream.ERROR, error);
         }
@@ -31564,10 +30501,9 @@ var require_download = __commonJS({
         }
         stream.emit(GridFSBucketReadStream.FILE, doc);
         return;
-      }, "handleReadResult");
+      };
       stream.s.files.findOne(stream.s.filter, findOneOptions).then((doc) => handleReadResult({ error: null, doc }), (error) => handleReadResult({ error, doc: null }));
     }
-    __name(init, "init");
     function waitForFile(stream, callback) {
       if (stream.s.file) {
         return callback();
@@ -31580,7 +30516,6 @@ var require_download = __commonJS({
         callback();
       });
     }
-    __name(waitForFile, "waitForFile");
     function handleStartOption(stream, doc, options) {
       if (options && options.start != null) {
         if (options.start > doc.length) {
@@ -31598,7 +30533,6 @@ var require_download = __commonJS({
       }
       throw new error_1.MongoInvalidArgumentError("Start option must be defined");
     }
-    __name(handleStartOption, "handleStartOption");
     function handleEndOption(stream, doc, cursor, options) {
       if (options && options.end != null) {
         if (options.end > doc.length) {
@@ -31614,7 +30548,6 @@ var require_download = __commonJS({
       }
       throw new error_1.MongoInvalidArgumentError("End option must be defined");
     }
-    __name(handleEndOption, "handleEndOption");
   }
 });
 
@@ -31628,7 +30561,7 @@ var require_upload = __commonJS({
     var bson_1 = require_bson2();
     var error_1 = require_error();
     var write_concern_1 = require_write_concern();
-    var _GridFSBucketWriteStream = class _GridFSBucketWriteStream extends stream_1.Writable {
+    var GridFSBucketWriteStream = class _GridFSBucketWriteStream extends stream_1.Writable {
       /**
        * @param bucket - Handle for this stream's corresponding bucket
        * @param filename - The value of the 'filename' key in the files doc
@@ -31707,8 +30640,6 @@ var require_upload = __commonJS({
         return this;
       }
     };
-    __name(_GridFSBucketWriteStream, "GridFSBucketWriteStream");
-    var GridFSBucketWriteStream = _GridFSBucketWriteStream;
     GridFSBucketWriteStream.CLOSE = "close";
     GridFSBucketWriteStream.ERROR = "error";
     GridFSBucketWriteStream.FINISH = "finish";
@@ -31723,7 +30654,6 @@ var require_upload = __commonJS({
       }
       stream.emit(GridFSBucketWriteStream.ERROR, error);
     }
-    __name(__handleError, "__handleError");
     function createChunkDoc(filesId, n, data) {
       return {
         _id: new bson_1.ObjectId(),
@@ -31732,7 +30662,6 @@ var require_upload = __commonJS({
         data
       };
     }
-    __name(createChunkDoc, "createChunkDoc");
     async function checkChunksIndex(stream) {
       const index = { files_id: 1, n: 1 };
       let indexes;
@@ -31760,7 +30689,6 @@ var require_upload = __commonJS({
         });
       }
     }
-    __name(checkChunksIndex, "checkChunksIndex");
     function checkDone(stream, callback) {
       if (stream.done)
         return true;
@@ -31780,7 +30708,6 @@ var require_upload = __commonJS({
       }
       return false;
     }
-    __name(checkDone, "checkDone");
     async function checkIndexes(stream) {
       const doc = await stream.files.findOne({}, { projection: { _id: 1 } });
       if (doc != null) {
@@ -31809,7 +30736,6 @@ var require_upload = __commonJS({
       }
       await checkChunksIndex(stream);
     }
-    __name(checkIndexes, "checkIndexes");
     function createFilesDoc(_id, length, chunkSize, filename, contentType, aliases, metadata) {
       const ret = {
         _id,
@@ -31829,7 +30755,6 @@ var require_upload = __commonJS({
       }
       return ret;
     }
-    __name(createFilesDoc, "createFilesDoc");
     function doWrite(stream, chunk, encoding, callback) {
       if (checkAborted(stream, callback)) {
         return false;
@@ -31879,7 +30804,6 @@ var require_upload = __commonJS({
       }
       return false;
     }
-    __name(doWrite, "doWrite");
     function waitForIndexes(stream, callback) {
       if (stream.bucket.s.checkedIndexes) {
         return callback(false);
@@ -31889,7 +30813,6 @@ var require_upload = __commonJS({
       });
       return true;
     }
-    __name(waitForIndexes, "waitForIndexes");
     function writeRemnant(stream, callback) {
       if (stream.pos === 0) {
         return checkDone(stream, callback);
@@ -31909,7 +30832,6 @@ var require_upload = __commonJS({
       });
       return true;
     }
-    __name(writeRemnant, "writeRemnant");
     function checkAborted(stream, callback) {
       if (stream.state.aborted) {
         if (typeof callback === "function") {
@@ -31919,7 +30841,6 @@ var require_upload = __commonJS({
       }
       return false;
     }
-    __name(checkAborted, "checkAborted");
   }
 });
 
@@ -31938,7 +30859,7 @@ var require_gridfs = __commonJS({
       bucketName: "fs",
       chunkSizeBytes: 255 * 1024
     };
-    var _GridFSBucket = class _GridFSBucket extends mongo_types_1.TypedEventEmitter {
+    var GridFSBucket = class extends mongo_types_1.TypedEventEmitter {
       constructor(db, options) {
         super();
         this.setMaxListeners(0);
@@ -32035,8 +30956,6 @@ var require_gridfs = __commonJS({
         await this.s._chunksCollection.drop();
       }
     };
-    __name(_GridFSBucket, "GridFSBucket");
-    var GridFSBucket = _GridFSBucket;
     GridFSBucket.INDEX = "index";
     exports2.GridFSBucket = GridFSBucket;
   }
@@ -32051,375 +30970,375 @@ var require_lib3 = __commonJS({
     exports2.ServerClosedEvent = exports2.ConnectionReadyEvent = exports2.ConnectionPoolReadyEvent = exports2.ConnectionPoolMonitoringEvent = exports2.ConnectionPoolCreatedEvent = exports2.ConnectionPoolClosedEvent = exports2.ConnectionPoolClearedEvent = exports2.ConnectionCreatedEvent = exports2.ConnectionClosedEvent = exports2.ConnectionCheckOutStartedEvent = exports2.ConnectionCheckOutFailedEvent = exports2.ConnectionCheckedOutEvent = exports2.ConnectionCheckedInEvent = exports2.CommandSucceededEvent = exports2.CommandStartedEvent = exports2.CommandFailedEvent = exports2.WriteConcern = exports2.ReadPreference = exports2.ReadConcern = exports2.TopologyType = exports2.ServerType = exports2.ReadPreferenceMode = exports2.ReadConcernLevel = exports2.ProfilingLevel = exports2.ReturnDocument = exports2.ServerApiVersion = exports2.ExplainVerbosity = exports2.MongoErrorLabel = exports2.AutoEncryptionLoggerLevel = exports2.CURSOR_FLAGS = exports2.Compressor = exports2.AuthMechanism = exports2.GSSAPICanonicalizationValue = exports2.BatchType = exports2.UnorderedBulkOperation = exports2.OrderedBulkOperation = exports2.MongoClient = exports2.ListIndexesCursor = exports2.ListCollectionsCursor = exports2.GridFSBucketWriteStream = exports2.GridFSBucketReadStream = exports2.GridFSBucket = exports2.FindCursor = exports2.Db = exports2.Collection = exports2.ClientSession = exports2.ChangeStream = exports2.CancellationToken = exports2.AggregationCursor = exports2.Admin = void 0;
     exports2.SrvPollingEvent = exports2.TopologyOpeningEvent = exports2.TopologyDescriptionChangedEvent = exports2.TopologyClosedEvent = exports2.ServerOpeningEvent = exports2.ServerHeartbeatSucceededEvent = exports2.ServerHeartbeatStartedEvent = exports2.ServerHeartbeatFailedEvent = exports2.ServerDescriptionChangedEvent = void 0;
     var admin_1 = require_admin();
-    Object.defineProperty(exports2, "Admin", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Admin", { enumerable: true, get: function() {
       return admin_1.Admin;
-    }, "get") });
+    } });
     var ordered_1 = require_ordered();
-    Object.defineProperty(exports2, "OrderedBulkOperation", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "OrderedBulkOperation", { enumerable: true, get: function() {
       return ordered_1.OrderedBulkOperation;
-    }, "get") });
+    } });
     var unordered_1 = require_unordered();
-    Object.defineProperty(exports2, "UnorderedBulkOperation", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "UnorderedBulkOperation", { enumerable: true, get: function() {
       return unordered_1.UnorderedBulkOperation;
-    }, "get") });
+    } });
     var change_stream_1 = require_change_stream();
-    Object.defineProperty(exports2, "ChangeStream", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ChangeStream", { enumerable: true, get: function() {
       return change_stream_1.ChangeStream;
-    }, "get") });
+    } });
     var collection_1 = require_collection();
-    Object.defineProperty(exports2, "Collection", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Collection", { enumerable: true, get: function() {
       return collection_1.Collection;
-    }, "get") });
+    } });
     var abstract_cursor_1 = require_abstract_cursor();
-    Object.defineProperty(exports2, "AbstractCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "AbstractCursor", { enumerable: true, get: function() {
       return abstract_cursor_1.AbstractCursor;
-    }, "get") });
+    } });
     var aggregation_cursor_1 = require_aggregation_cursor();
-    Object.defineProperty(exports2, "AggregationCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "AggregationCursor", { enumerable: true, get: function() {
       return aggregation_cursor_1.AggregationCursor;
-    }, "get") });
+    } });
     var find_cursor_1 = require_find_cursor();
-    Object.defineProperty(exports2, "FindCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "FindCursor", { enumerable: true, get: function() {
       return find_cursor_1.FindCursor;
-    }, "get") });
+    } });
     var list_collections_cursor_1 = require_list_collections_cursor();
-    Object.defineProperty(exports2, "ListCollectionsCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ListCollectionsCursor", { enumerable: true, get: function() {
       return list_collections_cursor_1.ListCollectionsCursor;
-    }, "get") });
+    } });
     var list_indexes_cursor_1 = require_list_indexes_cursor();
-    Object.defineProperty(exports2, "ListIndexesCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ListIndexesCursor", { enumerable: true, get: function() {
       return list_indexes_cursor_1.ListIndexesCursor;
-    }, "get") });
+    } });
     var db_1 = require_db();
-    Object.defineProperty(exports2, "Db", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Db", { enumerable: true, get: function() {
       return db_1.Db;
-    }, "get") });
+    } });
     var gridfs_1 = require_gridfs();
-    Object.defineProperty(exports2, "GridFSBucket", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "GridFSBucket", { enumerable: true, get: function() {
       return gridfs_1.GridFSBucket;
-    }, "get") });
+    } });
     var download_1 = require_download();
-    Object.defineProperty(exports2, "GridFSBucketReadStream", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "GridFSBucketReadStream", { enumerable: true, get: function() {
       return download_1.GridFSBucketReadStream;
-    }, "get") });
+    } });
     var upload_1 = require_upload();
-    Object.defineProperty(exports2, "GridFSBucketWriteStream", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "GridFSBucketWriteStream", { enumerable: true, get: function() {
       return upload_1.GridFSBucketWriteStream;
-    }, "get") });
+    } });
     var mongo_client_1 = require_mongo_client();
-    Object.defineProperty(exports2, "MongoClient", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "MongoClient", { enumerable: true, get: function() {
       return mongo_client_1.MongoClient;
-    }, "get") });
+    } });
     var mongo_types_1 = require_mongo_types();
-    Object.defineProperty(exports2, "CancellationToken", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "CancellationToken", { enumerable: true, get: function() {
       return mongo_types_1.CancellationToken;
-    }, "get") });
+    } });
     var sessions_1 = require_sessions();
-    Object.defineProperty(exports2, "ClientSession", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ClientSession", { enumerable: true, get: function() {
       return sessions_1.ClientSession;
-    }, "get") });
+    } });
     var bson_1 = require_bson2();
-    Object.defineProperty(exports2, "BSON", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "BSON", { enumerable: true, get: function() {
       return bson_1.BSON;
-    }, "get") });
+    } });
     var bson_2 = require_bson2();
-    Object.defineProperty(exports2, "Binary", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Binary", { enumerable: true, get: function() {
       return bson_2.Binary;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONRegExp", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONRegExp", { enumerable: true, get: function() {
       return bson_2.BSONRegExp;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONSymbol", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONSymbol", { enumerable: true, get: function() {
       return bson_2.BSONSymbol;
-    }, "get") });
-    Object.defineProperty(exports2, "BSONType", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "BSONType", { enumerable: true, get: function() {
       return bson_2.BSONType;
-    }, "get") });
-    Object.defineProperty(exports2, "Code", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Code", { enumerable: true, get: function() {
       return bson_2.Code;
-    }, "get") });
-    Object.defineProperty(exports2, "DBRef", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "DBRef", { enumerable: true, get: function() {
       return bson_2.DBRef;
-    }, "get") });
-    Object.defineProperty(exports2, "Decimal128", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Decimal128", { enumerable: true, get: function() {
       return bson_2.Decimal128;
-    }, "get") });
-    Object.defineProperty(exports2, "Double", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Double", { enumerable: true, get: function() {
       return bson_2.Double;
-    }, "get") });
-    Object.defineProperty(exports2, "Int32", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Int32", { enumerable: true, get: function() {
       return bson_2.Int32;
-    }, "get") });
-    Object.defineProperty(exports2, "Long", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Long", { enumerable: true, get: function() {
       return bson_2.Long;
-    }, "get") });
-    Object.defineProperty(exports2, "MaxKey", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MaxKey", { enumerable: true, get: function() {
       return bson_2.MaxKey;
-    }, "get") });
-    Object.defineProperty(exports2, "MinKey", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MinKey", { enumerable: true, get: function() {
       return bson_2.MinKey;
-    }, "get") });
-    Object.defineProperty(exports2, "ObjectId", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ObjectId", { enumerable: true, get: function() {
       return bson_2.ObjectId;
-    }, "get") });
-    Object.defineProperty(exports2, "Timestamp", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "Timestamp", { enumerable: true, get: function() {
       return bson_2.Timestamp;
-    }, "get") });
+    } });
     var common_1 = require_common2();
-    Object.defineProperty(exports2, "MongoBulkWriteError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "MongoBulkWriteError", { enumerable: true, get: function() {
       return common_1.MongoBulkWriteError;
-    }, "get") });
+    } });
     var change_stream_cursor_1 = require_change_stream_cursor();
-    Object.defineProperty(exports2, "ChangeStreamCursor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ChangeStreamCursor", { enumerable: true, get: function() {
       return change_stream_cursor_1.ChangeStreamCursor;
-    }, "get") });
+    } });
     var error_1 = require_error();
-    Object.defineProperty(exports2, "MongoAPIError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "MongoAPIError", { enumerable: true, get: function() {
       return error_1.MongoAPIError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoAWSError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoAWSError", { enumerable: true, get: function() {
       return error_1.MongoAWSError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoAzureError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoAzureError", { enumerable: true, get: function() {
       return error_1.MongoAzureError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoBatchReExecutionError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoBatchReExecutionError", { enumerable: true, get: function() {
       return error_1.MongoBatchReExecutionError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoChangeStreamError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoChangeStreamError", { enumerable: true, get: function() {
       return error_1.MongoChangeStreamError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoCompatibilityError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoCompatibilityError", { enumerable: true, get: function() {
       return error_1.MongoCompatibilityError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoCursorExhaustedError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoCursorExhaustedError", { enumerable: true, get: function() {
       return error_1.MongoCursorExhaustedError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoCursorInUseError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoCursorInUseError", { enumerable: true, get: function() {
       return error_1.MongoCursorInUseError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoDecompressionError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoDecompressionError", { enumerable: true, get: function() {
       return error_1.MongoDecompressionError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoDriverError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoDriverError", { enumerable: true, get: function() {
       return error_1.MongoDriverError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoError", { enumerable: true, get: function() {
       return error_1.MongoError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoExpiredSessionError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoExpiredSessionError", { enumerable: true, get: function() {
       return error_1.MongoExpiredSessionError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoGridFSChunkError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoGridFSChunkError", { enumerable: true, get: function() {
       return error_1.MongoGridFSChunkError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoGridFSStreamError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoGridFSStreamError", { enumerable: true, get: function() {
       return error_1.MongoGridFSStreamError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoInvalidArgumentError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoInvalidArgumentError", { enumerable: true, get: function() {
       return error_1.MongoInvalidArgumentError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoKerberosError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoKerberosError", { enumerable: true, get: function() {
       return error_1.MongoKerberosError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoMissingCredentialsError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoMissingCredentialsError", { enumerable: true, get: function() {
       return error_1.MongoMissingCredentialsError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoMissingDependencyError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoMissingDependencyError", { enumerable: true, get: function() {
       return error_1.MongoMissingDependencyError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoNetworkError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoNetworkError", { enumerable: true, get: function() {
       return error_1.MongoNetworkError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoNetworkTimeoutError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoNetworkTimeoutError", { enumerable: true, get: function() {
       return error_1.MongoNetworkTimeoutError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoNotConnectedError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoNotConnectedError", { enumerable: true, get: function() {
       return error_1.MongoNotConnectedError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoParseError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoParseError", { enumerable: true, get: function() {
       return error_1.MongoParseError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoRuntimeError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoRuntimeError", { enumerable: true, get: function() {
       return error_1.MongoRuntimeError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoServerClosedError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoServerClosedError", { enumerable: true, get: function() {
       return error_1.MongoServerClosedError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoServerError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoServerError", { enumerable: true, get: function() {
       return error_1.MongoServerError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoServerSelectionError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoServerSelectionError", { enumerable: true, get: function() {
       return error_1.MongoServerSelectionError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoSystemError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoSystemError", { enumerable: true, get: function() {
       return error_1.MongoSystemError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoTailableCursorError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoTailableCursorError", { enumerable: true, get: function() {
       return error_1.MongoTailableCursorError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoTopologyClosedError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoTopologyClosedError", { enumerable: true, get: function() {
       return error_1.MongoTopologyClosedError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoTransactionError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoTransactionError", { enumerable: true, get: function() {
       return error_1.MongoTransactionError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoUnexpectedServerResponseError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoUnexpectedServerResponseError", { enumerable: true, get: function() {
       return error_1.MongoUnexpectedServerResponseError;
-    }, "get") });
-    Object.defineProperty(exports2, "MongoWriteConcernError", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "MongoWriteConcernError", { enumerable: true, get: function() {
       return error_1.MongoWriteConcernError;
-    }, "get") });
+    } });
     var common_2 = require_common2();
-    Object.defineProperty(exports2, "BatchType", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "BatchType", { enumerable: true, get: function() {
       return common_2.BatchType;
-    }, "get") });
+    } });
     var gssapi_1 = require_gssapi();
-    Object.defineProperty(exports2, "GSSAPICanonicalizationValue", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "GSSAPICanonicalizationValue", { enumerable: true, get: function() {
       return gssapi_1.GSSAPICanonicalizationValue;
-    }, "get") });
+    } });
     var providers_1 = require_providers();
-    Object.defineProperty(exports2, "AuthMechanism", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "AuthMechanism", { enumerable: true, get: function() {
       return providers_1.AuthMechanism;
-    }, "get") });
+    } });
     var compression_1 = require_compression();
-    Object.defineProperty(exports2, "Compressor", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "Compressor", { enumerable: true, get: function() {
       return compression_1.Compressor;
-    }, "get") });
+    } });
     var abstract_cursor_2 = require_abstract_cursor();
-    Object.defineProperty(exports2, "CURSOR_FLAGS", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "CURSOR_FLAGS", { enumerable: true, get: function() {
       return abstract_cursor_2.CURSOR_FLAGS;
-    }, "get") });
+    } });
     var deps_1 = require_deps();
-    Object.defineProperty(exports2, "AutoEncryptionLoggerLevel", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "AutoEncryptionLoggerLevel", { enumerable: true, get: function() {
       return deps_1.AutoEncryptionLoggerLevel;
-    }, "get") });
+    } });
     var error_2 = require_error();
-    Object.defineProperty(exports2, "MongoErrorLabel", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "MongoErrorLabel", { enumerable: true, get: function() {
       return error_2.MongoErrorLabel;
-    }, "get") });
+    } });
     var explain_1 = require_explain();
-    Object.defineProperty(exports2, "ExplainVerbosity", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ExplainVerbosity", { enumerable: true, get: function() {
       return explain_1.ExplainVerbosity;
-    }, "get") });
+    } });
     var mongo_client_2 = require_mongo_client();
-    Object.defineProperty(exports2, "ServerApiVersion", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ServerApiVersion", { enumerable: true, get: function() {
       return mongo_client_2.ServerApiVersion;
-    }, "get") });
+    } });
     var find_and_modify_1 = require_find_and_modify();
-    Object.defineProperty(exports2, "ReturnDocument", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ReturnDocument", { enumerable: true, get: function() {
       return find_and_modify_1.ReturnDocument;
-    }, "get") });
+    } });
     var set_profiling_level_1 = require_set_profiling_level();
-    Object.defineProperty(exports2, "ProfilingLevel", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ProfilingLevel", { enumerable: true, get: function() {
       return set_profiling_level_1.ProfilingLevel;
-    }, "get") });
+    } });
     var read_concern_1 = require_read_concern();
-    Object.defineProperty(exports2, "ReadConcernLevel", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ReadConcernLevel", { enumerable: true, get: function() {
       return read_concern_1.ReadConcernLevel;
-    }, "get") });
+    } });
     var read_preference_1 = require_read_preference();
-    Object.defineProperty(exports2, "ReadPreferenceMode", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ReadPreferenceMode", { enumerable: true, get: function() {
       return read_preference_1.ReadPreferenceMode;
-    }, "get") });
+    } });
     var common_3 = require_common();
-    Object.defineProperty(exports2, "ServerType", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ServerType", { enumerable: true, get: function() {
       return common_3.ServerType;
-    }, "get") });
-    Object.defineProperty(exports2, "TopologyType", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "TopologyType", { enumerable: true, get: function() {
       return common_3.TopologyType;
-    }, "get") });
+    } });
     var read_concern_2 = require_read_concern();
-    Object.defineProperty(exports2, "ReadConcern", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ReadConcern", { enumerable: true, get: function() {
       return read_concern_2.ReadConcern;
-    }, "get") });
+    } });
     var read_preference_2 = require_read_preference();
-    Object.defineProperty(exports2, "ReadPreference", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ReadPreference", { enumerable: true, get: function() {
       return read_preference_2.ReadPreference;
-    }, "get") });
+    } });
     var write_concern_1 = require_write_concern();
-    Object.defineProperty(exports2, "WriteConcern", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "WriteConcern", { enumerable: true, get: function() {
       return write_concern_1.WriteConcern;
-    }, "get") });
+    } });
     var command_monitoring_events_1 = require_command_monitoring_events();
-    Object.defineProperty(exports2, "CommandFailedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "CommandFailedEvent", { enumerable: true, get: function() {
       return command_monitoring_events_1.CommandFailedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "CommandStartedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "CommandStartedEvent", { enumerable: true, get: function() {
       return command_monitoring_events_1.CommandStartedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "CommandSucceededEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "CommandSucceededEvent", { enumerable: true, get: function() {
       return command_monitoring_events_1.CommandSucceededEvent;
-    }, "get") });
+    } });
     var connection_pool_events_1 = require_connection_pool_events();
-    Object.defineProperty(exports2, "ConnectionCheckedInEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ConnectionCheckedInEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionCheckedInEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionCheckedOutEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionCheckedOutEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionCheckedOutEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionCheckOutFailedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionCheckOutFailedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionCheckOutFailedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionCheckOutStartedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionCheckOutStartedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionCheckOutStartedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionClosedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionClosedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionClosedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionCreatedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionCreatedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionCreatedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionPoolClearedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionPoolClearedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionPoolClearedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionPoolClosedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionPoolClosedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionPoolClosedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionPoolCreatedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionPoolCreatedEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionPoolCreatedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionPoolMonitoringEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionPoolMonitoringEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionPoolMonitoringEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionPoolReadyEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionPoolReadyEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionPoolReadyEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ConnectionReadyEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ConnectionReadyEvent", { enumerable: true, get: function() {
       return connection_pool_events_1.ConnectionReadyEvent;
-    }, "get") });
+    } });
     var events_1 = require_events();
-    Object.defineProperty(exports2, "ServerClosedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "ServerClosedEvent", { enumerable: true, get: function() {
       return events_1.ServerClosedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ServerDescriptionChangedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ServerDescriptionChangedEvent", { enumerable: true, get: function() {
       return events_1.ServerDescriptionChangedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ServerHeartbeatFailedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ServerHeartbeatFailedEvent", { enumerable: true, get: function() {
       return events_1.ServerHeartbeatFailedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ServerHeartbeatStartedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ServerHeartbeatStartedEvent", { enumerable: true, get: function() {
       return events_1.ServerHeartbeatStartedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ServerHeartbeatSucceededEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ServerHeartbeatSucceededEvent", { enumerable: true, get: function() {
       return events_1.ServerHeartbeatSucceededEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "ServerOpeningEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "ServerOpeningEvent", { enumerable: true, get: function() {
       return events_1.ServerOpeningEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "TopologyClosedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "TopologyClosedEvent", { enumerable: true, get: function() {
       return events_1.TopologyClosedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "TopologyDescriptionChangedEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "TopologyDescriptionChangedEvent", { enumerable: true, get: function() {
       return events_1.TopologyDescriptionChangedEvent;
-    }, "get") });
-    Object.defineProperty(exports2, "TopologyOpeningEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    } });
+    Object.defineProperty(exports2, "TopologyOpeningEvent", { enumerable: true, get: function() {
       return events_1.TopologyOpeningEvent;
-    }, "get") });
+    } });
     var srv_polling_1 = require_srv_polling();
-    Object.defineProperty(exports2, "SrvPollingEvent", { enumerable: true, get: /* @__PURE__ */ __name(function() {
+    Object.defineProperty(exports2, "SrvPollingEvent", { enumerable: true, get: function() {
       return srv_polling_1.SrvPollingEvent;
-    }, "get") });
+    } });
   }
 });
 
@@ -32430,7 +31349,6 @@ function isClass(value) {
 }
 var init_is_class = __esm({
   "node_modules/@e22m4u/js-format/src/utils/is-class.js"() {
-    __name(isClass, "isClass");
   }
 });
 
@@ -32469,7 +31387,6 @@ var init_value_to_string = __esm({
       "Set",
       "Date"
     ];
-    __name(valueToString, "valueToString");
   }
 });
 
@@ -32484,7 +31401,6 @@ var init_array_to_list = __esm({
   "node_modules/@e22m4u/js-format/src/array-to-list.js"() {
     init_value_to_string();
     SEPARATOR = ", ";
-    __name(arrayToList, "arrayToList");
   }
 });
 
@@ -32530,16 +31446,15 @@ var init_format = __esm({
   "node_modules/@e22m4u/js-format/src/format.js"() {
     init_array_to_list();
     init_value_to_string();
-    __name(format, "format");
   }
 });
 
 // node_modules/@e22m4u/js-format/src/errorf.js
-var _Errorf, Errorf;
+var Errorf;
 var init_errorf = __esm({
   "node_modules/@e22m4u/js-format/src/errorf.js"() {
     init_format();
-    _Errorf = class _Errorf extends Error {
+    Errorf = class extends Error {
       /**
        * Constructor.
        *
@@ -32551,8 +31466,6 @@ var init_errorf = __esm({
         super(message);
       }
     };
-    __name(_Errorf, "Errorf");
-    Errorf = _Errorf;
   }
 });
 
@@ -32565,14 +31478,12 @@ var init_src = __esm({
 });
 
 // node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
-var _InvalidArgumentError, InvalidArgumentError;
+var InvalidArgumentError;
 var init_invalid_argument_error = __esm({
   "node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js"() {
     init_src();
-    _InvalidArgumentError = class _InvalidArgumentError extends Errorf {
+    InvalidArgumentError = class extends Errorf {
     };
-    __name(_InvalidArgumentError, "InvalidArgumentError");
-    InvalidArgumentError = _InvalidArgumentError;
   }
 });
 
@@ -32584,12 +31495,12 @@ var init_errors = __esm({
 });
 
 // node_modules/@e22m4u/js-service/src/service-container.js
-var _ServiceContainer, ServiceContainer;
+var ServiceContainer;
 var init_service_container = __esm({
   "node_modules/@e22m4u/js-service/src/service-container.js"() {
     init_service();
     init_errors();
-    _ServiceContainer = class _ServiceContainer {
+    ServiceContainer = class _ServiceContainer {
       /**
        * Services map.
        *
@@ -32669,7 +31580,7 @@ var init_service_container = __esm({
             "The first argument of ServicesContainer.add must be a class constructor, but %v given.",
             ctor
           );
-        const factory = /* @__PURE__ */ __name(() => ctor.prototype instanceof Service ? new ctor(this, ...args) : new ctor(...args), "factory");
+        const factory = () => ctor.prototype instanceof Service ? new ctor(this, ...args) : new ctor(...args);
         this._services.set(ctor, factory);
         return this;
       }
@@ -32712,17 +31623,15 @@ var init_service_container = __esm({
         return this;
       }
     };
-    __name(_ServiceContainer, "ServiceContainer");
-    ServiceContainer = _ServiceContainer;
   }
 });
 
 // node_modules/@e22m4u/js-service/src/service.js
-var _Service, Service;
+var Service;
 var init_service = __esm({
   "node_modules/@e22m4u/js-service/src/service.js"() {
     init_service_container();
-    _Service = class _Service {
+    Service = class {
       /**
        * Container.
        *
@@ -32790,8 +31699,6 @@ var init_service = __esm({
         return this;
       }
     };
-    __name(_Service, "Service");
-    Service = _Service;
   }
 });
 
@@ -32804,35 +31711,31 @@ var init_src2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/errors/not-implemented-error.js
-var _NotImplementedError, NotImplementedError;
+var NotImplementedError;
 var init_not_implemented_error = __esm({
   "node_modules/@e22m4u/js-repository/src/errors/not-implemented-error.js"() {
     init_src();
-    _NotImplementedError = class _NotImplementedError extends Errorf {
+    NotImplementedError = class extends Errorf {
     };
-    __name(_NotImplementedError, "NotImplementedError");
-    NotImplementedError = _NotImplementedError;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/errors/invalid-argument-error.js
-var _InvalidArgumentError2, InvalidArgumentError2;
+var InvalidArgumentError2;
 var init_invalid_argument_error2 = __esm({
   "node_modules/@e22m4u/js-repository/src/errors/invalid-argument-error.js"() {
     init_src();
-    _InvalidArgumentError2 = class _InvalidArgumentError2 extends Errorf {
+    InvalidArgumentError2 = class extends Errorf {
     };
-    __name(_InvalidArgumentError2, "InvalidArgumentError");
-    InvalidArgumentError2 = _InvalidArgumentError2;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/errors/invalid-operator-value-error.js
-var _InvalidOperatorValueError, InvalidOperatorValueError;
+var InvalidOperatorValueError;
 var init_invalid_operator_value_error = __esm({
   "node_modules/@e22m4u/js-repository/src/errors/invalid-operator-value-error.js"() {
     init_src();
-    _InvalidOperatorValueError = class _InvalidOperatorValueError extends Error {
+    InvalidOperatorValueError = class extends Error {
       /**
        * Constructor.
        *
@@ -32851,8 +31754,6 @@ var init_invalid_operator_value_error = __esm({
         );
       }
     };
-    __name(_InvalidOperatorValueError, "InvalidOperatorValueError");
-    InvalidOperatorValueError = _InvalidOperatorValueError;
   }
 });
 
@@ -32866,12 +31767,12 @@ var init_errors2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/filter/slice-clause-tool.js
-var _SliceClauseTool, SliceClauseTool;
+var SliceClauseTool;
 var init_slice_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/slice-clause-tool.js"() {
     init_src2();
     init_errors2();
-    _SliceClauseTool = class _SliceClauseTool extends Service {
+    SliceClauseTool = class extends Service {
       /**
        * Slice.
        *
@@ -32927,8 +31828,6 @@ var init_slice_clause_tool = __esm({
           );
       }
     };
-    __name(_SliceClauseTool, "SliceClauseTool");
-    SliceClauseTool = _SliceClauseTool;
   }
 });
 
@@ -32946,7 +31845,6 @@ function isPromise(value) {
 }
 var init_is_promise = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/is-promise.js"() {
-    __name(isPromise, "isPromise");
   }
 });
 
@@ -32957,7 +31855,6 @@ function capitalize(string) {
 }
 var init_capitalize = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/capitalize.js"() {
-    __name(capitalize, "capitalize");
   }
 });
 
@@ -33000,7 +31897,6 @@ function cloneDeep(value) {
 }
 var init_clone_deep = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/clone-deep.js"() {
-    __name(cloneDeep, "cloneDeep");
   }
 });
 
@@ -33023,14 +31919,13 @@ function singularize(noun) {
 }
 var init_singularize = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/singularize.js"() {
-    __name(singularize, "singularize");
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/utils/is-deep-equal.js
 function isDeepEqual(firstValue, secondValue) {
   const cached = /* @__PURE__ */ new WeakMap();
-  const compare = /* @__PURE__ */ __name((a, b) => {
+  const compare = (a, b) => {
     if (a === null || b === null) return a === b;
     if (typeof a !== "object" || typeof b !== "object") return a === b;
     const dataTypeA = Array.isArray(a) ? "array" : "object";
@@ -33066,12 +31961,11 @@ function isDeepEqual(firstValue, secondValue) {
       if (!compare(propertyValueA, propertyValueB)) return false;
     }
     return true;
-  }, "compare");
+  };
   return compare(firstValue, secondValue);
 }
 var init_is_deep_equal = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/is-deep-equal.js"() {
-    __name(isDeepEqual, "isDeepEqual");
   }
 });
 
@@ -33083,7 +31977,6 @@ function getCtorName(value) {
 }
 var init_get_ctor_name = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/get-ctor-name.js"() {
-    __name(getCtorName, "getCtorName");
   }
 });
 
@@ -33095,7 +31988,6 @@ function isPureObject(value) {
 }
 var init_is_pure_object = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/is-pure-object.js"() {
-    __name(isPureObject, "isPureObject");
   }
 });
 
@@ -33117,7 +32009,6 @@ function stringToRegexp(pattern, flags = void 0) {
 }
 var init_string_to_regexp = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/string-to-regexp.js"() {
-    __name(stringToRegexp, "stringToRegexp");
   }
 });
 
@@ -33139,7 +32030,6 @@ function getValueByPath(obj, path, orElse = void 0) {
 }
 var init_get_value_by_path = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/get-value-by-path.js"() {
-    __name(getValueByPath, "getValueByPath");
   }
 });
 
@@ -33150,7 +32040,6 @@ function transformPromise(valueOrPromise, transformer) {
 var init_transform_promise = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/transform-promise.js"() {
     init_is_promise();
-    __name(transformPromise, "transformPromise");
   }
 });
 
@@ -33183,7 +32072,6 @@ function selectObjectKeys(obj, keys) {
 var init_select_object_keys = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/select-object-keys.js"() {
     init_errors2();
-    __name(selectObjectKeys, "selectObjectKeys");
   }
 });
 
@@ -33202,7 +32090,6 @@ function excludeObjectKeys(obj, keys) {
 var init_exclude_object_keys = __esm({
   "node_modules/@e22m4u/js-repository/src/utils/exclude-object-keys.js"() {
     init_errors2();
-    __name(excludeObjectKeys, "excludeObjectKeys");
   }
 });
 
@@ -33248,13 +32135,13 @@ function compareFn(a, b) {
   }
   return 0;
 }
-var _OrderClauseTool, OrderClauseTool;
+var OrderClauseTool;
 var init_order_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/order-clause-tool.js"() {
     init_src2();
     init_utils2();
     init_errors2();
-    _OrderClauseTool = class _OrderClauseTool extends Service {
+    OrderClauseTool = class extends Service {
       /**
        * Sort.
        *
@@ -33319,21 +32206,18 @@ var init_order_clause_tool = __esm({
         return clause;
       }
     };
-    __name(_OrderClauseTool, "OrderClauseTool");
-    OrderClauseTool = _OrderClauseTool;
-    __name(compareFn, "compareFn");
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/filter/operator-clause-tool.js
-var _OperatorClauseTool, OperatorClauseTool;
+var OperatorClauseTool;
 var init_operator_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/operator-clause-tool.js"() {
     init_src2();
     init_utils2();
     init_errors2();
     init_errors2();
-    _OperatorClauseTool = class _OperatorClauseTool extends Service {
+    OperatorClauseTool = class extends Service {
       /**
        * Compare.
        *
@@ -33769,20 +32653,18 @@ var init_operator_clause_tool = __esm({
         }
       }
     };
-    __name(_OperatorClauseTool, "OperatorClauseTool");
-    OperatorClauseTool = _OperatorClauseTool;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/filter/where-clause-tool.js
-var _WhereClauseTool, WhereClauseTool;
+var WhereClauseTool;
 var init_where_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/where-clause-tool.js"() {
     init_src2();
     init_utils2();
     init_errors2();
     init_operator_clause_tool();
-    _WhereClauseTool = class _WhereClauseTool extends Service {
+    WhereClauseTool = class extends Service {
       /**
        * Filter by where clause.
        *
@@ -33912,8 +32794,6 @@ var init_where_clause_tool = __esm({
           );
       }
     };
-    __name(_WhereClauseTool, "WhereClauseTool");
-    WhereClauseTool = _WhereClauseTool;
   }
 });
 
@@ -33937,14 +32817,14 @@ var init_relation_definition = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/relations/relations-definition-validator.js
-var _RelationsDefinitionValidator, RelationsDefinitionValidator;
+var RelationsDefinitionValidator;
 var init_relations_definition_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/relations/relations-definition-validator.js"() {
     init_src2();
     init_relation_type();
     init_relation_type();
     init_errors2();
-    _RelationsDefinitionValidator = class _RelationsDefinitionValidator extends Service {
+    RelationsDefinitionValidator = class extends Service {
       /**
        * Validate.
        *
@@ -34321,8 +33201,6 @@ var init_relations_definition_validator = __esm({
           );
       }
     };
-    __name(_RelationsDefinitionValidator, "RelationsDefinitionValidator");
-    RelationsDefinitionValidator = _RelationsDefinitionValidator;
   }
 });
 
@@ -34369,14 +33247,14 @@ var init_property_uniqueness = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/empty-values-definer.js
-var _EmptyValuesDefiner, EmptyValuesDefiner;
+var EmptyValuesDefiner;
 var init_empty_values_definer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/empty-values-definer.js"() {
     init_data_type();
     init_src2();
     init_utils2();
     init_errors2();
-    _EmptyValuesDefiner = class _EmptyValuesDefiner extends Service {
+    EmptyValuesDefiner = class extends Service {
       /**
        * Empty values map.
        *
@@ -34429,8 +33307,6 @@ var init_empty_values_definer = __esm({
         return this._emptyValuesMap.get(dataType).some((v) => isDeepEqual(v, value));
       }
     };
-    __name(_EmptyValuesDefiner, "EmptyValuesDefiner");
-    EmptyValuesDefiner = _EmptyValuesDefiner;
   }
 });
 
@@ -34463,7 +33339,6 @@ var init_regexp_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-validator/builtin/regexp-validator.js"() {
     init_utils2();
     init_errors2();
-    __name(regexpValidator, "regexpValidator");
   }
 });
 
@@ -34487,7 +33362,6 @@ function maxLengthValidator(value, options, context) {
 var init_max_length_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-validator/builtin/max-length-validator.js"() {
     init_errors2();
-    __name(maxLengthValidator, "maxLengthValidator");
   }
 });
 
@@ -34511,7 +33385,6 @@ function minLengthValidator(value, options, context) {
 var init_min_length_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-validator/builtin/min-length-validator.js"() {
     init_errors2();
-    __name(minLengthValidator, "minLengthValidator");
   }
 });
 
@@ -34525,7 +33398,7 @@ var init_builtin = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/property-validator/property-validator-registry.js
-var _PropertyValidatorRegistry, PropertyValidatorRegistry;
+var PropertyValidatorRegistry;
 var init_property_validator_registry = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-validator/property-validator-registry.js"() {
     init_src2();
@@ -34533,7 +33406,7 @@ var init_property_validator_registry = __esm({
     init_builtin();
     init_builtin();
     init_errors2();
-    _PropertyValidatorRegistry = class _PropertyValidatorRegistry extends Service {
+    PropertyValidatorRegistry = class extends Service {
       /**
        * Validators.
        *
@@ -34596,8 +33469,6 @@ var init_property_validator_registry = __esm({
         return validator;
       }
     };
-    __name(_PropertyValidatorRegistry, "PropertyValidatorRegistry");
-    PropertyValidatorRegistry = _PropertyValidatorRegistry;
   }
 });
 
@@ -34628,7 +33499,6 @@ function trimTransformer(value, options, context) {
 var init_trim_transformer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/builtin/trim-transformer.js"() {
     init_errors2();
-    __name(trimTransformer, "trimTransformer");
   }
 });
 
@@ -34645,7 +33515,6 @@ function toLowerCaseTransformer(value, options, context) {
 var init_to_lower_case_transformer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/builtin/to-lower-case-transformer.js"() {
     init_errors2();
-    __name(toLowerCaseTransformer, "toLowerCaseTransformer");
   }
 });
 
@@ -34662,7 +33531,6 @@ function toUpperCaseTransformer(value, options, context) {
 var init_to_upper_case_transformer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/builtin/to-upper-case-transformer.js"() {
     init_errors2();
-    __name(toUpperCaseTransformer, "toUpperCaseTransformer");
   }
 });
 
@@ -34682,7 +33550,6 @@ function toTitleCaseTransformer(value, options, context) {
 var init_to_title_case_transformer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/builtin/to-title-case-transformer.js"() {
     init_errors2();
-    __name(toTitleCaseTransformer, "toTitleCaseTransformer");
   }
 });
 
@@ -34697,7 +33564,7 @@ var init_builtin2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/property-transformer-registry.js
-var _PropertyTransformerRegistry, PropertyTransformerRegistry;
+var PropertyTransformerRegistry;
 var init_property_transformer_registry = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-transformer/property-transformer-registry.js"() {
     init_src2();
@@ -34706,7 +33573,7 @@ var init_property_transformer_registry = __esm({
     init_builtin2();
     init_builtin2();
     init_errors2();
-    _PropertyTransformerRegistry = class _PropertyTransformerRegistry extends Service {
+    PropertyTransformerRegistry = class extends Service {
       /**
        * Transformers.
        *
@@ -34770,8 +33637,6 @@ var init_property_transformer_registry = __esm({
         return transformer;
       }
     };
-    __name(_PropertyTransformerRegistry, "PropertyTransformerRegistry");
-    PropertyTransformerRegistry = _PropertyTransformerRegistry;
   }
 });
 
@@ -34784,14 +33649,14 @@ var init_property_transformer2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/definition-registry.js
-var _DefinitionRegistry, DefinitionRegistry;
+var DefinitionRegistry;
 var init_definition_registry = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/definition-registry.js"() {
     init_src2();
     init_errors2();
     init_model();
     init_definition();
-    _DefinitionRegistry = class _DefinitionRegistry extends Service {
+    DefinitionRegistry = class extends Service {
       /**
        * Datasources.
        *
@@ -34874,13 +33739,11 @@ var init_definition_registry = __esm({
         return modelDef;
       }
     };
-    __name(_DefinitionRegistry, "DefinitionRegistry");
-    DefinitionRegistry = _DefinitionRegistry;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/model-definition-utils.js
-var DEFAULT_PRIMARY_KEY_PROPERTY_NAME, _ModelDefinitionUtils, ModelDefinitionUtils;
+var DEFAULT_PRIMARY_KEY_PROPERTY_NAME, ModelDefinitionUtils;
 var init_model_definition_utils = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/model-definition-utils.js"() {
     init_src2();
@@ -34891,7 +33754,7 @@ var init_model_definition_utils = __esm({
     init_errors2();
     init_definition_registry();
     DEFAULT_PRIMARY_KEY_PROPERTY_NAME = "id";
-    _ModelDefinitionUtils = class _ModelDefinitionUtils extends Service {
+    ModelDefinitionUtils = class extends Service {
       /**
        * Get primary key as property name.
        *
@@ -35137,7 +34000,7 @@ var init_model_definition_utils = __esm({
       getPropertiesDefinitionInBaseModelHierarchy(modelName) {
         let result = {};
         let pkPropDefs = {};
-        const recursion = /* @__PURE__ */ __name((currModelName, prevModelName = void 0) => {
+        const recursion = (currModelName, prevModelName = void 0) => {
           if (currModelName === prevModelName)
             throw new InvalidArgumentError2(
               "The model %v has a circular inheritance.",
@@ -35151,7 +34014,7 @@ var init_model_definition_utils = __esm({
           result = { ...regularPropDefs, ...result };
           const modelDef = this.getService(DefinitionRegistry).getModel(currModelName);
           if (modelDef.base) recursion(modelDef.base, currModelName);
-        }, "recursion");
+        };
         recursion(modelName);
         return result;
       }
@@ -35173,7 +34036,7 @@ var init_model_definition_utils = __esm({
        */
       getRelationsDefinitionInBaseModelHierarchy(modelName) {
         let result = {};
-        const recursion = /* @__PURE__ */ __name((currModelName, prevModelName = void 0) => {
+        const recursion = (currModelName, prevModelName = void 0) => {
           if (currModelName === prevModelName)
             throw new InvalidArgumentError2(
               "The model %v has a circular inheritance.",
@@ -35183,7 +34046,7 @@ var init_model_definition_utils = __esm({
           const ownRelDefs = modelDef.relations ?? {};
           result = { ...ownRelDefs, ...result };
           if (modelDef.base) recursion(modelDef.base, currModelName);
-        }, "recursion");
+        };
         recursion(modelName);
         return result;
       }
@@ -35230,13 +34093,11 @@ var init_model_definition_utils = __esm({
         return excludeObjectKeys(modelData, relNames);
       }
     };
-    __name(_ModelDefinitionUtils, "ModelDefinitionUtils");
-    ModelDefinitionUtils = _ModelDefinitionUtils;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/property-uniqueness-validator.js
-var _PropertyUniquenessValidator, PropertyUniquenessValidator;
+var PropertyUniquenessValidator;
 var init_property_uniqueness_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/property-uniqueness-validator.js"() {
     init_data_type();
@@ -35246,7 +34107,7 @@ var init_property_uniqueness_validator = __esm({
     init_empty_values_definer();
     init_errors2();
     init_model_definition_utils();
-    _PropertyUniquenessValidator = class _PropertyUniquenessValidator extends Service {
+    PropertyUniquenessValidator = class extends Service {
       /**
        * Validate.
        *
@@ -35287,12 +34148,12 @@ var init_property_uniqueness_validator = __esm({
         const idProp = this.getService(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
           modelName
         );
-        const createError = /* @__PURE__ */ __name((propName, propValue) => new InvalidArgumentError2(
+        const createError = (propName, propValue) => new InvalidArgumentError2(
           "An existing document of the model %v already has the property %v with the value %v and should be unique.",
           modelName,
           propName,
           propValue
-        ), "createError");
+        );
         let willBeReplaced = void 0;
         const emptyValuesDefiner = this.getService(EmptyValuesDefiner);
         for (const propName of propNames) {
@@ -35349,19 +34210,17 @@ var init_property_uniqueness_validator = __esm({
         }
       }
     };
-    __name(_PropertyUniquenessValidator, "PropertyUniquenessValidator");
-    PropertyUniquenessValidator = _PropertyUniquenessValidator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/primary-keys-definition-validator.js
-var _PrimaryKeysDefinitionValidator, PrimaryKeysDefinitionValidator;
+var PrimaryKeysDefinitionValidator;
 var init_primary_keys_definition_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/primary-keys-definition-validator.js"() {
     init_src2();
     init_errors2();
     init_model_definition_utils();
-    _PrimaryKeysDefinitionValidator = class _PrimaryKeysDefinitionValidator extends Service {
+    PrimaryKeysDefinitionValidator = class extends Service {
       /**
        * Validate.
        *
@@ -35400,13 +34259,11 @@ var init_primary_keys_definition_validator = __esm({
         }
       }
     };
-    __name(_PrimaryKeysDefinitionValidator, "PrimaryKeysDefinitionValidator");
-    PrimaryKeysDefinitionValidator = _PrimaryKeysDefinitionValidator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/properties/properties-definition-validator.js
-var _PropertiesDefinitionValidator, PropertiesDefinitionValidator;
+var PropertiesDefinitionValidator;
 var init_properties_definition_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/properties/properties-definition-validator.js"() {
     init_src2();
@@ -35417,7 +34274,7 @@ var init_properties_definition_validator = __esm({
     init_property_validator2();
     init_property_transformer2();
     init_primary_keys_definition_validator();
-    _PropertiesDefinitionValidator = class _PropertiesDefinitionValidator extends Service {
+    PropertiesDefinitionValidator = class extends Service {
       /**
        * Validate.
        *
@@ -35689,8 +34546,6 @@ var init_properties_definition_validator = __esm({
           );
       }
     };
-    __name(_PropertiesDefinitionValidator, "PropertiesDefinitionValidator");
-    PropertiesDefinitionValidator = _PropertiesDefinitionValidator;
   }
 });
 
@@ -35716,7 +34571,7 @@ var init_model_definition = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/model-data-validator.js
-var _ModelDataValidator, ModelDataValidator;
+var ModelDataValidator;
 var init_model_data_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/model-data-validator.js"() {
     init_src2();
@@ -35727,7 +34582,7 @@ var init_model_data_validator = __esm({
     init_errors2();
     init_properties();
     init_model_definition_utils();
-    _ModelDataValidator = class _ModelDataValidator extends Service {
+    ModelDataValidator = class extends Service {
       /**
        * Validate.
        *
@@ -35814,7 +34669,7 @@ var init_model_data_validator = __esm({
         } else {
           expectingType = typeof propDef !== "string" ? propDef.type : propDef;
         }
-        const createError = /* @__PURE__ */ __name((expected) => {
+        const createError = (expected) => {
           const pattern = isArrayValue ? "The array property %v of the model %v must have %s element, but %s given." : "The property %v of the model %v must have %s, but %s given.";
           const ctorName = getCtorName(propValue);
           const givenStr = ctorName ?? typeof propValue;
@@ -35825,7 +34680,7 @@ var init_model_data_validator = __esm({
             expected,
             givenStr
           );
-        }, "createError");
+        };
         switch (expectingType) {
           // STRING
           case DataType.STRING:
@@ -35873,14 +34728,14 @@ var init_model_data_validator = __esm({
         if (typeof propDef === "string" || propDef.validate == null) return;
         const validateDef = propDef.validate;
         const validatorRegistry = this.getService(PropertyValidatorRegistry);
-        const createError = /* @__PURE__ */ __name((validatorName) => new InvalidArgumentError2(
+        const createError = (validatorName) => new InvalidArgumentError2(
           "The property %v of the model %v has an invalid value %v that caught by the validator %v.",
           propName,
           modelName,
           propValue,
           validatorName
-        ), "createError");
-        const validateBy = /* @__PURE__ */ __name((validatorName, validatorOptions = void 0) => {
+        );
+        const validateBy = (validatorName, validatorOptions = void 0) => {
           const validator = validatorRegistry.getValidator(validatorName);
           const context = { validatorName, modelName, propName };
           const valid = validator(propValue, validatorOptions, context);
@@ -35892,7 +34747,7 @@ var init_model_data_validator = __esm({
           } else if (valid !== true) {
             throw createError(validatorName);
           }
-        }, "validateBy");
+        };
         if (validateDef && typeof validateDef === "string") {
           validateBy(validateDef);
         } else if (Array.isArray(validateDef)) {
@@ -35914,19 +34769,17 @@ var init_model_data_validator = __esm({
         }
       }
     };
-    __name(_ModelDataValidator, "ModelDataValidator");
-    ModelDataValidator = _ModelDataValidator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/model-data-sanitizer.js
-var _ModelDataSanitizer, ModelDataSanitizer;
+var ModelDataSanitizer;
 var init_model_data_sanitizer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/model-data-sanitizer.js"() {
     init_src2();
     init_errors2();
     init_model_definition_utils();
-    _ModelDataSanitizer = class _ModelDataSanitizer extends Service {
+    ModelDataSanitizer = class extends Service {
       /**
        * Validate.
        *
@@ -35950,13 +34803,11 @@ var init_model_data_sanitizer = __esm({
         ).excludeObjectKeysByRelationNames(modelName, modelData);
       }
     };
-    __name(_ModelDataSanitizer, "ModelDataSanitizer");
-    ModelDataSanitizer = _ModelDataSanitizer;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/model-data-transformer.js
-var _ModelDataTransformer, ModelDataTransformer;
+var ModelDataTransformer;
 var init_model_data_transformer = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/model-data-transformer.js"() {
     init_src2();
@@ -35967,7 +34818,7 @@ var init_model_data_transformer = __esm({
     init_errors2();
     init_model_definition_utils();
     init_properties();
-    _ModelDataTransformer = class _ModelDataTransformer extends Service {
+    ModelDataTransformer = class extends Service {
       /**
        * Transform.
        *
@@ -36025,11 +34876,11 @@ var init_model_data_transformer = __esm({
           return propValue;
         const transformDef = propDef.transform;
         const transformerRegistry = this.getService(PropertyTransformerRegistry);
-        const transformFn = /* @__PURE__ */ __name((value, transformerName, transformerOptions = void 0) => {
+        const transformFn = (value, transformerName, transformerOptions = void 0) => {
           const transformer = transformerRegistry.getTransformer(transformerName);
           const context = { transformerName, modelName, propName };
           return transformer(value, transformerOptions, context);
-        }, "transformFn");
+        };
         if (transformDef && typeof transformDef === "string") {
           return transformFn(propValue, transformDef);
         } else if (Array.isArray(transformDef)) {
@@ -36058,20 +34909,18 @@ var init_model_data_transformer = __esm({
         }
       }
     };
-    __name(_ModelDataTransformer, "ModelDataTransformer");
-    ModelDataTransformer = _ModelDataTransformer;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/model/model-definition-validator.js
-var _ModelDefinitionValidator, ModelDefinitionValidator;
+var ModelDefinitionValidator;
 var init_model_definition_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/model/model-definition-validator.js"() {
     init_src2();
     init_errors2();
     init_relations();
     init_properties();
-    _ModelDefinitionValidator = class _ModelDefinitionValidator extends Service {
+    ModelDefinitionValidator = class extends Service {
       /**
        * Validate.
        *
@@ -36134,8 +34983,6 @@ var init_model_definition_validator = __esm({
         }
       }
     };
-    __name(_ModelDefinitionValidator, "ModelDefinitionValidator");
-    ModelDefinitionValidator = _ModelDefinitionValidator;
   }
 });
 
@@ -36154,12 +35001,12 @@ var init_model = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/definition/datasource/datasource-definition-validator.js
-var _DatasourceDefinitionValidator, DatasourceDefinitionValidator;
+var DatasourceDefinitionValidator;
 var init_datasource_definition_validator = __esm({
   "node_modules/@e22m4u/js-repository/src/definition/datasource/datasource-definition-validator.js"() {
     init_src2();
     init_errors2();
-    _DatasourceDefinitionValidator = class _DatasourceDefinitionValidator extends Service {
+    DatasourceDefinitionValidator = class extends Service {
       /**
        * Validate.
        *
@@ -36184,8 +35031,6 @@ var init_datasource_definition_validator = __esm({
           );
       }
     };
-    __name(_DatasourceDefinitionValidator, "DatasourceDefinitionValidator");
-    DatasourceDefinitionValidator = _DatasourceDefinitionValidator;
   }
 });
 
@@ -36206,14 +35051,14 @@ var init_definition = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/filter/fields-clause-tool.js
-var _FieldsClauseTool, FieldsClauseTool;
+var FieldsClauseTool;
 var init_fields_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/fields-clause-tool.js"() {
     init_src2();
     init_utils2();
     init_errors2();
     init_definition();
-    _FieldsClauseTool = class _FieldsClauseTool extends Service {
+    FieldsClauseTool = class extends Service {
       /**
        * Filter.
        *
@@ -36291,13 +35136,11 @@ var init_fields_clause_tool = __esm({
         return fields;
       }
     };
-    __name(_FieldsClauseTool, "FieldsClauseTool");
-    FieldsClauseTool = _FieldsClauseTool;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/relations/has-one-resolver.js
-var _HasOneResolver, HasOneResolver;
+var HasOneResolver;
 var init_has_one_resolver = __esm({
   "node_modules/@e22m4u/js-repository/src/relations/has-one-resolver.js"() {
     init_src2();
@@ -36306,7 +35149,7 @@ var init_has_one_resolver = __esm({
     init_errors2();
     init_repository2();
     init_definition();
-    _HasOneResolver = class _HasOneResolver extends Service {
+    HasOneResolver = class extends Service {
       /**
        * Include to.
        *
@@ -36545,13 +35388,11 @@ var init_has_one_resolver = __esm({
         );
       }
     };
-    __name(_HasOneResolver, "HasOneResolver");
-    HasOneResolver = _HasOneResolver;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/relations/has-many-resolver.js
-var _HasManyResolver, HasManyResolver;
+var HasManyResolver;
 var init_has_many_resolver = __esm({
   "node_modules/@e22m4u/js-repository/src/relations/has-many-resolver.js"() {
     init_src2();
@@ -36560,7 +35401,7 @@ var init_has_many_resolver = __esm({
     init_errors2();
     init_repository2();
     init_definition();
-    _HasManyResolver = class _HasManyResolver extends Service {
+    HasManyResolver = class extends Service {
       /**
        * Include to.
        *
@@ -36805,13 +35646,11 @@ var init_has_many_resolver = __esm({
         );
       }
     };
-    __name(_HasManyResolver, "HasManyResolver");
-    HasManyResolver = _HasManyResolver;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/relations/belongs-to-resolver.js
-var _BelongsToResolver, BelongsToResolver;
+var BelongsToResolver;
 var init_belongs_to_resolver = __esm({
   "node_modules/@e22m4u/js-repository/src/relations/belongs-to-resolver.js"() {
     init_src2();
@@ -36820,7 +35659,7 @@ var init_belongs_to_resolver = __esm({
     init_errors2();
     init_repository2();
     init_definition();
-    _BelongsToResolver = class _BelongsToResolver extends Service {
+    BelongsToResolver = class extends Service {
       /**
        * Include to.
        *
@@ -37010,13 +35849,11 @@ var init_belongs_to_resolver = __esm({
         });
       }
     };
-    __name(_BelongsToResolver, "BelongsToResolver");
-    BelongsToResolver = _BelongsToResolver;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/relations/references-many-resolver.js
-var _ReferencesManyResolver, ReferencesManyResolver;
+var ReferencesManyResolver;
 var init_references_many_resolver = __esm({
   "node_modules/@e22m4u/js-repository/src/relations/references-many-resolver.js"() {
     init_src2();
@@ -37025,7 +35862,7 @@ var init_references_many_resolver = __esm({
     init_errors2();
     init_repository2();
     init_definition();
-    _ReferencesManyResolver = class _ReferencesManyResolver extends Service {
+    ReferencesManyResolver = class extends Service {
       /**
        * Include to.
        *
@@ -37110,8 +35947,6 @@ var init_references_many_resolver = __esm({
         });
       }
     };
-    __name(_ReferencesManyResolver, "ReferencesManyResolver");
-    ReferencesManyResolver = _ReferencesManyResolver;
   }
 });
 
@@ -37126,7 +35961,7 @@ var init_relations2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/filter/include-clause-tool.js
-var _IncludeClauseTool, IncludeClauseTool;
+var IncludeClauseTool;
 var init_include_clause_tool = __esm({
   "node_modules/@e22m4u/js-repository/src/filter/include-clause-tool.js"() {
     init_src2();
@@ -37141,7 +35976,7 @@ var init_include_clause_tool = __esm({
     init_fields_clause_tool();
     init_definition();
     init_relations2();
-    _IncludeClauseTool = class _IncludeClauseTool extends Service {
+    IncludeClauseTool = class _IncludeClauseTool extends Service {
       /**
        * Include to.
        *
@@ -37459,8 +36294,6 @@ var init_include_clause_tool = __esm({
         return void 0;
       }
     };
-    __name(_IncludeClauseTool, "IncludeClauseTool");
-    IncludeClauseTool = _IncludeClauseTool;
   }
 });
 
@@ -37477,14 +36310,14 @@ var init_filter = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/inclusion-decorator.js
-var _InclusionDecorator, InclusionDecorator;
+var InclusionDecorator;
 var init_inclusion_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/inclusion-decorator.js"() {
     init_adapter();
     init_src2();
     init_filter();
     init_errors2();
-    _InclusionDecorator = class _InclusionDecorator extends Service {
+    InclusionDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37497,7 +36330,7 @@ var init_inclusion_decorator = __esm({
             adapter
           );
         const tool = adapter.getService(IncludeClauseTool);
-        const includeTo = /* @__PURE__ */ __name((...args) => tool.includeTo(...args), "includeTo");
+        const includeTo = (...args) => tool.includeTo(...args);
         const create = adapter.create;
         adapter.create = async function(modelName, modelData, filter) {
           const retvalData = await create.call(this, modelName, modelData, filter);
@@ -37559,20 +36392,18 @@ var init_inclusion_decorator = __esm({
         };
       }
     };
-    __name(_InclusionDecorator, "InclusionDecorator");
-    InclusionDecorator = _InclusionDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/default-values-decorator.js
-var _DefaultValuesDecorator, DefaultValuesDecorator;
+var DefaultValuesDecorator;
 var init_default_values_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/default-values-decorator.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_definition();
-    _DefaultValuesDecorator = class _DefaultValuesDecorator extends Service {
+    DefaultValuesDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37585,7 +36416,7 @@ var init_default_values_decorator = __esm({
             adapter
           );
         const utils = adapter.getService(ModelDefinitionUtils);
-        const setDefaults = /* @__PURE__ */ __name((...args) => utils.setDefaultValuesToEmptyProperties(...args), "setDefaults");
+        const setDefaults = (...args) => utils.setDefaultValuesToEmptyProperties(...args);
         const create = adapter.create;
         adapter.create = function(modelName, modelData, filter) {
           modelData = setDefaults(modelName, modelData);
@@ -37623,20 +36454,18 @@ var init_default_values_decorator = __esm({
         };
       }
     };
-    __name(_DefaultValuesDecorator, "DefaultValuesDecorator");
-    DefaultValuesDecorator = _DefaultValuesDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/data-sanitizing-decorator.js
-var _DataSanitizingDecorator, DataSanitizingDecorator;
+var DataSanitizingDecorator;
 var init_data_sanitizing_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/data-sanitizing-decorator.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_definition();
-    _DataSanitizingDecorator = class _DataSanitizingDecorator extends Service {
+    DataSanitizingDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37649,7 +36478,7 @@ var init_data_sanitizing_decorator = __esm({
             adapter
           );
         const sanitizer = adapter.getService(ModelDataSanitizer);
-        const sanitize = /* @__PURE__ */ __name((...args) => sanitizer.sanitize(...args), "sanitize");
+        const sanitize = (...args) => sanitizer.sanitize(...args);
         const create = adapter.create;
         adapter.create = async function(modelName, modelData, filter) {
           modelData = sanitize(modelName, modelData);
@@ -37677,20 +36506,18 @@ var init_data_sanitizing_decorator = __esm({
         };
       }
     };
-    __name(_DataSanitizingDecorator, "DataSanitizingDecorator");
-    DataSanitizingDecorator = _DataSanitizingDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/data-validation-decorator.js
-var _DataValidationDecorator, DataValidationDecorator;
+var DataValidationDecorator;
 var init_data_validation_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/data-validation-decorator.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_definition();
-    _DataValidationDecorator = class _DataValidationDecorator extends Service {
+    DataValidationDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37730,20 +36557,18 @@ var init_data_validation_decorator = __esm({
         };
       }
     };
-    __name(_DataValidationDecorator, "DataValidationDecorator");
-    DataValidationDecorator = _DataValidationDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/fields-filtering-decorator.js
-var _FieldsFilteringDecorator, FieldsFilteringDecorator;
+var FieldsFilteringDecorator;
 var init_fields_filtering_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/fields-filtering-decorator.js"() {
     init_adapter();
     init_src2();
     init_filter();
     init_errors2();
-    _FieldsFilteringDecorator = class _FieldsFilteringDecorator extends Service {
+    FieldsFilteringDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37756,7 +36581,7 @@ var init_fields_filtering_decorator = __esm({
             adapter
           );
         const tool = adapter.getService(FieldsClauseTool);
-        const selectFields = /* @__PURE__ */ __name((...args) => tool.filter(...args), "selectFields");
+        const selectFields = (...args) => tool.filter(...args);
         const create = adapter.create;
         adapter.create = async function(modelName, modelData, filter) {
           let result = await create.call(this, modelName, modelData, filter);
@@ -37812,20 +36637,18 @@ var init_fields_filtering_decorator = __esm({
         };
       }
     };
-    __name(_FieldsFilteringDecorator, "FieldsFilteringDecorator");
-    FieldsFilteringDecorator = _FieldsFilteringDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/data-transformation-decorator.js
-var _DataTransformationDecorator, DataTransformationDecorator;
+var DataTransformationDecorator;
 var init_data_transformation_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/data-transformation-decorator.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_definition();
-    _DataTransformationDecorator = class _DataTransformationDecorator extends Service {
+    DataTransformationDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37865,20 +36688,18 @@ var init_data_transformation_decorator = __esm({
         };
       }
     };
-    __name(_DataTransformationDecorator, "DataTransformationDecorator");
-    DataTransformationDecorator = _DataTransformationDecorator;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/decorator/property-uniqueness-decorator.js
-var _PropertyUniquenessDecorator, PropertyUniquenessDecorator;
+var PropertyUniquenessDecorator;
 var init_property_uniqueness_decorator = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/decorator/property-uniqueness-decorator.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_definition();
-    _PropertyUniquenessDecorator = class _PropertyUniquenessDecorator extends Service {
+    PropertyUniquenessDecorator = class extends Service {
       /**
        * Decorate.
        *
@@ -37940,8 +36761,6 @@ var init_property_uniqueness_decorator = __esm({
         };
       }
     };
-    __name(_PropertyUniquenessDecorator, "PropertyUniquenessDecorator");
-    PropertyUniquenessDecorator = _PropertyUniquenessDecorator;
   }
 });
 
@@ -37959,7 +36778,7 @@ var init_decorator = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/adapter.js
-var _Adapter, Adapter;
+var Adapter;
 var init_adapter = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/adapter.js"() {
     init_src2();
@@ -37971,7 +36790,7 @@ var init_adapter = __esm({
     init_decorator();
     init_decorator();
     init_decorator();
-    _Adapter = class _Adapter extends Service {
+    Adapter = class _Adapter extends Service {
       /**
        * Settings.
        *
@@ -38157,8 +36976,6 @@ var init_adapter = __esm({
         );
       }
     };
-    __name(_Adapter, "Adapter");
-    Adapter = _Adapter;
   }
 });
 
@@ -38167,7 +36984,7 @@ var memory_adapter_exports = {};
 __export(memory_adapter_exports, {
   MemoryAdapter: () => MemoryAdapter
 });
-var _MemoryAdapter, MemoryAdapter;
+var MemoryAdapter;
 var init_memory_adapter = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/builtin/memory-adapter.js"() {
     init_adapter();
@@ -38179,7 +36996,7 @@ var init_memory_adapter = __esm({
     init_filter();
     init_errors2();
     init_definition();
-    _MemoryAdapter = class _MemoryAdapter extends Adapter {
+    MemoryAdapter = class extends Adapter {
       /**
        * Tables.
        *
@@ -38537,8 +37354,6 @@ var init_memory_adapter = __esm({
         return modelItems.length;
       }
     };
-    __name(_MemoryAdapter, "MemoryAdapter");
-    MemoryAdapter = _MemoryAdapter;
   }
 });
 
@@ -38564,14 +37379,14 @@ function findAdapterCtorInModule(module2) {
   }
   return adapterCtor;
 }
-var _AdapterLoader, AdapterLoader;
+var AdapterLoader;
 var init_adapter_loader = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/adapter-loader.js"() {
     init_adapter();
     init_src2();
     init_errors2();
     init_();
-    _AdapterLoader = class _AdapterLoader extends Service {
+    AdapterLoader = class extends Service {
       /**
        * Load by name.
        *
@@ -38605,21 +37420,18 @@ var init_adapter_loader = __esm({
         return new adapterCtor(this.container, settings);
       }
     };
-    __name(_AdapterLoader, "AdapterLoader");
-    AdapterLoader = _AdapterLoader;
-    __name(findAdapterCtorInModule, "findAdapterCtorInModule");
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/adapter/adapter-registry.js
-var _AdapterRegistry, AdapterRegistry;
+var AdapterRegistry;
 var init_adapter_registry = __esm({
   "node_modules/@e22m4u/js-repository/src/adapter/adapter-registry.js"() {
     init_adapter();
     init_src2();
     init_adapter_loader();
     init_definition();
-    _AdapterRegistry = class _AdapterRegistry extends Service {
+    AdapterRegistry = class extends Service {
       /**
        * Adapters.
        *
@@ -38645,8 +37457,6 @@ var init_adapter_registry = __esm({
         return adapter;
       }
     };
-    __name(_AdapterRegistry, "AdapterRegistry");
-    AdapterRegistry = _AdapterRegistry;
   }
 });
 
@@ -38660,7 +37470,7 @@ var init_adapter2 = __esm({
 });
 
 // node_modules/@e22m4u/js-repository/src/repository/repository.js
-var _Repository, Repository;
+var Repository;
 var init_repository = __esm({
   "node_modules/@e22m4u/js-repository/src/repository/repository.js"() {
     init_src2();
@@ -38668,7 +37478,7 @@ var init_repository = __esm({
     init_adapter2();
     init_errors2();
     init_definition();
-    _Repository = class _Repository extends Service {
+    Repository = class extends Service {
       /**
        * Model name.
        *
@@ -38856,19 +37666,17 @@ var init_repository = __esm({
         return adapter.count(this.modelName, where);
       }
     };
-    __name(_Repository, "Repository");
-    Repository = _Repository;
   }
 });
 
 // node_modules/@e22m4u/js-repository/src/repository/repository-registry.js
-var _RepositoryRegistry, RepositoryRegistry;
+var RepositoryRegistry;
 var init_repository_registry = __esm({
   "node_modules/@e22m4u/js-repository/src/repository/repository-registry.js"() {
     init_src2();
     init_repository();
     init_errors2();
-    _RepositoryRegistry = class _RepositoryRegistry extends Service {
+    RepositoryRegistry = class extends Service {
       /**
        * Repositories.
        *
@@ -38910,8 +37718,6 @@ var init_repository_registry = __esm({
         return repository;
       }
     };
-    __name(_RepositoryRegistry, "RepositoryRegistry");
-    RepositoryRegistry = _RepositoryRegistry;
   }
 });
 
@@ -38942,7 +37748,6 @@ function isIsoDate(value) {
   const d = new Date(value);
   return d instanceof Date && !isNaN(d.getTime()) && d.toISOString() === value;
 }
-__name(isIsoDate, "isIsoDate");
 
 // src/utils/is-object-id.js
 var import_mongodb = __toESM(require_lib3(), 1);
@@ -38952,7 +37757,6 @@ function isObjectId(value) {
   if (typeof value !== "string") return false;
   return value.match(/^[a-fA-F0-9]{24}$/) != null;
 }
-__name(isObjectId, "isObjectId");
 
 // node_modules/@e22m4u/js-repository/src/schema.js
 init_src2();
@@ -39040,7 +37844,6 @@ function createMongodbUrl(options = {}) {
     return `${protocol}://${hostname}${portUrl}/${database}`;
   }
 }
-__name(createMongodbUrl, "createMongodbUrl");
 
 // src/utils/transform-values-deep.js
 function transformValuesDeep(value, transformer) {
@@ -39066,7 +37869,6 @@ function transformValuesDeep(value, transformer) {
     return transformer(value);
   }
 }
-__name(transformValuesDeep, "transformValuesDeep");
 
 // src/mongodb-adapter.js
 init_src2();
@@ -39120,7 +37922,7 @@ var DEFAULT_SETTINGS = {
   //  connectTimeoutMS: 2500,
   //  serverSelectionTimeoutMS: 2500,
 };
-var _MongodbAdapter = class _MongodbAdapter extends Adapter {
+var MongodbAdapter = class extends Adapter {
   /**
    * Mongodb instance.
    *
@@ -39799,8 +38601,6 @@ var _MongodbAdapter = class _MongodbAdapter extends Adapter {
     return await table.count(query);
   }
 };
-__name(_MongodbAdapter, "MongodbAdapter");
-var MongodbAdapter = _MongodbAdapter;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   MongodbAdapter
