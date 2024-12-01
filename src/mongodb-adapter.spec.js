@@ -107,6 +107,44 @@ describe('MongodbAdapter', function () {
         expect(res).to.be.eql({_id: 1, bar: 1});
       });
 
+      it('converts property names chain to column names chain', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'modelA',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.OBJECT,
+              columnName: 'fooCol',
+              model: 'modelB',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelB',
+          properties: {
+            bar: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelC',
+          properties: {
+            baz: {
+              type: DataType.OBJECT,
+              columnName: 'bazCol',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('modelA', 'foo.bar.baz.qux');
+        expect(res).to.be.eql({_id: 1, 'fooCol.bar.bazCol.qux': 1});
+      });
+
       it('includes "_id" field to the projection', async function () {
         const schema = createSchema();
         schema.defineModel({name: 'model', datasource: 'mongodb'});
@@ -195,6 +233,64 @@ describe('MongodbAdapter', function () {
           .getAdapter('mongodb');
         const res = A._buildProjection('model', ['foo', 'baz']);
         expect(res).to.be.eql({_id: 1, bar: 1, qux: 1});
+      });
+
+      it('converts property names chain to column names chain', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'modelA',
+          datasource: 'mongodb',
+          properties: {
+            foo1: {
+              type: DataType.OBJECT,
+              columnName: 'foo1Col',
+              model: 'modelB',
+            },
+            foo2: {
+              type: DataType.OBJECT,
+              columnName: 'foo2Col',
+              model: 'modelB',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelB',
+          properties: {
+            bar1: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+            bar2: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelC',
+          properties: {
+            baz1: {
+              type: DataType.OBJECT,
+              columnName: 'baz1Col',
+            },
+            baz2: {
+              type: DataType.OBJECT,
+              columnName: 'baz2Col',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res = A._buildProjection('modelA', [
+          'foo1.bar1.baz1.qux1',
+          'foo2.bar2.baz2.qux2',
+        ]);
+        expect(res).to.be.eql({
+          _id: 1,
+          'foo1Col.bar1.baz1Col.qux1': 1,
+          'foo2Col.bar2.baz2Col.qux2': 1,
+        });
       });
 
       it('includes "_id" field to the projection', async function () {
@@ -327,6 +423,48 @@ describe('MongodbAdapter', function () {
         expect(res2).to.be.eql({bar: -1});
         expect(res3).to.be.eql({bar: 1});
       });
+
+      it('converts property names chain to column names chain', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'modelA',
+          datasource: 'mongodb',
+          properties: {
+            foo: {
+              type: DataType.OBJECT,
+              columnName: 'fooCol',
+              model: 'modelB',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelB',
+          properties: {
+            bar: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelC',
+          properties: {
+            baz: {
+              type: DataType.OBJECT,
+              columnName: 'bazCol',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('modelA', 'foo.bar.baz.qux');
+        const res2 = A._buildSort('modelA', 'foo.bar.baz.qux DESC');
+        const res3 = A._buildSort('modelA', 'foo.bar.baz.qux ASC');
+        expect(res1).to.be.eql({'fooCol.bar.bazCol.qux': 1});
+        expect(res2).to.be.eql({'fooCol.bar.bazCol.qux': -1});
+        expect(res3).to.be.eql({'fooCol.bar.bazCol.qux': 1});
+      });
     });
 
     describe('multiple fields', function () {
@@ -431,6 +569,79 @@ describe('MongodbAdapter', function () {
         expect(res2).to.be.eql({bar: -1, qux: 1});
         expect(res3).to.be.eql({bar: 1, qux: -1});
       });
+
+      it('converts property names chain to column names chain', async function () {
+        const schema = createSchema();
+        schema.defineModel({
+          name: 'modelA',
+          datasource: 'mongodb',
+          properties: {
+            foo1: {
+              type: DataType.OBJECT,
+              columnName: 'foo1Col',
+              model: 'modelB',
+            },
+            foo2: {
+              type: DataType.OBJECT,
+              columnName: 'foo2Col',
+              model: 'modelB',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelB',
+          properties: {
+            bar1: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+            bar2: {
+              type: DataType.OBJECT,
+              model: 'modelC',
+            },
+          },
+        });
+        schema.defineModel({
+          name: 'modelC',
+          properties: {
+            baz1: {
+              type: DataType.OBJECT,
+              columnName: 'baz1Col',
+            },
+            baz2: {
+              type: DataType.OBJECT,
+              columnName: 'baz2Col',
+            },
+          },
+        });
+        const A = await schema
+          .getService(AdapterRegistry)
+          .getAdapter('mongodb');
+        const res1 = A._buildSort('modelA', [
+          'foo1.bar1.baz1.qux1',
+          'foo2.bar2.baz2.qux2',
+        ]);
+        const res2 = A._buildSort('modelA', [
+          'foo1.bar1.baz1.qux1 DESC',
+          'foo2.bar2.baz2.qux2 DESC',
+        ]);
+        const res3 = A._buildSort('modelA', [
+          'foo1.bar1.baz1.qux1 ASC',
+          'foo2.bar2.baz2.qux2 ASC',
+        ]);
+        expect(res1).to.be.eql({
+          'foo1Col.bar1.baz1Col.qux1': 1,
+          'foo2Col.bar2.baz2Col.qux2': 1,
+        });
+        expect(res2).to.be.eql({
+          'foo1Col.bar1.baz1Col.qux1': -1,
+          'foo2Col.bar2.baz2Col.qux2': -1,
+        });
+        expect(res3).to.be.eql({
+          'foo1Col.bar1.baz1Col.qux1': 1,
+          'foo2Col.bar2.baz2Col.qux2': 1,
+        });
+      });
     });
   });
 
@@ -476,6 +687,42 @@ describe('MongodbAdapter', function () {
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
       const res = A._buildQuery('model', {foo: 'a1', baz: null});
       expect(res).to.be.eql({bar: 'a1', qux: null});
+    });
+
+    it('converts property names chain to column names chain', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'modelA',
+        datasource: 'mongodb',
+        properties: {
+          foo: {
+            type: DataType.OBJECT,
+            columnName: 'fooCol',
+            model: 'modelB',
+          },
+        },
+      });
+      schema.defineModel({
+        name: 'modelB',
+        properties: {
+          bar: {
+            type: DataType.OBJECT,
+            model: 'modelC',
+          },
+        },
+      });
+      schema.defineModel({
+        name: 'modelC',
+        properties: {
+          baz: {
+            type: DataType.OBJECT,
+            columnName: 'bazCol',
+          },
+        },
+      });
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const res = A._buildQuery('modelA', {'foo.bar.baz.qux': 10});
+      expect(res).to.be.eql({'fooCol.bar.bazCol.qux': 10});
     });
 
     it('throws an error when using "$" character', async function () {

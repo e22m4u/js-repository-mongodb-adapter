@@ -129,6 +129,7 @@ export class MongodbAdapter extends Adapter {
    * Get id prop name.
    *
    * @param modelName
+   * @private
    */
   _getIdPropName(modelName) {
     return this.getService(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
@@ -140,6 +141,7 @@ export class MongodbAdapter extends Adapter {
    * Get id col name.
    *
    * @param modelName
+   * @private
    */
   _getIdColName(modelName) {
     return this.getService(ModelDefinitionUtils).getPrimaryKeyAsColumnName(
@@ -151,7 +153,7 @@ export class MongodbAdapter extends Adapter {
    * Coerce id.
    *
    * @param value
-   * @return {ObjectId|*}
+   * @returns {ObjectId|*}
    * @private
    */
   _coerceId(value) {
@@ -179,7 +181,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object} modelData
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _toDatabase(modelName, modelData) {
@@ -213,7 +215,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object} tableData
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _fromDatabase(modelName, tableData) {
@@ -246,7 +248,7 @@ export class MongodbAdapter extends Adapter {
    * Get collection.
    *
    * @param {string} modelName
-   * @return {*}
+   * @returns {*}
    * @private
    */
   _getCollection(modelName) {
@@ -263,7 +265,7 @@ export class MongodbAdapter extends Adapter {
    * Get id type.
    *
    * @param modelName
-   * @return {string|*}
+   * @returns {string|*}
    * @private
    */
   _getIdType(modelName) {
@@ -273,43 +275,17 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
-   * Build projection.
-   *
-   * @param {string} modelName
-   * @param {string|string[]} fields
-   * @return {Record<string, number>|undefined}
-   * @private
-   */
-  _buildProjection(modelName, fields) {
-    if (fields == null) return;
-    if (Array.isArray(fields) === false) fields = [fields];
-    if (!fields.length) return;
-    if (fields.indexOf('_id') === -1) fields.push('_id');
-    return fields.reduce((acc, field) => {
-      if (!field || typeof field !== 'string')
-        throw new InvalidArgumentError(
-          'The provided option "fields" should be a non-empty String ' +
-            'or an Array of non-empty String, but %v given.',
-          field,
-        );
-      let colName = this._getColName(modelName, field);
-      acc[colName] = 1;
-      return acc;
-    }, {});
-  }
-
-  /**
    * Get col name.
    *
    * @param {string} modelName
    * @param {string} propName
-   * @return {string}
+   * @returns {string}
    * @private
    */
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== 'string')
       throw new InvalidArgumentError(
-        'A property name must be a non-empty String, but %v given.',
+        'Property name must be a non-empty String, but %v given.',
         propName,
       );
     const utils = this.getService(ModelDefinitionUtils);
@@ -328,18 +304,87 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
+   * Convert prop names chain to col names chain.
+   *
+   * @param {string} modelName
+   * @param {string} propsChain
+   * @returns {string}
+   * @private
+   */
+  _convertPropNamesChainToColNamesChain(modelName, propsChain) {
+    if (!modelName || typeof modelName !== 'string')
+      throw new InvalidArgumentError(
+        'Model name must be a non-empty String, but %v given.',
+        modelName,
+      );
+    if (!propsChain || typeof propsChain !== 'string')
+      throw new InvalidArgumentError(
+        'Properties chain must be a non-empty String, but %v given.',
+        propsChain,
+      );
+    // удаление повторяющихся точек,
+    // где строка "foo..bar.baz...qux"
+    // будет преобразована к "foo.bar.baz.qux"
+    propsChain = propsChain.replace(/\.{2,}/g, '.');
+    // разделение цепочки на массив свойств,
+    // и формирование цепочки имен колонок
+    const propNames = propsChain.split('.');
+    const utils = this.getService(ModelDefinitionUtils);
+    let currModelName = modelName;
+    return propNames
+      .map(currPropName => {
+        if (!currModelName) return currPropName;
+        const colName = this._getColName(currModelName, currPropName);
+        currModelName = utils.getModelNameOfPropertyValueIfDefined(
+          currModelName,
+          currPropName,
+        );
+        return colName;
+      })
+      .join('.');
+  }
+
+  /**
+   * Build projection.
+   *
+   * @param {string} modelName
+   * @param {string|string[]} fields
+   * @returns {Record<string, number>|undefined}
+   * @private
+   */
+  _buildProjection(modelName, fields) {
+    if (fields == null) return;
+    if (Array.isArray(fields) === false) fields = [fields];
+    if (!fields.length) return;
+    if (fields.indexOf('_id') === -1) fields.push('_id');
+    return fields.reduce((acc, field) => {
+      if (!field || typeof field !== 'string')
+        throw new InvalidArgumentError(
+          'The provided option "fields" should be a non-empty String ' +
+            'or an Array of non-empty String, but %v given.',
+          field,
+        );
+      let colName = this._convertPropNamesChainToColNamesChain(
+        modelName,
+        field,
+      );
+      acc[colName] = 1;
+      return acc;
+    }, {});
+  }
+
+  /**
    * Build sort.
    *
    * @param {string} modelName
    * @param {string|string[]} clause
-   * @return {object|undefined}
+   * @returns {object|undefined}
    * @private
    */
   _buildSort(modelName, clause) {
     if (clause == null) return;
     if (Array.isArray(clause) === false) clause = [clause];
     if (!clause.length) return;
-    const utils = this.getService(ModelDefinitionUtils);
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== 'string')
@@ -354,7 +399,7 @@ export class MongodbAdapter extends Adapter {
         field = '_id';
       } else {
         try {
-          field = utils.getColumnNameByPropertyName(modelName, field);
+          field = this._convertPropNamesChainToColNamesChain(modelName, field);
         } catch (error) {
           if (
             !(error instanceof InvalidArgumentError) ||
@@ -374,7 +419,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object} clause
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _buildQuery(modelName, clause) {
@@ -410,7 +455,7 @@ export class MongodbAdapter extends Adapter {
       if (key === idPropName) {
         key = '_id';
       } else {
-        key = this._getColName(modelName, key);
+        key = this._convertPropNamesChainToColNamesChain(modelName, key);
       }
       // string
       if (typeof cond === 'string') {
@@ -596,7 +641,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async create(modelName, modelData, filter = undefined) {
     const idPropName = this._getIdPropName(modelName);
@@ -631,7 +676,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string|number} id
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async replaceById(modelName, id, modelData, filter = undefined) {
     id = this._coerceId(id);
@@ -656,7 +701,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async replaceOrCreate(modelName, modelData, filter = undefined) {
     const idPropName = this._getIdPropName(modelName);
@@ -700,7 +745,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async patch(modelName, modelData, where = undefined) {
     const idPropName = this._getIdPropName(modelName);
@@ -719,7 +764,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string|number} id
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async patchById(modelName, id, modelData, filter = undefined) {
     id = this._coerceId(id);
@@ -743,7 +788,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object|undefined} filter
-   * @return {Promise<object[]>}
+   * @returns {Promise<object[]>}
    */
   async find(modelName, filter = undefined) {
     filter = filter || {};
@@ -764,7 +809,7 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {string|number} id
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async findById(modelName, id, filter = undefined) {
     id = this._coerceId(id);
@@ -784,7 +829,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async delete(modelName, where = undefined) {
     const table = this._getCollection(modelName);
@@ -798,7 +843,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {string|number} id
-   * @return {Promise<boolean>}
+   * @returns {Promise<boolean>}
    */
   async deleteById(modelName, id) {
     id = this._coerceId(id);
@@ -812,7 +857,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {string|number} id
-   * @return {Promise<boolean>}
+   * @returns {Promise<boolean>}
    */
   async exists(modelName, id) {
     id = this._coerceId(id);
@@ -826,7 +871,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async count(modelName, where = undefined) {
     const query = this._buildQuery(modelName, where);

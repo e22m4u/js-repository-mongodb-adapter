@@ -253,6 +253,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Get id prop name.
    *
    * @param modelName
+   * @private
    */
   _getIdPropName(modelName) {
     return this.getService(import_js_repository8.ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
@@ -263,6 +264,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Get id col name.
    *
    * @param modelName
+   * @private
    */
   _getIdColName(modelName) {
     return this.getService(import_js_repository8.ModelDefinitionUtils).getPrimaryKeyAsColumnName(
@@ -273,7 +275,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Coerce id.
    *
    * @param value
-   * @return {ObjectId|*}
+   * @returns {ObjectId|*}
    * @private
    */
   _coerceId(value) {
@@ -299,7 +301,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object} modelData
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _toDatabase(modelName, modelData) {
@@ -329,7 +331,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object} tableData
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _fromDatabase(modelName, tableData) {
@@ -358,7 +360,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Get collection.
    *
    * @param {string} modelName
-   * @return {*}
+   * @returns {*}
    * @private
    */
   _getCollection(modelName) {
@@ -373,7 +375,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Get id type.
    *
    * @param modelName
-   * @return {string|*}
+   * @returns {string|*}
    * @private
    */
   _getIdType(modelName) {
@@ -382,41 +384,17 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     return utils.getDataTypeByPropertyName(modelName, pkPropName);
   }
   /**
-   * Build projection.
-   *
-   * @param {string} modelName
-   * @param {string|string[]} fields
-   * @return {Record<string, number>|undefined}
-   * @private
-   */
-  _buildProjection(modelName, fields) {
-    if (fields == null) return;
-    if (Array.isArray(fields) === false) fields = [fields];
-    if (!fields.length) return;
-    if (fields.indexOf("_id") === -1) fields.push("_id");
-    return fields.reduce((acc, field) => {
-      if (!field || typeof field !== "string")
-        throw new import_js_repository9.InvalidArgumentError(
-          'The provided option "fields" should be a non-empty String or an Array of non-empty String, but %v given.',
-          field
-        );
-      let colName = this._getColName(modelName, field);
-      acc[colName] = 1;
-      return acc;
-    }, {});
-  }
-  /**
    * Get col name.
    *
    * @param {string} modelName
    * @param {string} propName
-   * @return {string}
+   * @returns {string}
    * @private
    */
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== "string")
       throw new import_js_repository9.InvalidArgumentError(
-        "A property name must be a non-empty String, but %v given.",
+        "Property name must be a non-empty String, but %v given.",
         propName
       );
     const utils = this.getService(import_js_repository8.ModelDefinitionUtils);
@@ -431,18 +409,77 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     return colName;
   }
   /**
+   * Convert prop names chain to col names chain.
+   *
+   * @param {string} modelName
+   * @param {string} propsChain
+   * @returns {string}
+   * @private
+   */
+  _convertPropNamesChainToColNamesChain(modelName, propsChain) {
+    if (!modelName || typeof modelName !== "string")
+      throw new import_js_repository9.InvalidArgumentError(
+        "Model name must be a non-empty String, but %v given.",
+        modelName
+      );
+    if (!propsChain || typeof propsChain !== "string")
+      throw new import_js_repository9.InvalidArgumentError(
+        "Properties chain must be a non-empty String, but %v given.",
+        propsChain
+      );
+    propsChain = propsChain.replace(/\.{2,}/g, ".");
+    const propNames = propsChain.split(".");
+    const utils = this.getService(import_js_repository8.ModelDefinitionUtils);
+    let currModelName = modelName;
+    return propNames.map((currPropName) => {
+      if (!currModelName) return currPropName;
+      const colName = this._getColName(currModelName, currPropName);
+      currModelName = utils.getModelNameOfPropertyValueIfDefined(
+        currModelName,
+        currPropName
+      );
+      return colName;
+    }).join(".");
+  }
+  /**
+   * Build projection.
+   *
+   * @param {string} modelName
+   * @param {string|string[]} fields
+   * @returns {Record<string, number>|undefined}
+   * @private
+   */
+  _buildProjection(modelName, fields) {
+    if (fields == null) return;
+    if (Array.isArray(fields) === false) fields = [fields];
+    if (!fields.length) return;
+    if (fields.indexOf("_id") === -1) fields.push("_id");
+    return fields.reduce((acc, field) => {
+      if (!field || typeof field !== "string")
+        throw new import_js_repository9.InvalidArgumentError(
+          'The provided option "fields" should be a non-empty String or an Array of non-empty String, but %v given.',
+          field
+        );
+      let colName = this._convertPropNamesChainToColNamesChain(
+        modelName,
+        field
+      );
+      acc[colName] = 1;
+      return acc;
+    }, {});
+  }
+  /**
    * Build sort.
    *
    * @param {string} modelName
    * @param {string|string[]} clause
-   * @return {object|undefined}
+   * @returns {object|undefined}
    * @private
    */
   _buildSort(modelName, clause) {
     if (clause == null) return;
     if (Array.isArray(clause) === false) clause = [clause];
     if (!clause.length) return;
-    const utils = this.getService(import_js_repository8.ModelDefinitionUtils);
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== "string")
@@ -456,7 +493,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         field = "_id";
       } else {
         try {
-          field = utils.getColumnNameByPropertyName(modelName, field);
+          field = this._convertPropNamesChainToColNamesChain(modelName, field);
         } catch (error) {
           if (!(error instanceof import_js_repository9.InvalidArgumentError) || error.message.indexOf("does not have the property") === -1) {
             throw error;
@@ -472,7 +509,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object} clause
-   * @return {object}
+   * @returns {object}
    * @private
    */
   _buildQuery(modelName, clause) {
@@ -507,7 +544,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
       if (key === idPropName) {
         key = "_id";
       } else {
-        key = this._getColName(modelName, key);
+        key = this._convertPropNamesChainToColNamesChain(modelName, key);
       }
       if (typeof cond === "string") {
         query[key] = this._coerceId(cond);
@@ -665,7 +702,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async create(modelName, modelData, filter = void 0) {
     const idPropName = this._getIdPropName(modelName);
@@ -697,7 +734,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string|number} id
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async replaceById(modelName, id, modelData, filter = void 0) {
     id = this._coerceId(id);
@@ -721,7 +758,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async replaceOrCreate(modelName, modelData, filter = void 0) {
     const idPropName = this._getIdPropName(modelName);
@@ -762,7 +799,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {object} modelData
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async patch(modelName, modelData, where = void 0) {
     const idPropName = this._getIdPropName(modelName);
@@ -780,7 +817,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string|number} id
    * @param {object} modelData
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async patchById(modelName, id, modelData, filter = void 0) {
     id = this._coerceId(id);
@@ -803,7 +840,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object|undefined} filter
-   * @return {Promise<object[]>}
+   * @returns {Promise<object[]>}
    */
   async find(modelName, filter = void 0) {
     filter = filter || {};
@@ -823,7 +860,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {string|number} id
    * @param {object|undefined} filter
-   * @return {Promise<object>}
+   * @returns {Promise<object>}
    */
   async findById(modelName, id, filter = void 0) {
     id = this._coerceId(id);
@@ -842,7 +879,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async delete(modelName, where = void 0) {
     const table = this._getCollection(modelName);
@@ -855,7 +892,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {string|number} id
-   * @return {Promise<boolean>}
+   * @returns {Promise<boolean>}
    */
   async deleteById(modelName, id) {
     id = this._coerceId(id);
@@ -868,7 +905,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {string|number} id
-   * @return {Promise<boolean>}
+   * @returns {Promise<boolean>}
    */
   async exists(modelName, id) {
     id = this._coerceId(id);
@@ -881,7 +918,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object|undefined} where
-   * @return {Promise<number>}
+   * @returns {Promise<number>}
    */
   async count(modelName, where = void 0) {
     const query = this._buildQuery(modelName, where);

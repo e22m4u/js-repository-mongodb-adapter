@@ -16,8 +16,8 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"./src/**/*.js\"",
-    "test": "npm run lint && c8 --reporter=text-summary mocha",
-    "test:coverage": "npm run lint && c8 --reporter=text mocha",
+    "test": "npm run lint && c8 --reporter=text-summary mocha --bail",
+    "test:coverage": "npm run lint && c8 --reporter=text mocha --bail",
     "build:cjs": "rimraf ./dist/cjs && node --no-warnings=ExperimentalWarning build-cjs.js",
     "prepare": "husky"
   },
@@ -42,7 +42,7 @@
   },
   "peerDependencies": {
     "@e22m4u/js-format": "0.1.x",
-    "@e22m4u/js-repository": "0.2.x",
+    "@e22m4u/js-repository": "~0.2.4",
     "@e22m4u/js-service": "0.2.x"
   },
   "devDependencies": {
