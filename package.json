@@ -41,7 +41,7 @@
     "mongodb": "6.11.0"
   },
   "peerDependencies": {
-    "@e22m4u/js-format": "~0.1.7",
+    "@e22m4u/js-format": "~0.1.0",
     "@e22m4u/js-repository": "~0.2.4",
     "@e22m4u/js-service": "~0.2.0"
   },
