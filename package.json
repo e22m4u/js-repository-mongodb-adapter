@@ -38,7 +38,7 @@
   "license": "MIT",
   "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
   "dependencies": {
-    "mongodb": "5.9.2"
+    "mongodb": "6.11.0"
   },
   "peerDependencies": {
     "@e22m4u/js-format": "~0.1.7",
