@@ -2,6 +2,22 @@
   "name": "@e22m4u/js-repository-mongodb-adapter",
   "version": "0.3.2",
   "description": "MongoDB adapter for @e22m4u/js-repository",
+  "author": "e22m4u <e22m4u@yandex.ru>",
+  "license": "MIT",
+  "keywords": [
+    "MongoDB",
+    "Repository",
+    "ORM",
+    "ODM",
+    "Database",
+    "Datasource",
+    "Relations"
+  ],
+  "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e22m4u/js-repository-mongodb-adapter.git"
+  },
   "type": "module",
   "module": "./src/index.js",
   "main": "./dist/cjs/index.cjs",
@@ -21,22 +37,6 @@
     "build:cjs": "rimraf ./dist/cjs && node --no-warnings=ExperimentalWarning build-cjs.js",
     "prepare": "husky"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/e22m4u/js-repository-mongodb-adapter.git"
-  },
-  "keywords": [
-    "MongoDB",
-    "Repository",
-    "ORM",
-    "ODM",
-    "Database",
-    "Datasource",
-    "Relations"
-  ],
-  "author": "e22m4u <e22m4u@yandex.ru>",
-  "license": "MIT",
-  "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
   "dependencies": {
     "mongodb": "6.15.0"
   },
