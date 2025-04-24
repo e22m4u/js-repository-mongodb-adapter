@@ -1,20 +1,18 @@
 ## @e22m4u/js-repository-mongodb-adapter
 
-*English | [Русский](README-ru.md)*
+MongoDB адаптер для [@e22m4u/js-repository](https://www.npmjs.com/package/@e22m4u/js-repository)  
 
-MongoDB adapter for [@e22m4u/js-repository](https://www.npmjs.com/package/@e22m4u/js-repository)
-
-## Installation
+## Установка
 
 ```bash
 npm install @e22m4u/js-repository-mongodb-adapter
 ```
 
-## Configuration
+## Параметры
 
-All parameters are optional:
+Все указанные параметры опциональны:
 
-| name     | default value         |
+| название | значение по умолчанию |
 |----------|-----------------------|
 | protocol | `'mongodb'`           |
 | host     | `'127.0.0.1'`         |
@@ -23,34 +21,34 @@ All parameters are optional:
 | username | `undefined`           |
 | password | `undefined`           |
 
-Example:
+Пример:
 
 ```js
 import {Schema} from '@e22m4u/js-repository';
 
 const schema = new Schema();
 
-// define datasource
+// объявление источника
 schema.defineDatasource({
-  name: 'myMongo', // datasource name
-  adapter: 'mongodb', // adapter name
-  // configuration
+  name: 'myMongo', // название источника
+  adapter: 'mongodb', // имя адаптера
+  // параметры
   host: '127.0.0.1',
   port: 27017,
   database: 'myDatabase',
 });
 
-// define model
+// объявление модели
 schema.defineModel({
-  name: 'user', // model name
-  datasource: 'myMongo', // datasource name (see above)
-  properties: { // model fields
+  name: 'user', // название модели
+  datasource: 'myMongo', // используемый источник (см. выше)
+  properties: { // поля модели
     name: 'string',
     surname: 'string',
   },
 });
 
-// get repository by model name and create a record
+// получаем репозиторий по названию модели и создаем запись
 const userRep = schema.getRepository('user');
 const user = await userRep.create({name: 'John', surname: 'Doe'});
 
@@ -62,20 +60,20 @@ console.log(user);
 // }
 ```
 
-## Testing
+## Тесты
 
-Start `mongo:latest` container using `setup.sh` script.
+Запуск контейнера `mongo:latest` скриптом `setup.sh`
 
 ```bash
 ./setup.sh
 ```
 
-Run tests
+Выполнение тестов
 
 ```bash
 npm run test
 ```
 
-## License
+## Лицензия
 
 MIT
