@@ -19,7 +19,7 @@ export default [{
   rules: {
     ...eslintJs.configs.recommended.rules,
     ...eslintPrettierConfig.rules,
-    ...eslintMochaPlugin.configs.flat.recommended.rules,
+    ...eslintMochaPlugin.configs.recommended.rules,
     ...eslintChaiExpectPlugin.configs['recommended-flat'].rules,
   },
   files: ['src/**/*.js'],
