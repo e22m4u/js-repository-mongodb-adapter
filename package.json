@@ -42,8 +42,7 @@
   },
   "peerDependencies": {
     "@e22m4u/js-format": "~0.1.0",
-    "@e22m4u/js-repository": "~0.3.0",
-    "@e22m4u/js-service": "~0.2.0"
+    "@e22m4u/js-repository": "~0.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "~19.8.1",
