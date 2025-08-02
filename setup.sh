@@ -20,9 +20,9 @@ if [ "$DOCKER_EXISTS" -ne 0 ]; then
     exit 1
 fi
 
-# Pulling latest mongodb image
-printf "\nPulling latest mongodb image..."
-docker pull mongo:latest > /dev/null 2>&1
+# Pulling mongodb image
+printf "\nPulling mongodb $MONGODB_VERSION image..."
+docker pull mongo:"$MONGODB_VERSION" > /dev/null 2>&1
 
 # Starting the mongodb container
 printf "\nStarting the mongodb container..."
@@ -30,7 +30,7 @@ CONTAINER_EXISTS=$(docker ps -a -q -f name="$MONGODB_CONTAINER")
 if [ "$CONTAINER_EXISTS" ]; then
     docker rm -f "$MONGODB_CONTAINER" > /dev/null
 fi
-docker run --name "$MONGODB_CONTAINER" -p "$MONGODB_PORT":27017 -d mongo:latest > /dev/null
+docker run --name "$MONGODB_CONTAINER" -p "$MONGODB_PORT":27017 -d mongo:"$MONGODB_VERSION" > /dev/null
 
 # Mongodb container has started
 printf "\n\nStatus: Mongodb container has started."
