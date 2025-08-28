@@ -43,7 +43,7 @@ describe('MongodbAdapter', function () {
   });
 
   describe('_getCollectionNameByModelName', function () {
-    it('converts model name to camel case an pluralize it', async function () {
+    it('converts model name to camel case and pluralizes it', async function () {
       const schema = createSchema();
       schema.defineModel({name: 'fooBar', datasource: 'mongodb'});
       schema.defineModel({name: 'FooBar', datasource: 'mongodb'});
@@ -57,7 +57,7 @@ describe('MongodbAdapter', function () {
     });
 
     // prettier-ignore
-    it('should cut off the "Model" suffix from the model name', async function () {
+    it('cuts off the "Model" suffix from the model name', async function () {
       const schema = createSchema();
       schema.defineModel({name: 'fooBarModel', datasource: 'mongodb'});
       schema.defineModel({name: 'FooBarModel', datasource: 'mongodb'});
@@ -97,7 +97,7 @@ describe('MongodbAdapter', function () {
       expect(A._getCollectionNameByModelName('FOO_BARS_MODEL')).to.be.eq('fooBars');
     });
 
-    it('returns a value from the "tableName" option if defined', async function () {
+    it('returns the value from the "tableName" option if defined', async function () {
       const schema = createSchema();
       schema.defineModel({
         name: 'fooBar',
@@ -151,7 +151,7 @@ describe('MongodbAdapter', function () {
       });
     });
 
-    it('cuts off the "Model" suffix from the model name before naming', async function () {
+    it('cuts off the "Model" suffix from the model name', async function () {
       const schema = createSchema();
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
       const modelNames = [
@@ -178,7 +178,7 @@ describe('MongodbAdapter', function () {
       });
     });
 
-    it('handles already pluralized names with the "Model" suffix', async function () {
+    it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
       const schema = createSchema();
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
       const modelNames = [
