@@ -1,6 +1,6 @@
 {
   "name": "@e22m4u/js-repository-mongodb-adapter",
-  "version": "0.5.6",
+  "version": "0.6.0",
   "description": "MongoDB адаптер для @e22m4u/js-repository",
   "author": "Mikhail Evstropov <e22m4u@yandex.ru>",
   "license": "MIT",
