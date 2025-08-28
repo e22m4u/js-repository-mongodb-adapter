@@ -11,8 +11,10 @@ import {ServiceContainer} from '@e22m4u/js-service';
 import {transformValuesDeep} from './utils/index.js';
 import {stringToRegexp} from '@e22m4u/js-repository';
 import {selectObjectKeys} from '@e22m4u/js-repository';
+import {DefinitionRegistry} from '@e22m4u/js-repository';
 import {ModelDefinitionUtils} from '@e22m4u/js-repository';
 import {InvalidArgumentError} from '@e22m4u/js-repository';
+import {modelNameToCollectionName} from './utils/index.js';
 import {InvalidOperatorValueError} from '@e22m4u/js-repository';
 
 /**
@@ -298,6 +300,17 @@ export class MongodbAdapter extends Adapter {
   }
 
   /**
+   * Get collection name by model name.
+   *
+   * @param {string} modelName
+   */
+  _getCollectionNameByModelName(modelName) {
+    const modelDef = this.getService(DefinitionRegistry).getModel(modelName);
+    if (modelDef.tableName != null) return modelDef.tableName;
+    return modelNameToCollectionName(modelName);
+  }
+
+  /**
    * Get collection.
    *
    * @param {string} modelName
@@ -307,9 +320,10 @@ export class MongodbAdapter extends Adapter {
   _getCollection(modelName) {
     let collection = this._collections.get(modelName);
     if (collection) return collection;
-    const tableName =
-      this.getService(ModelDefinitionUtils).getTableNameByModelName(modelName);
-    collection = this.client.db(this.settings.database).collection(tableName);
+    const collectionName = this._getCollectionNameByModelName(modelName);
+    collection = this.client
+      .db(this.settings.database)
+      .collection(collectionName);
     this._collections.set(modelName, collection);
     return collection;
   }
@@ -929,6 +943,6 @@ export class MongodbAdapter extends Adapter {
   async count(modelName, where = undefined) {
     const query = this._buildQuery(modelName, where);
     const table = this._getCollection(modelName);
-    return await table.count(query);
+    return await table.countDocuments(query);
   }
 }

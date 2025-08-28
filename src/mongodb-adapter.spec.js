@@ -42,6 +42,172 @@ describe('MongodbAdapter', function () {
     await MDB_CLIENT.close(true);
   });
 
+  describe('_getCollectionNameByModelName', function () {
+    it('converts model name to camel case an pluralize it', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'fooBar', datasource: 'mongodb'});
+      schema.defineModel({name: 'FooBar', datasource: 'mongodb'});
+      schema.defineModel({name: 'foo_bar', datasource: 'mongodb'});
+      schema.defineModel({name: 'FOO_BAR', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._getCollectionNameByModelName('fooBar')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FooBar')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('foo_bar')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FOO_BAR')).to.be.eq('fooBars');
+    });
+
+    // prettier-ignore
+    it('should cut off the "Model" suffix from the model name', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'fooBarModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'FooBarModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'foo_bar_model', datasource: 'mongodb'});
+      schema.defineModel({name: 'FOO_BAR_MODEL', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._getCollectionNameByModelName('fooBarModel')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FooBarModel')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('foo_bar_model')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FOO_BAR_MODEL')).to.be.eq('fooBars');
+    });
+
+    it('converts already pluralized model name to camel case', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'fooBars', datasource: 'mongodb'});
+      schema.defineModel({name: 'FooBars', datasource: 'mongodb'});
+      schema.defineModel({name: 'foo_bars', datasource: 'mongodb'});
+      schema.defineModel({name: 'FOO_BARS', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._getCollectionNameByModelName('fooBars')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FooBars')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('foo_bars')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FOO_BARS')).to.be.eq('fooBars');
+    });
+
+    // prettier-ignore
+    it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'fooBarsModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'FooBarsModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'foo_bars_model', datasource: 'mongodb'});
+      schema.defineModel({name: 'FOO_BARS_MODEL', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._getCollectionNameByModelName('fooBarsModel')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FooBarsModel')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('foo_bars_model')).to.be.eq('fooBars');
+      expect(A._getCollectionNameByModelName('FOO_BARS_MODEL')).to.be.eq('fooBars');
+    });
+
+    it('returns a value from the "tableName" option if defined', async function () {
+      const schema = createSchema();
+      schema.defineModel({
+        name: 'fooBar',
+        tableName: 'bazQux',
+        datasource: 'mongodb',
+      });
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._getCollectionNameByModelName('fooBar')).to.be.eq('bazQux');
+    });
+  });
+
+  describe('_getCollection', function () {
+    it('should create and return a new collection object on the first call', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._collections.has('myTestModel')).to.be.false;
+      const collection = A._getCollection('myTestModel');
+      expect(collection).to.exist;
+      expect(collection.collectionName).to.equal('myTests');
+      expect(collection.dbName).to.equal(CONFIG.database);
+    });
+
+    it('should cache the collection object after the first call', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      expect(A._collections.has('myTestModel')).to.be.false;
+      A._getCollection('myTestModel');
+      expect(A._collections.has('myTestModel')).to.be.true;
+      expect(A._collections.get('myTestModel')).to.exist;
+    });
+
+    it('should return the cached collection instance on subsequent calls', async function () {
+      const schema = createSchema();
+      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const collection1 = A._getCollection('myTestModel');
+      const collection2 = A._getCollection('myTestModel');
+      expect(collection2).to.equal(collection1);
+    });
+
+    it('converts model name to camel case and pluralizes it', async function () {
+      const schema = createSchema();
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const modelNames = ['fooBar', 'FooBar', 'foo_bar', 'FOO_BAR'];
+      modelNames.forEach(modelName => {
+        schema.defineModel({name: modelName, datasource: 'mongodb'});
+        const collection = A._getCollection(modelName);
+        expect(collection.collectionName).to.equal('fooBars');
+      });
+    });
+
+    it('cuts off the "Model" suffix from the model name before naming', async function () {
+      const schema = createSchema();
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const modelNames = [
+        'fooBarModel',
+        'FooBarModel',
+        'foo_bar_model',
+        'FOO_BAR_MODEL',
+      ];
+      modelNames.forEach(modelName => {
+        schema.defineModel({name: modelName, datasource: 'mongodb'});
+        const collection = A._getCollection(modelName);
+        expect(collection.collectionName).to.equal('fooBars');
+      });
+    });
+
+    it('converts already pluralized model name to camel case', async function () {
+      const schema = createSchema();
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const modelNames = ['fooBars', 'FooBars', 'foo_bars', 'FOO_BARS'];
+      modelNames.forEach(modelName => {
+        schema.defineModel({name: modelName, datasource: 'mongodb'});
+        const collection = A._getCollection(modelName);
+        expect(collection.collectionName).to.equal('fooBars');
+      });
+    });
+
+    it('handles already pluralized names with the "Model" suffix', async function () {
+      const schema = createSchema();
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const modelNames = [
+        'fooBarsModel',
+        'FooBarsModel',
+        'foo_bars_model',
+        'FOO_BARS_MODEL',
+      ];
+      modelNames.forEach(modelName => {
+        schema.defineModel({name: modelName, datasource: 'mongodb'});
+        const collection = A._getCollection(modelName);
+        expect(collection.collectionName).to.equal('fooBars');
+      });
+    });
+
+    it('uses the value from the "tableName" option if defined', async function () {
+      const schema = createSchema();
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      const customTableName = 'custom_baz_qux';
+      schema.defineModel({
+        name: 'fooBar',
+        tableName: customTableName,
+        datasource: 'mongodb',
+      });
+      const collection = A._getCollection('fooBar');
+      expect(collection.collectionName).to.equal(customTableName);
+    });
+  });
+
   describe('_buildProjection', function () {
     describe('single field', function () {
       it('returns undefined if the second argument is undefined', async function () {
@@ -1480,7 +1646,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({[DEF_PK]: oid});
       expect(result).to.be.eql({[DEF_PK]: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1494,7 +1660,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({[DEF_PK]: id});
       expect(result).to.be.eql({[DEF_PK]: id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1516,7 +1682,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({id: oid});
       expect(result).to.be.eql({id: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1539,7 +1705,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({id});
       expect(result).to.be.eql({id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1561,7 +1727,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({_id: oid});
       expect(result).to.be.eql({_id: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1584,7 +1750,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.create({_id: id});
       expect(result).to.be.eql({_id: id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -1616,10 +1782,13 @@ describe('MongodbAdapter', function () {
       const rep = schema.getRepository('model');
       await rep.create({[DEF_PK]: 10});
       const promise = rep.create({[DEF_PK]: 10});
-      await expect(promise).to.be.rejectedWith(
-        'E11000 duplicate key error collection: test.model index: ' +
-          '_id_ dup key: { _id: 10 }',
-      );
+      try {
+        await promise;
+        expect.fail('Promise should have been rejected');
+      } catch (error) {
+        expect(error.name).to.equal('MongoServerError');
+        expect(error.code).to.equal(11000);
+      }
     });
 
     it('throws an error if a given "string" identifier already exists', async function () {
@@ -1628,10 +1797,13 @@ describe('MongodbAdapter', function () {
       const rep = schema.getRepository('model');
       await rep.create({[DEF_PK]: 'str'});
       const promise = rep.create({[DEF_PK]: 'str'});
-      await expect(promise).to.be.rejectedWith(
-        'E11000 duplicate key error collection: test.model index: ' +
-          '_id_ dup key: { _id: "str" }',
-      );
+      try {
+        await promise;
+        expect.fail('Promise should have been rejected');
+      } catch (error) {
+        expect(error.name).to.equal('MongoServerError');
+        expect(error.code).to.equal(11000);
+      }
     });
 
     it('throws an error if a given ObjectId instance identifier already exists', async function () {
@@ -1641,13 +1813,13 @@ describe('MongodbAdapter', function () {
       const oid = new ObjectId();
       await rep.create({[DEF_PK]: oid});
       const promise = rep.create({[DEF_PK]: oid});
-      await expect(promise).to.be.rejectedWith(
-        format(
-          'E11000 duplicate key error collection: test.model index: ' +
-            "_id_ dup key: { _id: ObjectId('%s') }",
-          oid,
-        ),
-      );
+      try {
+        await promise;
+        expect.fail('Promise should have been rejected');
+      } catch (error) {
+        expect(error.name).to.equal('MongoServerError');
+        expect(error.code).to.equal(11000);
+      }
     });
 
     it('throws an error if a given ObjectId string identifier already exists', async function () {
@@ -1658,13 +1830,13 @@ describe('MongodbAdapter', function () {
       const id = String(oid);
       await rep.create({[DEF_PK]: id});
       const promise = rep.create({[DEF_PK]: id});
-      await expect(promise).to.be.rejectedWith(
-        format(
-          'E11000 duplicate key error collection: test.model index: ' +
-            "_id_ dup key: { _id: ObjectId('%s') }",
-          id,
-        ),
-      );
+      try {
+        await promise;
+        expect.fail('Promise should have been rejected');
+      } catch (error) {
+        expect(error.name).to.equal('MongoServerError');
+        expect(error.code).to.equal(11000);
+      }
     });
 
     it('uses a specified column name for a regular property', async function () {
@@ -1684,7 +1856,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 10});
     });
@@ -1707,7 +1879,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 10});
     });
@@ -1722,7 +1894,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -1737,7 +1909,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -1750,7 +1922,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'str'});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 'str'});
     });
@@ -1763,7 +1935,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -1780,7 +1952,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: true, bar: false});
     });
@@ -1796,7 +1968,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: ['bar']});
     });
@@ -1812,7 +1984,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: {bar: 10}});
     });
@@ -1828,7 +2000,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -1844,7 +2016,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -1868,7 +2040,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10, bar: 20});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10, bar: 20, baz: 30});
     });
@@ -1913,7 +2085,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, bar: 20});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 20});
     });
@@ -1929,7 +2101,7 @@ describe('MongodbAdapter', function () {
       });
       expect(replaced).to.be.eql({[DEF_PK]: 'foo', prop: 20});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: 'foo'});
       expect(rawData).to.be.eql({_id: 'foo', prop: 20});
     });
@@ -1952,7 +2124,7 @@ describe('MongodbAdapter', function () {
       const replaced = await rep.replaceById('foo', {myId: 'bar', prop: 20});
       expect(replaced).to.be.eql({myId: 'foo', prop: 20});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: 'foo'});
       expect(rawData).to.be.eql({_id: 'foo', prop: 20});
     });
@@ -2007,7 +2179,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 20});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 20});
     });
@@ -2024,7 +2196,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, date: dateString});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -2041,7 +2213,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, date: dateString});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -2056,7 +2228,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 'str'});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 'str'});
     });
@@ -2071,7 +2243,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 10});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -2086,7 +2258,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: true, bar: false});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: true, bar: false});
     });
@@ -2101,7 +2273,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: ['bar']});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: ['bar']});
     });
@@ -2116,7 +2288,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: {bar: 10}});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: {bar: 10}});
     });
@@ -2131,7 +2303,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: null});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -2146,7 +2318,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: null});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -2165,7 +2337,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 15});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 15, bar: 25});
     });
@@ -2184,7 +2356,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 15, bar: 25});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 15, bar: 25, baz: 35});
     });
@@ -2223,7 +2395,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: replaced[DEF_PK]});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, fooCol: 15, barCol: 25, bazCol: 35});
     });
@@ -2238,7 +2410,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql({[DEF_PK]: id, foo: 10});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -2428,7 +2600,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({[DEF_PK]: oid});
       expect(result).to.be.eql({[DEF_PK]: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2442,7 +2614,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({[DEF_PK]: id});
       expect(result).to.be.eql({[DEF_PK]: id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2464,7 +2636,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({id: oid});
       expect(result).to.be.eql({id: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2487,7 +2659,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({id});
       expect(result).to.be.eql({id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2509,7 +2681,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({_id: oid});
       expect(result).to.be.eql({_id: String(oid)});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2532,7 +2704,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.replaceOrCreate({_id: id});
       expect(result).to.be.eql({_id: id});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.not.null;
     });
@@ -2575,7 +2747,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 10});
     });
@@ -2598,7 +2770,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 10});
     });
@@ -2613,7 +2785,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -2628,7 +2800,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], date: dateString});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -2641,7 +2813,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 'str'});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 'str'});
     });
@@ -2654,7 +2826,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -2671,7 +2843,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: true, bar: false});
     });
@@ -2687,7 +2859,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: ['bar']});
     });
@@ -2703,7 +2875,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: {bar: 10}});
     });
@@ -2719,7 +2891,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -2735,7 +2907,7 @@ describe('MongodbAdapter', function () {
       });
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -2762,7 +2934,7 @@ describe('MongodbAdapter', function () {
       expect(result).to.be.eql({[DEF_PK]: result[DEF_PK], foo: 10, bar: 20});
       const oid = new ObjectId(result[DEF_PK]);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10, bar: 20, baz: 30});
     });
@@ -2806,7 +2978,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql(replacer);
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 20});
     });
@@ -2822,7 +2994,7 @@ describe('MongodbAdapter', function () {
       expect(replaced).to.be.eql(replacer);
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -2852,7 +3024,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'd1'});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -2888,7 +3060,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'd1'});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -2921,7 +3093,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({[DEF_PK]: '100', foo: 'd1'});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -2958,7 +3130,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({id: '100', foo: 'd1'});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -2997,7 +3169,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: undefined});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3036,7 +3208,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: null});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3075,7 +3247,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'd1'});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3116,7 +3288,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: undefined});
       expect(result).to.be.eq(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3149,7 +3321,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'test'}, {baz: 'd3'});
       expect(result).to.be.eq(0);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3182,7 +3354,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'd'}, {bar: '2'});
       expect(result).to.be.eq(2);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3221,7 +3393,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.patch({foo: 'd'}, {bar: '2'});
       expect(result).to.be.eq(2);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.eql([
@@ -3249,7 +3421,7 @@ describe('MongodbAdapter', function () {
       const input2 = {foo: 'b', bar: undefined};
       const input3 = {foo: 'c', bar: 10};
       const input4 = {foo: 'd', bar: null};
-      const table = await MDB_CLIENT.db().collection('model');
+      const table = await MDB_CLIENT.db().collection('models');
       const {insertedIds} = await table.insertMany([
         input1,
         input2,
@@ -3285,7 +3457,7 @@ describe('MongodbAdapter', function () {
       const input2 = {foo: 'b', bar: undefined};
       const input3 = {foo: 'c', bar: 10};
       const input4 = {foo: 'd', bar: null};
-      const table = await MDB_CLIENT.db().collection('model');
+      const table = await MDB_CLIENT.db().collection('models');
       const {insertedIds} = await table.insertMany([
         input1,
         input2,
@@ -3317,7 +3489,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: 10});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3340,7 +3512,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {eq: 10}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3363,7 +3535,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {neq: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3386,7 +3558,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {gt: 10}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3409,7 +3581,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {lt: 10}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3432,7 +3604,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {gte: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3455,7 +3627,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {lte: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3478,7 +3650,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {inq: [5, 10]}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3501,7 +3673,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {nin: [5, 10]}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3524,7 +3696,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {between: [5, 10]}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3549,7 +3721,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {exists: true}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3575,7 +3747,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.patch({foo: 7}, {foo: {exists: false}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3604,7 +3776,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3633,7 +3805,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3662,7 +3834,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3691,7 +3863,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3720,7 +3892,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3749,7 +3921,7 @@ describe('MongodbAdapter', function () {
         );
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -3773,7 +3945,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 10, bar: 20});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10, bar: 20});
     });
@@ -3792,13 +3964,13 @@ describe('MongodbAdapter', function () {
       });
       const rep = schema.getRepository('model');
       const {insertedId: oid} = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .insertOne({bar: 10});
       const patched = await rep.patchById(oid, {baz: 20});
       const id = String(oid);
       expect(patched).to.be.eql({[DEF_PK]: id, bar: 10, baz: 20});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 10, baz: 20});
     });
@@ -3814,7 +3986,7 @@ describe('MongodbAdapter', function () {
       });
       expect(patched).to.be.eql({[DEF_PK]: 'foo', prop: 20});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: 'foo'});
       expect(rawData).to.be.eql({_id: 'foo', prop: 20});
     });
@@ -3837,7 +4009,7 @@ describe('MongodbAdapter', function () {
       const patched = await rep.patchById('foo', {myId: 'bar', prop: 20});
       expect(patched).to.be.eql({myId: 'foo', prop: 20});
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: 'foo'});
       expect(rawData).to.be.eql({_id: 'foo', prop: 20});
     });
@@ -3892,7 +4064,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 20});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, bar: 20});
     });
@@ -3909,7 +4081,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, date: dateString});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -3926,7 +4098,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, date: dateString});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, date});
     });
@@ -3941,7 +4113,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 'str'});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 'str'});
     });
@@ -3956,7 +4128,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 10});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -3971,7 +4143,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: true, bar: false});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: true, bar: false});
     });
@@ -3986,7 +4158,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: ['bar']});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: ['bar']});
     });
@@ -4001,7 +4173,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: {bar: 10}});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: {bar: 10}});
     });
@@ -4016,7 +4188,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: null});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -4031,7 +4203,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: null});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: null});
     });
@@ -4050,7 +4222,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 15});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 15, bar: 25});
     });
@@ -4069,7 +4241,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 15, bar: 25});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 15, bar: 25, baz: 35});
     });
@@ -4108,7 +4280,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: patched[DEF_PK]});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, fooCol: 15, barCol: 25, bazCol: 35});
     });
@@ -4123,7 +4295,7 @@ describe('MongodbAdapter', function () {
       expect(patched).to.be.eql({[DEF_PK]: id, foo: 10});
       const oid = new ObjectId(id);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .findOne({_id: oid});
       expect(rawData).to.be.eql({_id: oid, foo: 10});
     });
@@ -4622,7 +4794,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.delete();
       expect(result).to.be.eql(3);
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.empty;
@@ -4638,7 +4810,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: 10});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4656,7 +4828,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {eq: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4674,7 +4846,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {neq: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4692,7 +4864,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {gt: 10}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4711,7 +4883,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {lt: 10}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4730,7 +4902,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {gte: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4748,7 +4920,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {lte: 10}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4766,7 +4938,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {inq: [5, 10]}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4784,7 +4956,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {nin: [5, 10]}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4804,7 +4976,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {between: [9, 16]}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4825,7 +4997,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {exists: true}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([{_id: new ObjectId(id1)}]);
@@ -4845,7 +5017,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {exists: false}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4866,7 +5038,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {like: 'sit amet'}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4886,7 +5058,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {nlike: 'sit amet'}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4906,7 +5078,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {ilike: 'sit amet'}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4925,7 +5097,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {nilike: 'sit amet'}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4946,7 +5118,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {regexp: 'sit am+'}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4966,7 +5138,7 @@ describe('MongodbAdapter', function () {
         const result = await rep.delete({foo: {regexp: 'sit am+', flags: 'i'}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
-          .collection('model')
+          .collection('models')
           .find()
           .toArray();
         expect(rawData).to.be.eql([
@@ -4995,7 +5167,7 @@ describe('MongodbAdapter', function () {
       const result = await rep.deleteById(oid);
       expect(result).to.be.true;
       const rawData = await MDB_CLIENT.db()
-        .collection('model')
+        .collection('models')
         .find()
         .toArray();
       expect(rawData).to.be.empty;
