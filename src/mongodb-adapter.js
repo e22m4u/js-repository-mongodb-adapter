@@ -307,7 +307,7 @@ export class MongodbAdapter extends Adapter {
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(DefinitionRegistry).getModel(modelName);
     if (modelDef.tableName != null) return modelDef.tableName;
-    return modelNameToCollectionName(modelName);
+    return modelNameToCollectionName(modelDef.name);
   }
 
   /**

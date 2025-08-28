@@ -1215,7 +1215,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(import_js_repository8.DefinitionRegistry).getModel(modelName);
     if (modelDef.tableName != null) return modelDef.tableName;
-    return modelNameToCollectionName(modelName);
+    return modelNameToCollectionName(modelDef.name);
   }
   /**
    * Get collection.

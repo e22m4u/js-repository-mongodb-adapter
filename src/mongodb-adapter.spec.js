@@ -45,56 +45,80 @@ describe('MongodbAdapter', function () {
   describe('_getCollectionNameByModelName', function () {
     it('converts model name to camel case and pluralizes it', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'fooBar', datasource: 'mongodb'});
-      schema.defineModel({name: 'FooBar', datasource: 'mongodb'});
-      schema.defineModel({name: 'foo_bar', datasource: 'mongodb'});
-      schema.defineModel({name: 'FOO_BAR', datasource: 'mongodb'});
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntity', 'camelCaseEntities'],
+        ['PascalCaseEntity', 'pascalCaseEntities'],
+        ['snake_case_entity', 'snakeCaseEntities'],
+        ['kebab-case-entity', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITY', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITY', 'upperKebabCaseEntities'],
+      ];
+      modelNamesToCollectionNames.forEach(tuple =>
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
+      );
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._getCollectionNameByModelName('fooBar')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FooBar')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('foo_bar')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FOO_BAR')).to.be.eq('fooBars');
+      modelNamesToCollectionNames.forEach(tuple =>
+        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
+      );
     });
 
     // prettier-ignore
     it('cuts off the "Model" suffix from the model name', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'fooBarModel', datasource: 'mongodb'});
-      schema.defineModel({name: 'FooBarModel', datasource: 'mongodb'});
-      schema.defineModel({name: 'foo_bar_model', datasource: 'mongodb'});
-      schema.defineModel({name: 'FOO_BAR_MODEL', datasource: 'mongodb'});
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntityModel', 'camelCaseEntities'],
+        ['PascalCaseEntityModel', 'pascalCaseEntities'],
+        ['snake_case_entity_model', 'snakeCaseEntities'],
+        ['kebab-case-entity-model', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITY_MODEL', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITY-MODEL', 'upperKebabCaseEntities'],
+      ];
+      modelNamesToCollectionNames.forEach(tuple =>
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
+      );
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._getCollectionNameByModelName('fooBarModel')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FooBarModel')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('foo_bar_model')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FOO_BAR_MODEL')).to.be.eq('fooBars');
+      modelNamesToCollectionNames.forEach(tuple =>
+        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
+      );
     });
 
     it('converts already pluralized model name to camel case', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'fooBars', datasource: 'mongodb'});
-      schema.defineModel({name: 'FooBars', datasource: 'mongodb'});
-      schema.defineModel({name: 'foo_bars', datasource: 'mongodb'});
-      schema.defineModel({name: 'FOO_BARS', datasource: 'mongodb'});
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntities', 'camelCaseEntities'],
+        ['PascalCaseEntities', 'pascalCaseEntities'],
+        ['snake_case_entities', 'snakeCaseEntities'],
+        ['kebab-case-entities', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITIES', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITIES', 'upperKebabCaseEntities'],
+      ];
+      modelNamesToCollectionNames.forEach(tuple =>
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
+      );
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._getCollectionNameByModelName('fooBars')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FooBars')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('foo_bars')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FOO_BARS')).to.be.eq('fooBars');
+      modelNamesToCollectionNames.forEach(tuple =>
+        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
+      );
     });
 
     // prettier-ignore
     it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'fooBarsModel', datasource: 'mongodb'});
-      schema.defineModel({name: 'FooBarsModel', datasource: 'mongodb'});
-      schema.defineModel({name: 'foo_bars_model', datasource: 'mongodb'});
-      schema.defineModel({name: 'FOO_BARS_MODEL', datasource: 'mongodb'});
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntitiesModel', 'camelCaseEntities'],
+        ['PascalCaseEntitiesModel', 'pascalCaseEntities'],
+        ['snake_case_entities_model', 'snakeCaseEntities'],
+        ['kebab-case-entities-model', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITIES_MODEL', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITIES-MODEL', 'upperKebabCaseEntities'],
+      ];
+      modelNamesToCollectionNames.forEach(tuple =>
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
+      );
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._getCollectionNameByModelName('fooBarsModel')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FooBarsModel')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('foo_bars_model')).to.be.eq('fooBars');
-      expect(A._getCollectionNameByModelName('FOO_BARS_MODEL')).to.be.eq('fooBars');
+      modelNamesToCollectionNames.forEach(tuple =>
+        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
+      );
     });
 
     it('returns the value from the "tableName" option if defined', async function () {
@@ -142,55 +166,73 @@ describe('MongodbAdapter', function () {
 
     it('converts model name to camel case and pluralizes it', async function () {
       const schema = createSchema();
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntity', 'camelCaseEntities'],
+        ['PascalCaseEntity', 'pascalCaseEntities'],
+        ['snake_case_entity', 'snakeCaseEntities'],
+        ['kebab-case-entity', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITY', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITY', 'upperKebabCaseEntities'],
+      ];
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const modelNames = ['fooBar', 'FooBar', 'foo_bar', 'FOO_BAR'];
-      modelNames.forEach(modelName => {
-        schema.defineModel({name: modelName, datasource: 'mongodb'});
-        const collection = A._getCollection(modelName);
-        expect(collection.collectionName).to.equal('fooBars');
+      modelNamesToCollectionNames.forEach(tuple => {
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
+        const collection = A._getCollection(tuple[0]);
+        expect(collection.collectionName).to.equal(tuple[1]);
       });
     });
 
     it('cuts off the "Model" suffix from the model name', async function () {
       const schema = createSchema();
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const modelNames = [
-        'fooBarModel',
-        'FooBarModel',
-        'foo_bar_model',
-        'FOO_BAR_MODEL',
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntityModel', 'camelCaseEntities'],
+        ['PascalCaseEntityModel', 'pascalCaseEntities'],
+        ['snake_case_entity_model', 'snakeCaseEntities'],
+        ['kebab-case-entity-model', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITY_MODEL', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITY-MODEL', 'upperKebabCaseEntities'],
       ];
-      modelNames.forEach(modelName => {
-        schema.defineModel({name: modelName, datasource: 'mongodb'});
-        const collection = A._getCollection(modelName);
-        expect(collection.collectionName).to.equal('fooBars');
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      modelNamesToCollectionNames.forEach(tuple => {
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
+        const collection = A._getCollection(tuple[0]);
+        expect(collection.collectionName).to.equal(tuple[1]);
       });
     });
 
     it('converts already pluralized model name to camel case', async function () {
       const schema = createSchema();
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntities', 'camelCaseEntities'],
+        ['PascalCaseEntities', 'pascalCaseEntities'],
+        ['snake_case_entities', 'snakeCaseEntities'],
+        ['kebab-case-entities', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITIES', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITIES', 'upperKebabCaseEntities'],
+      ];
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const modelNames = ['fooBars', 'FooBars', 'foo_bars', 'FOO_BARS'];
-      modelNames.forEach(modelName => {
-        schema.defineModel({name: modelName, datasource: 'mongodb'});
-        const collection = A._getCollection(modelName);
-        expect(collection.collectionName).to.equal('fooBars');
+      modelNamesToCollectionNames.forEach(tuple => {
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
+        const collection = A._getCollection(tuple[0]);
+        expect(collection.collectionName).to.equal(tuple[1]);
       });
     });
 
     it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
       const schema = createSchema();
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const modelNames = [
-        'fooBarsModel',
-        'FooBarsModel',
-        'foo_bars_model',
-        'FOO_BARS_MODEL',
+      const modelNamesToCollectionNames = [
+        ['camelCaseEntitiesModel', 'camelCaseEntities'],
+        ['PascalCaseEntitiesModel', 'pascalCaseEntities'],
+        ['snake_case_entities_model', 'snakeCaseEntities'],
+        ['kebab-case-entities-model', 'kebabCaseEntities'],
+        ['UPPER_SNAKE_CASE_ENTITIES_MODEL', 'upperSnakeCaseEntities'],
+        ['UPPER-KEBAB-CASE-ENTITIES-MODEL', 'upperKebabCaseEntities'],
       ];
-      modelNames.forEach(modelName => {
-        schema.defineModel({name: modelName, datasource: 'mongodb'});
-        const collection = A._getCollection(modelName);
-        expect(collection.collectionName).to.equal('fooBars');
+      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
+      modelNamesToCollectionNames.forEach(tuple => {
+        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
+        const collection = A._getCollection(tuple[0]);
+        expect(collection.collectionName).to.equal(tuple[1]);
       });
     });
 

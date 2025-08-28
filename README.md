@@ -26,10 +26,10 @@ npm install @e22m4u/js-repository-mongodb-adapter
 ```js
 import {DatabaseSchema} from '@e22m4u/js-repository';
 
-const schema = new DatabaseSchema();
+const dbs = new DatabaseSchema();
 
 // объявление источника
-schema.defineDatasource({
+dbs.defineDatasource({
   name: 'myMongo', // название источника
   adapter: 'mongodb', // имя адаптера
   // параметры
@@ -39,7 +39,7 @@ schema.defineDatasource({
 });
 
 // объявление модели
-schema.defineModel({
+dbs.defineModel({
   name: 'user', // название модели
   datasource: 'myMongo', // используемый источник (см. выше)
   properties: { // поля модели
@@ -49,7 +49,7 @@ schema.defineModel({
 });
 
 // получаем репозиторий по названию модели и создаем запись
-const userRep = schema.getRepository('user');
+const userRep = dbs.getRepository('user');
 const user = await userRep.create({name: 'John', surname: 'Doe'});
 
 console.log(user);
