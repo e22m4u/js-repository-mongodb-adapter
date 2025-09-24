@@ -19,9 +19,9 @@ import {InvalidOperatorValueError} from '@e22m4u/js-repository';
 
 /**
  * Mongodb option names.
- * 6.19.0
+ * 6.20
  *
- * https://mongodb.github.io/node-mongodb-native/6.19/interfaces/MongoClientOptions.html
+ * https://mongodb.github.io/node-mongodb-native/6.20/interfaces/MongoClientOptions.html
  *
  * @type {string[]}
  */
