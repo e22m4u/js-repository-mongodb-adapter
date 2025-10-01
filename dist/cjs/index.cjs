@@ -558,12 +558,12 @@ var _Debuggable = class _Debuggable {
    * @returns {Function}
    */
   getDebuggerFor(method) {
-    return this.debug.withHash().withNs(method.name);
+    const name = method.name || "anonymous";
+    return this.debug.withHash().withNs(name);
   }
   /**
    * Constructor.
    *
-   * @param {object|undefined} container
    * @param {DebuggableOptions|undefined} options
    */
   constructor(options = void 0) {
@@ -575,10 +575,12 @@ var _Debuggable = class _Debuggable {
     } else {
       this.debug = createDebugger(className);
     }
-    const noEnvNs = Boolean(options.noEnvNs);
-    if (noEnvNs) this.debug = this.debug.withoutEnvNs();
+    const noEnvironmentNamespace = Boolean(options.noEnvironmentNamespace);
+    if (noEnvironmentNamespace) this.debug = this.debug.withoutEnvNs();
     this.ctorDebug = this.debug.withNs("constructor").withHash();
-    this.ctorDebug(_Debuggable.INSTANTIATION_MESSAGE);
+    const noInstantiationMessage = Boolean(options.noInstantiationMessage);
+    if (!noInstantiationMessage)
+      this.ctorDebug(_Debuggable.INSTANTIATION_MESSAGE);
   }
 };
 __name(_Debuggable, "Debuggable");
