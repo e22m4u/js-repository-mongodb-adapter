@@ -1164,39 +1164,63 @@ describe('MongodbAdapter', function () {
     });
 
     it('converts the "like" operator to "$regex"', async function () {
-      const input = {foo: {like: 'test'}};
+      const input1 = {foo: {like: 'test'}};
+      const input2 = {foo: {like: 'test%'}};
+      const input3 = {foo: {like: 'test_'}};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const res = A._buildQuery('model', input);
-      expect(res).to.be.eql({foo: {$regex: /test/}});
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: {$regex: /^test$/}});
+      expect(res2).to.be.eql({foo: {$regex: /^test.*$/}});
+      expect(res3).to.be.eql({foo: {$regex: /^test.$/}});
     });
 
     it('converts the "nlike" operator to "$not"', async function () {
-      const input = {foo: {nlike: 'test'}};
+      const input1 = {foo: {nlike: 'test'}};
+      const input2 = {foo: {nlike: 'test%'}};
+      const input3 = {foo: {nlike: 'test_'}};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const res = A._buildQuery('model', input);
-      expect(res).to.be.eql({foo: {$not: /test/}});
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: {$not: /^test$/}});
+      expect(res2).to.be.eql({foo: {$not: /^test.*$/}});
+      expect(res3).to.be.eql({foo: {$not: /^test.$/}});
     });
 
     it('converts the "ilike" operator to "$regex" with "i" flag', async function () {
-      const input = {foo: {ilike: 'test'}};
+      const input1 = {foo: {ilike: 'test'}};
+      const input2 = {foo: {ilike: 'test%'}};
+      const input3 = {foo: {ilike: 'test_'}};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const res = A._buildQuery('model', input);
-      expect(res).to.be.eql({foo: {$regex: /test/i}});
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: {$regex: /^test$/i}});
+      expect(res2).to.be.eql({foo: {$regex: /^test.*$/i}});
+      expect(res3).to.be.eql({foo: {$regex: /^test.$/i}});
     });
 
     it('converts the "nilike" operator to "$not" with "i" flag', async function () {
-      const input = {foo: {nilike: 'test'}};
+      const input1 = {foo: {nilike: 'test'}};
+      const input2 = {foo: {nilike: 'test%'}};
+      const input3 = {foo: {nilike: 'test_'}};
       const schema = createSchema();
       schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const res = A._buildQuery('model', input);
-      expect(res).to.be.eql({foo: {$not: /test/i}});
+      const res1 = A._buildQuery('model', input1);
+      const res2 = A._buildQuery('model', input2);
+      const res3 = A._buildQuery('model', input3);
+      expect(res1).to.be.eql({foo: {$not: /^test$/i}});
+      expect(res2).to.be.eql({foo: {$not: /^test.*$/i}});
+      expect(res3).to.be.eql({foo: {$not: /^test.$/i}});
     });
 
     it('converts property value to an instance of ObjectId', async function () {
@@ -1442,10 +1466,10 @@ describe('MongodbAdapter', function () {
           {foo: {$nin: ['qwe']}},
           {foo: {$gte: 100, $lte: 200}},
           {foo: {$exists: true}},
-          {foo: {$regex: /asd/}},
-          {foo: {$not: /zxc/}},
-          {foo: {$regex: /rty/i}},
-          {foo: {$not: /fgh/i}},
+          {foo: {$regex: /^asd$/}},
+          {foo: {$not: /^zxc$/}},
+          {foo: {$regex: /^rty$/i}},
+          {foo: {$not: /^fgh$/i}},
           {foo: {$regex: /vbn/i}},
         ],
       };
@@ -1492,10 +1516,10 @@ describe('MongodbAdapter', function () {
           {foo: {$nin: ['qwe']}},
           {foo: {$gte: 100, $lte: 200}},
           {foo: {$exists: true}},
-          {foo: {$regex: /asd/}},
-          {foo: {$not: /zxc/}},
-          {foo: {$regex: /rty/i}},
-          {foo: {$not: /fgh/i}},
+          {foo: {$regex: /^asd$/}},
+          {foo: {$not: /^zxc$/}},
+          {foo: {$regex: /^rty$/i}},
+          {foo: {$not: /^fgh$/i}},
           {foo: {$regex: /vbn/i}},
         ],
       };
@@ -3814,7 +3838,7 @@ describe('MongodbAdapter', function () {
         const id4 = input4[DEF_PK];
         const result = await rep.patch(
           {foo: 'test'},
-          {foo: {like: 'sit amet'}},
+          {foo: {like: '%sit amet%'}},
         );
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
@@ -3843,7 +3867,7 @@ describe('MongodbAdapter', function () {
         const id4 = input4[DEF_PK];
         const result = await rep.patch(
           {foo: 'test'},
-          {foo: {nlike: 'sit amet'}},
+          {foo: {nlike: '%sit amet%'}},
         );
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
@@ -3872,7 +3896,7 @@ describe('MongodbAdapter', function () {
         const id4 = input4[DEF_PK];
         const result = await rep.patch(
           {foo: 'test'},
-          {foo: {ilike: 'sit amet'}},
+          {foo: {ilike: '%sit amet%'}},
         );
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
@@ -3901,7 +3925,7 @@ describe('MongodbAdapter', function () {
         const id4 = input4[DEF_PK];
         const result = await rep.patch(
           {foo: 'test'},
-          {foo: {nilike: 'sit amet'}},
+          {foo: {nilike: '%sit amet%'}},
         );
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
@@ -4703,7 +4727,7 @@ describe('MongodbAdapter', function () {
         const created2 = await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         const created4 = await rep.create({foo: 'sit amet'});
-        const result = await rep.find({where: {foo: {like: 'sit amet'}}});
+        const result = await rep.find({where: {foo: {like: '%sit amet%'}}});
         expect(result).to.be.eql([
           {[DEF_PK]: created2[DEF_PK], foo: 'dolor sit amet'},
           {[DEF_PK]: created4[DEF_PK], foo: 'sit amet'},
@@ -4718,7 +4742,7 @@ describe('MongodbAdapter', function () {
         const created2 = await rep.create({foo: 'dolor sit amet'});
         const created3 = await rep.create({foo: 'DOLOR SIT AMET'});
         const created4 = await rep.create({foo: 'sit amet'});
-        const result = await rep.find({where: {foo: {ilike: 'sit amet'}}});
+        const result = await rep.find({where: {foo: {ilike: '%sit amet%'}}});
         expect(result).to.be.eql([
           {[DEF_PK]: created2[DEF_PK], foo: 'dolor sit amet'},
           {[DEF_PK]: created3[DEF_PK], foo: 'DOLOR SIT AMET'},
@@ -4734,7 +4758,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         const created3 = await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.find({where: {foo: {nlike: 'sit amet'}}});
+        const result = await rep.find({where: {foo: {nlike: '%sit amet%'}}});
         expect(result).to.be.eql([
           {[DEF_PK]: created1[DEF_PK], foo: 'lorem ipsum'},
           {[DEF_PK]: created3[DEF_PK], foo: 'DOLOR SIT AMET'},
@@ -4749,7 +4773,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.find({where: {foo: {nilike: 'sit amet'}}});
+        const result = await rep.find({where: {foo: {nilike: '%sit amet%'}}});
         expect(result).to.be.eql([
           {[DEF_PK]: created1[DEF_PK], foo: 'lorem ipsum'},
         ]);
@@ -5077,7 +5101,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         const created3 = await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.delete({foo: {like: 'sit amet'}});
+        const result = await rep.delete({foo: {like: '%sit amet%'}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
           .collection('models')
@@ -5097,7 +5121,7 @@ describe('MongodbAdapter', function () {
         const created2 = await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         const created4 = await rep.create({foo: 'sit amet'});
-        const result = await rep.delete({foo: {nlike: 'sit amet'}});
+        const result = await rep.delete({foo: {nlike: '%sit amet%'}});
         expect(result).to.be.eq(2);
         const rawData = await MDB_CLIENT.db()
           .collection('models')
@@ -5117,7 +5141,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.delete({foo: {ilike: 'sit amet'}});
+        const result = await rep.delete({foo: {ilike: '%sit amet%'}});
         expect(result).to.be.eq(3);
         const rawData = await MDB_CLIENT.db()
           .collection('models')
@@ -5136,7 +5160,7 @@ describe('MongodbAdapter', function () {
         const created2 = await rep.create({foo: 'dolor sit amet'});
         const created3 = await rep.create({foo: 'DOLOR SIT AMET'});
         const created4 = await rep.create({foo: 'sit amet'});
-        const result = await rep.delete({foo: {nilike: 'sit amet'}});
+        const result = await rep.delete({foo: {nilike: '%sit amet%'}});
         expect(result).to.be.eq(1);
         const rawData = await MDB_CLIENT.db()
           .collection('models')
@@ -5401,7 +5425,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.count({foo: {like: 'sit amet'}});
+        const result = await rep.count({foo: {like: '%sit amet%'}});
         expect(result).to.be.eql(2);
       });
 
@@ -5413,7 +5437,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.count({foo: {nlike: 'sit amet'}});
+        const result = await rep.count({foo: {nlike: '%sit amet%'}});
         expect(result).to.be.eql(2);
       });
 
@@ -5425,7 +5449,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.count({foo: {ilike: 'sit amet'}});
+        const result = await rep.count({foo: {ilike: '%sit amet%'}});
         expect(result).to.be.eql(3);
       });
 
@@ -5437,7 +5461,7 @@ describe('MongodbAdapter', function () {
         await rep.create({foo: 'dolor sit amet'});
         await rep.create({foo: 'DOLOR SIT AMET'});
         await rep.create({foo: 'sit amet'});
-        const result = await rep.count({foo: {nilike: 'sit amet'}});
+        const result = await rep.count({foo: {nilike: '%sit amet%'}});
         expect(result).to.be.eql(1);
       });
 

@@ -30,204 +30,12 @@ module.exports = __toCommonJS(index_exports);
 var import_mongodb2 = require("mongodb");
 var import_mongodb3 = require("mongodb");
 
-// src/utils/pluralize.js
-var singularExceptions = [
-  /access$/i,
-  /address$/i,
-  /alias$/i,
-  /bonus$/i,
-  /boss$/i,
-  /bus$/i,
-  /business$/i,
-  /canvas$/i,
-  /class$/i,
-  /cross$/i,
-  /dress$/i,
-  /focus$/i,
-  /gas$/i,
-  /glass$/i,
-  /kiss$/i,
-  /lens$/i,
-  /loss$/i,
-  /pass$/i,
-  /plus$/i,
-  /process$/i,
-  /status$/i,
-  /success$/i,
-  /virus$/i
-];
-function pluralize(input) {
-  if (!input || typeof input !== "string") {
-    return input;
-  }
-  if (/s$/i.test(input) && !singularExceptions.some((re) => re.test(input))) {
-    return input;
-  }
-  const lastChar = input.slice(-1);
-  const isLastCharUpper = lastChar === lastChar.toUpperCase() && lastChar !== lastChar.toLowerCase();
-  if (/(s|x|z|ch|sh)$/i.test(input)) {
-    return input + (isLastCharUpper ? "ES" : "es");
-  }
-  if (/[^aeiou]y$/i.test(input)) {
-    return input.slice(0, -1) + (isLastCharUpper ? "IES" : "ies");
-  }
-  return input + (isLastCharUpper ? "S" : "s");
-}
-__name(pluralize, "pluralize");
-
-// src/utils/is-iso-date.js
-function isIsoDate(value) {
-  if (!value) return false;
-  if (value instanceof Date) return true;
-  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) return false;
-  const d = new Date(value);
-  return d instanceof Date && !isNaN(d.getTime()) && d.toISOString() === value;
-}
-__name(isIsoDate, "isIsoDate");
-
-// src/utils/is-object-id.js
-var import_mongodb = require("mongodb");
-function isObjectId(value) {
-  if (!value) return false;
-  if (value instanceof import_mongodb.ObjectId) return true;
-  if (typeof value !== "string") return false;
-  return value.match(/^[a-fA-F0-9]{24}$/) != null;
-}
-__name(isObjectId, "isObjectId");
-
-// src/utils/to-camel-case.js
-function toCamelCase(input) {
-  if (!input) return "";
-  const spacedString = String(input).replace(/([-_])/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
-  const intermediateCased = spacedString.toLowerCase().replace(/\s(.)/g, ($1) => $1.toUpperCase()).replace(/\s/g, "");
-  if (!intermediateCased) return "";
-  return intermediateCased.charAt(0).toLowerCase() + intermediateCased.slice(1);
-}
-__name(toCamelCase, "toCamelCase");
-
-// src/utils/create-mongodb-url.js
-var import_js_repository = require("@e22m4u/js-repository");
-function createMongodbUrl(options = {}) {
-  if (!options || typeof options !== "object" || Array.isArray(options))
-    throw new import_js_repository.InvalidArgumentError(
-      'The first argument of "createMongodbUrl" must be an Object, but %v given.',
-      options
-    );
-  if (options.protocol && typeof options.protocol !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "protocol" must be a String, but %v given.',
-      options.protocol
-    );
-  if (options.hostname && typeof options.hostname !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "hostname" must be a String, but %v given.',
-      options.hostname
-    );
-  if (options.host && typeof options.host !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "host" must be a String, but %v given.',
-      options.host
-    );
-  if (options.port && typeof options.port !== "number" && typeof options.port !== "string") {
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "port" must be a Number or a String, but %v given.',
-      options.port
-    );
-  }
-  if (options.database && typeof options.database !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "database" must be a String, but %v given.',
-      options.database
-    );
-  if (options.db && typeof options.db !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "db" must be a String, but %v given.',
-      options.db
-    );
-  if (options.username && typeof options.username !== "string")
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "username" must be a String, but %v given.',
-      options.username
-    );
-  if (options.password && typeof options.password !== "string" && typeof options.password !== "number") {
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "password" must be a String or a Number, but %v given.',
-      options.password
-    );
-  }
-  if (options.pass && typeof options.pass !== "string" && typeof options.pass !== "number") {
-    throw new import_js_repository.InvalidArgumentError(
-      'MongoDB option "pass" must be a String or a Number, but %v given.',
-      options.pass
-    );
-  }
-  const protocol = options.protocol || "mongodb";
-  const hostname = options.hostname || options.host || "127.0.0.1";
-  const port = options.port || 27017;
-  const database = options.database || options.db || "database";
-  const username = options.username || options.user;
-  const password = options.password || options.pass || void 0;
-  let portUrl = "";
-  if (protocol !== "mongodb+srv") {
-    portUrl = ":" + port;
-  }
-  if (username && password) {
-    return `${protocol}://${username}:${password}@${hostname}${portUrl}/${database}`;
-  } else {
-    return `${protocol}://${hostname}${portUrl}/${database}`;
-  }
-}
-__name(createMongodbUrl, "createMongodbUrl");
-
-// src/utils/transform-values-deep.js
-var import_js_repository2 = require("@e22m4u/js-repository");
-function transformValuesDeep(value, transformer) {
-  if (!transformer || typeof transformer !== "function")
-    throw new import_js_repository2.InvalidArgumentError(
-      'The second argument of "transformValuesDeep" must be a Function, but %v given.',
-      transformer
-    );
-  if (Array.isArray(value)) {
-    value.forEach((v, i) => value[i] = transformValuesDeep(v, transformer));
-    return value;
-  } else if (value && typeof value === "object") {
-    if (!value.constructor || value.constructor && value.constructor.name === "Object") {
-      Object.keys(value).forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(value, key))
-          value[key] = transformValuesDeep(value[key], transformer);
-      });
-      return value;
-    } else {
-      return transformer(value);
-    }
-  } else {
-    return transformer(value);
-  }
-}
-__name(transformValuesDeep, "transformValuesDeep");
-
-// src/utils/model-name-to-collection-name.js
-function modelNameToCollectionName(modelName) {
-  const ccName = toCamelCase(modelName);
-  const woModel = ccName.replace(/Model$/i, "");
-  if (woModel.length <= 2) {
-    return pluralize(ccName);
-  }
-  return pluralize(woModel);
-}
-__name(modelNameToCollectionName, "modelNameToCollectionName");
-
-// src/mongodb-adapter.js
-var import_js_repository3 = require("@e22m4u/js-repository");
-var import_js_repository4 = require("@e22m4u/js-repository");
-var import_js_repository5 = require("@e22m4u/js-repository");
-
 // node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
 var import_js_format = require("@e22m4u/js-format");
 var _InvalidArgumentError = class _InvalidArgumentError extends import_js_format.Errorf {
 };
 __name(_InvalidArgumentError, "InvalidArgumentError");
-var InvalidArgumentError3 = _InvalidArgumentError;
+var InvalidArgumentError = _InvalidArgumentError;
 
 // node_modules/@e22m4u/js-service/src/service-container.js
 var SERVICE_CONTAINER_CLASS_NAME = "ServiceContainer";
@@ -254,7 +62,7 @@ var _ServiceContainer = class _ServiceContainer {
   constructor(parent = void 0) {
     if (parent != null) {
       if (!(parent instanceof _ServiceContainer))
-        throw new InvalidArgumentError3(
+        throw new InvalidArgumentError(
           'The provided parameter "parent" of ServicesContainer.constructor must be an instance ServiceContainer, but %v given.',
           parent
         );
@@ -268,7 +76,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   getParent() {
     if (!this._parent)
-      throw new InvalidArgumentError3("The service container has no parent.");
+      throw new InvalidArgumentError("The service container has no parent.");
     return this._parent;
   }
   /**
@@ -288,7 +96,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   get(ctor, ...args) {
     if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The first argument of ServicesContainer.get must be a class constructor, but %v given.",
         ctor
       );
@@ -296,14 +104,14 @@ var _ServiceContainer = class _ServiceContainer {
     let service = this._services.get(ctor);
     let inheritedCtor = void 0;
     if (!service) {
-      const ctors = this._services.keys();
-      const inheritedCtor2 = ctors.find((v) => v.prototype instanceof ctor);
-      if (inheritedCtor2) service = this._services.get(inheritedCtor2);
+      const ctors = Array.from(this._services.keys());
+      inheritedCtor = ctors.find((v) => v.prototype instanceof ctor);
+      if (inheritedCtor) service = this._services.get(inheritedCtor);
     }
     if (!service && !isCtorRegistered && !inheritedCtor && this._parent && this._parent.has(ctor)) {
       return this._parent.get(ctor, ...args);
     }
-    if (!service && !isCtorRegistered && inheritedCtor) {
+    if (!isCtorRegistered && inheritedCtor) {
       ctor = inheritedCtor;
     }
     if (!service || args.length) {
@@ -325,7 +133,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   getRegistered(ctor, ...args) {
     if (!this.has(ctor))
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The constructor %v is not registered.",
         ctor
       );
@@ -339,7 +147,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   has(ctor) {
     if (this._services.has(ctor)) return true;
-    const ctors = this._services.keys();
+    const ctors = Array.from(this._services.keys());
     const inheritedCtor = ctors.find((v) => v.prototype instanceof ctor);
     if (inheritedCtor) return true;
     if (this._parent) return this._parent.has(ctor);
@@ -354,7 +162,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   add(ctor, ...args) {
     if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The first argument of ServicesContainer.add must be a class constructor, but %v given.",
         ctor
       );
@@ -371,7 +179,7 @@ var _ServiceContainer = class _ServiceContainer {
    */
   use(ctor, ...args) {
     if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The first argument of ServicesContainer.use must be a class constructor, but %v given.",
         ctor
       );
@@ -388,17 +196,47 @@ var _ServiceContainer = class _ServiceContainer {
    */
   set(ctor, service) {
     if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The first argument of ServicesContainer.set must be a class constructor, but %v given.",
         ctor
       );
     if (!service || typeof service !== "object" || Array.isArray(service))
-      throw new InvalidArgumentError3(
+      throw new InvalidArgumentError(
         "The second argument of ServicesContainer.set must be an Object, but %v given.",
         service
       );
     this._services.set(ctor, service);
     return this;
+  }
+  /**
+   * Найти сервис удовлетворяющий условию.
+   *
+   * @param {function(Function, ServiceContainer): boolean} predicate
+   * @param {boolean} noParent
+   * @returns {*}
+   */
+  find(predicate, noParent = false) {
+    if (typeof predicate !== "function") {
+      throw new InvalidArgumentError(
+        "The first argument of ServiceContainer.find must be a function, but %v given.",
+        predicate
+      );
+    }
+    const isRecursive = !noParent;
+    let currentContainer = this;
+    do {
+      for (const ctor of currentContainer._services.keys()) {
+        if (predicate(ctor, currentContainer) === true) {
+          return this.get(ctor);
+        }
+      }
+      if (isRecursive && currentContainer.hasParent()) {
+        currentContainer = currentContainer.getParent();
+      } else {
+        currentContainer = null;
+      }
+    } while (currentContainer);
+    return void 0;
   }
 };
 __name(_ServiceContainer, "ServiceContainer");
@@ -498,6 +336,16 @@ var _Service = class _Service {
     this.container.set(ctor, service);
     return this;
   }
+  /**
+   * Найти сервис удовлетворяющий условию.
+   *
+   * @param {function(Function, ServiceContainer): boolean} predicate
+   * @param {boolean} noParent
+   * @returns {*}
+   */
+  findService(predicate, noParent = false) {
+    return this.container.find(predicate, noParent);
+  }
 };
 __name(_Service, "Service");
 /**
@@ -509,10 +357,10 @@ __publicField(_Service, "kinds", [SERVICE_CLASS_NAME]);
 var Service = _Service;
 
 // node_modules/@e22m4u/js-debug/src/utils/to-camel-case.js
-function toCamelCase2(input) {
+function toCamelCase(input) {
   return input.replace(/(^\w|[A-Z]|\b\w)/g, (c) => c.toUpperCase()).replace(/\W+/g, "").replace(/(^\w)/g, (c) => c.toLowerCase());
 }
-__name(toCamelCase2, "toCamelCase");
+__name(toCamelCase, "toCamelCase");
 
 // node_modules/@e22m4u/js-debug/src/utils/is-non-array-object.js
 function isNonArrayObject(input) {
@@ -569,7 +417,7 @@ var _Debuggable = class _Debuggable {
    * @param {DebuggableOptions|undefined} options
    */
   constructor(options = void 0) {
-    const className = toCamelCase2(this.constructor.name);
+    const className = toCamelCase(this.constructor.name);
     options = typeof options === "object" && options || {};
     const namespace = options.namespace && String(options.namespace) || void 0;
     if (namespace) {
@@ -937,6 +785,14 @@ var _DebuggableService = class _DebuggableService extends Debuggable {
     return this._service.setService;
   }
   /**
+   * Найти сервис удовлетворяющий условию.
+   *
+   * @type {Service['findService']}
+   */
+  get findService() {
+    return this._service.findService;
+  }
+  /**
    * Constructor.
    *
    * @param {ServiceContainer|undefined} container
@@ -957,12 +813,196 @@ __publicField(_DebuggableService, "kinds", Service.kinds);
 var DebuggableService = _DebuggableService;
 
 // src/mongodb-adapter.js
-var import_js_repository6 = require("@e22m4u/js-repository");
-var import_js_repository7 = require("@e22m4u/js-repository");
-var import_js_repository8 = require("@e22m4u/js-repository");
-var import_js_repository9 = require("@e22m4u/js-repository");
-var import_js_repository10 = require("@e22m4u/js-repository");
-var import_js_repository11 = require("@e22m4u/js-repository");
+var import_js_repository3 = require("@e22m4u/js-repository");
+
+// src/utils/pluralize.js
+var singularExceptions = [
+  /access$/i,
+  /address$/i,
+  /alias$/i,
+  /bonus$/i,
+  /boss$/i,
+  /bus$/i,
+  /business$/i,
+  /canvas$/i,
+  /class$/i,
+  /cross$/i,
+  /dress$/i,
+  /focus$/i,
+  /gas$/i,
+  /glass$/i,
+  /kiss$/i,
+  /lens$/i,
+  /loss$/i,
+  /pass$/i,
+  /plus$/i,
+  /process$/i,
+  /status$/i,
+  /success$/i,
+  /virus$/i
+];
+function pluralize(input) {
+  if (!input || typeof input !== "string") {
+    return input;
+  }
+  if (/s$/i.test(input) && !singularExceptions.some((re) => re.test(input))) {
+    return input;
+  }
+  const lastChar = input.slice(-1);
+  const isLastCharUpper = lastChar === lastChar.toUpperCase() && lastChar !== lastChar.toLowerCase();
+  if (/(s|x|z|ch|sh)$/i.test(input)) {
+    return input + (isLastCharUpper ? "ES" : "es");
+  }
+  if (/[^aeiou]y$/i.test(input)) {
+    return input.slice(0, -1) + (isLastCharUpper ? "IES" : "ies");
+  }
+  return input + (isLastCharUpper ? "S" : "s");
+}
+__name(pluralize, "pluralize");
+
+// src/utils/is-iso-date.js
+function isIsoDate(value) {
+  if (!value) return false;
+  if (value instanceof Date) return true;
+  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) return false;
+  const d = new Date(value);
+  return d instanceof Date && !isNaN(d.getTime()) && d.toISOString() === value;
+}
+__name(isIsoDate, "isIsoDate");
+
+// src/utils/is-object-id.js
+var import_mongodb = require("mongodb");
+function isObjectId(value) {
+  if (!value) return false;
+  if (value instanceof import_mongodb.ObjectId) return true;
+  if (typeof value !== "string") return false;
+  return value.match(/^[a-fA-F0-9]{24}$/) != null;
+}
+__name(isObjectId, "isObjectId");
+
+// src/utils/to-camel-case.js
+function toCamelCase2(input) {
+  if (!input) return "";
+  const spacedString = String(input).replace(/([-_])/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
+  const intermediateCased = spacedString.toLowerCase().replace(/\s(.)/g, ($1) => $1.toUpperCase()).replace(/\s/g, "");
+  if (!intermediateCased) return "";
+  return intermediateCased.charAt(0).toLowerCase() + intermediateCased.slice(1);
+}
+__name(toCamelCase2, "toCamelCase");
+
+// src/utils/create-mongodb-url.js
+var import_js_repository = require("@e22m4u/js-repository");
+function createMongodbUrl(options = {}) {
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    throw new import_js_repository.InvalidArgumentError(
+      'The first argument of "createMongodbUrl" must be an Object, but %v given.',
+      options
+    );
+  if (options.protocol && typeof options.protocol !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "protocol" must be a String, but %v given.',
+      options.protocol
+    );
+  if (options.hostname && typeof options.hostname !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "hostname" must be a String, but %v given.',
+      options.hostname
+    );
+  if (options.host && typeof options.host !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "host" must be a String, but %v given.',
+      options.host
+    );
+  if (options.port && typeof options.port !== "number" && typeof options.port !== "string") {
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "port" must be a Number or a String, but %v given.',
+      options.port
+    );
+  }
+  if (options.database && typeof options.database !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "database" must be a String, but %v given.',
+      options.database
+    );
+  if (options.db && typeof options.db !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "db" must be a String, but %v given.',
+      options.db
+    );
+  if (options.username && typeof options.username !== "string")
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "username" must be a String, but %v given.',
+      options.username
+    );
+  if (options.password && typeof options.password !== "string" && typeof options.password !== "number") {
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "password" must be a String or a Number, but %v given.',
+      options.password
+    );
+  }
+  if (options.pass && typeof options.pass !== "string" && typeof options.pass !== "number") {
+    throw new import_js_repository.InvalidArgumentError(
+      'MongoDB option "pass" must be a String or a Number, but %v given.',
+      options.pass
+    );
+  }
+  const protocol = options.protocol || "mongodb";
+  const hostname = options.hostname || options.host || "127.0.0.1";
+  const port = options.port || 27017;
+  const database = options.database || options.db || "database";
+  const username = options.username || options.user;
+  const password = options.password || options.pass || void 0;
+  let portUrl = "";
+  if (protocol !== "mongodb+srv") {
+    portUrl = ":" + port;
+  }
+  if (username && password) {
+    return `${protocol}://${username}:${password}@${hostname}${portUrl}/${database}`;
+  } else {
+    return `${protocol}://${hostname}${portUrl}/${database}`;
+  }
+}
+__name(createMongodbUrl, "createMongodbUrl");
+
+// src/utils/transform-values-deep.js
+var import_js_repository2 = require("@e22m4u/js-repository");
+function transformValuesDeep(value, transformer) {
+  if (!transformer || typeof transformer !== "function")
+    throw new import_js_repository2.InvalidArgumentError(
+      'The second argument of "transformValuesDeep" must be a Function, but %v given.',
+      transformer
+    );
+  if (Array.isArray(value)) {
+    value.forEach((v, i) => value[i] = transformValuesDeep(v, transformer));
+    return value;
+  } else if (value && typeof value === "object") {
+    if (!value.constructor || value.constructor && value.constructor.name === "Object") {
+      Object.keys(value).forEach((key) => {
+        if (Object.prototype.hasOwnProperty.call(value, key))
+          value[key] = transformValuesDeep(value[key], transformer);
+      });
+      return value;
+    } else {
+      return transformer(value);
+    }
+  } else {
+    return transformer(value);
+  }
+}
+__name(transformValuesDeep, "transformValuesDeep");
+
+// src/utils/model-name-to-collection-name.js
+function modelNameToCollectionName(modelName) {
+  const ccName = toCamelCase2(modelName);
+  const woModel = ccName.replace(/Model$/i, "");
+  if (woModel.length <= 2) {
+    return pluralize(ccName);
+  }
+  return pluralize(woModel);
+}
+__name(modelNameToCollectionName, "modelNameToCollectionName");
+
+// src/mongodb-adapter.js
 var MONGODB_OPTION_NAMES = [
   "ALPNProtocols",
   "allowPartialTrustChain",
@@ -1100,7 +1140,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     settings.port = settings.port || 27017;
     settings.database = settings.database || settings.db || "database";
     super(container, settings);
-    const options = (0, import_js_repository7.selectObjectKeys)(this.settings, MONGODB_OPTION_NAMES);
+    const options = (0, import_js_repository3.selectObjectKeys)(this.settings, MONGODB_OPTION_NAMES);
     const url = createMongodbUrl(this.settings);
     this._client = new import_mongodb3.MongoClient(url, options);
   }
@@ -1111,7 +1151,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @private
    */
   _getIdPropName(modelName) {
-    return this.getService(import_js_repository9.ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
+    return this.getService(import_js_repository3.ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
       modelName
     );
   }
@@ -1122,7 +1162,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @private
    */
   _getIdColName(modelName) {
-    return this.getService(import_js_repository9.ModelDefinitionUtils).getPrimaryKeyAsColumnName(
+    return this.getService(import_js_repository3.ModelDefinitionUtils).getPrimaryKeyAsColumnName(
       modelName
     );
   }
@@ -1161,11 +1201,11 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    */
   _toDatabase(modelName, modelData) {
     const tableData = this.getService(
-      import_js_repository9.ModelDefinitionUtils
+      import_js_repository3.ModelDefinitionUtils
     ).convertPropertyNamesToColumnNames(modelName, modelData);
     const idColName = this._getIdColName(modelName);
     if (idColName !== "id" && idColName !== "_id")
-      throw new import_js_repository10.InvalidArgumentError(
+      throw new import_js_repository3.InvalidArgumentError(
         'MongoDB is not supporting custom names of the primary key. Do use "id" as a primary key instead of %v.',
         idColName
       );
@@ -1193,7 +1233,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     if ("_id" in tableData) {
       const idColName = this._getIdColName(modelName);
       if (idColName !== "id" && idColName !== "_id")
-        throw new import_js_repository10.InvalidArgumentError(
+        throw new import_js_repository3.InvalidArgumentError(
           'MongoDB is not supporting custom names of the primary key. Do use "id" as a primary key instead of %v.',
           idColName
         );
@@ -1203,7 +1243,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
       }
     }
     const modelData = this.getService(
-      import_js_repository9.ModelDefinitionUtils
+      import_js_repository3.ModelDefinitionUtils
     ).convertColumnNamesToPropertyNames(modelName, tableData);
     return transformValuesDeep(modelData, (value) => {
       if (value instanceof import_mongodb2.ObjectId) return String(value);
@@ -1217,7 +1257,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    */
   _getCollectionNameByModelName(modelName) {
-    const modelDef = this.getService(import_js_repository8.DefinitionRegistry).getModel(modelName);
+    const modelDef = this.getService(import_js_repository3.DefinitionRegistry).getModel(modelName);
     if (modelDef.tableName != null) return modelDef.tableName;
     return modelNameToCollectionName(modelDef.name);
   }
@@ -1244,7 +1284,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @private
    */
   _getIdType(modelName) {
-    const utils = this.getService(import_js_repository9.ModelDefinitionUtils);
+    const utils = this.getService(import_js_repository3.ModelDefinitionUtils);
     const pkPropName = utils.getPrimaryKeyAsPropertyName(modelName);
     return utils.getDataTypeByPropertyName(modelName, pkPropName);
   }
@@ -1258,16 +1298,16 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    */
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== "string")
-      throw new import_js_repository10.InvalidArgumentError(
+      throw new import_js_repository3.InvalidArgumentError(
         "Property name must be a non-empty String, but %v given.",
         propName
       );
-    const utils = this.getService(import_js_repository9.ModelDefinitionUtils);
+    const utils = this.getService(import_js_repository3.ModelDefinitionUtils);
     let colName = propName;
     try {
       colName = utils.getColumnNameByPropertyName(modelName, propName);
     } catch (error) {
-      if (!(error instanceof import_js_repository10.InvalidArgumentError) || error.message.indexOf("does not have the property") === -1) {
+      if (!(error instanceof import_js_repository3.InvalidArgumentError) || error.message.indexOf("does not have the property") === -1) {
         throw error;
       }
     }
@@ -1283,18 +1323,18 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    */
   _convertPropNamesChainToColNamesChain(modelName, propsChain) {
     if (!modelName || typeof modelName !== "string")
-      throw new import_js_repository10.InvalidArgumentError(
+      throw new import_js_repository3.InvalidArgumentError(
         "Model name must be a non-empty String, but %v given.",
         modelName
       );
     if (!propsChain || typeof propsChain !== "string")
-      throw new import_js_repository10.InvalidArgumentError(
+      throw new import_js_repository3.InvalidArgumentError(
         "Properties chain must be a non-empty String, but %v given.",
         propsChain
       );
     propsChain = propsChain.replace(/\.{2,}/g, ".");
     const propNames = propsChain.split(".");
-    const utils = this.getService(import_js_repository9.ModelDefinitionUtils);
+    const utils = this.getService(import_js_repository3.ModelDefinitionUtils);
     let currModelName = modelName;
     return propNames.map((currPropName) => {
       if (!currModelName) return currPropName;
@@ -1321,7 +1361,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     if (fields.indexOf("_id") === -1) fields.push("_id");
     return fields.reduce((acc, field) => {
       if (!field || typeof field !== "string")
-        throw new import_js_repository10.InvalidArgumentError(
+        throw new import_js_repository3.InvalidArgumentError(
           'The provided option "fields" should be a non-empty String or an Array of non-empty String, but %v given.',
           field
         );
@@ -1348,7 +1388,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
       if (!order || typeof order !== "string")
-        throw new import_js_repository10.InvalidArgumentError(
+        throw new import_js_repository3.InvalidArgumentError(
           'The provided option "order" should be a non-empty String or an Array of non-empty String, but %v given.',
           order
         );
@@ -1360,7 +1400,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         try {
           field = this._convertPropNamesChainToColNamesChain(modelName, field);
         } catch (error) {
-          if (!(error instanceof import_js_repository10.InvalidArgumentError) || error.message.indexOf("does not have the property") === -1) {
+          if (!(error instanceof import_js_repository3.InvalidArgumentError) || error.message.indexOf("does not have the property") === -1) {
             throw error;
           }
         }
@@ -1380,7 +1420,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   _buildQuery(modelName, clause) {
     if (clause == null) return;
     if (typeof clause !== "object" || Array.isArray(clause))
-      throw new import_js_repository10.InvalidArgumentError(
+      throw new import_js_repository3.InvalidArgumentError(
         'The provided option "where" should be an Object, but %v given.',
         clause
       );
@@ -1389,7 +1429,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     Object.keys(clause).forEach((key) => {
       var _a, _b;
       if (String(key).indexOf("$") !== -1)
-        throw new import_js_repository10.InvalidArgumentError(
+        throw new import_js_repository3.InvalidArgumentError(
           'The symbol "$" is not supported, but %v given.',
           key
         );
@@ -1397,7 +1437,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
       if (key === "and" || key === "or" || key === "nor") {
         if (cond == null) return;
         if (!Array.isArray(cond))
-          throw new import_js_repository11.InvalidOperatorValueError(key, "an Array", cond);
+          throw new import_js_repository3.InvalidOperatorValueError(key, "an Array", cond);
         if (cond.length === 0) return;
         cond = cond.map((c) => this._buildQuery(modelName, c));
         cond = cond.filter((c) => c != null);
@@ -1450,7 +1490,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         }
         if ("inq" in cond) {
           if (!cond.inq || !Array.isArray(cond.inq))
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "inq",
               "an Array of possible values",
               cond.inq
@@ -1464,7 +1504,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         }
         if ("nin" in cond) {
           if (!cond.nin || !Array.isArray(cond.nin))
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "nin",
               "an Array of possible values",
               cond
@@ -1478,7 +1518,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         }
         if ("between" in cond) {
           if (!Array.isArray(cond.between) || cond.between.length !== 2)
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "between",
               "an Array of 2 elements",
               cond.between
@@ -1489,7 +1529,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         }
         if ("exists" in cond) {
           if (typeof cond.exists !== "boolean")
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "exists",
               "a Boolean",
               cond.exists
@@ -1498,44 +1538,44 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
         }
         if ("like" in cond) {
           if (typeof cond.like !== "string" && !(cond.like instanceof RegExp))
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "like",
               "a String or RegExp",
               cond.like
             );
-          opConds.push({ $regex: (0, import_js_repository6.stringToRegexp)(cond.like) });
+          opConds.push({ $regex: (0, import_js_repository3.likeToRegexp)(cond.like) });
         }
         if ("nlike" in cond) {
           if (typeof cond.nlike !== "string" && !(cond.nlike instanceof RegExp))
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "nlike",
               "a String or RegExp",
               cond.nlike
             );
-          opConds.push({ $not: (0, import_js_repository6.stringToRegexp)(cond.nlike) });
+          opConds.push({ $not: (0, import_js_repository3.likeToRegexp)(cond.nlike) });
         }
         if ("ilike" in cond) {
           if (typeof cond.ilike !== "string" && !(cond.ilike instanceof RegExp))
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "ilike",
               "a String or RegExp",
               cond.ilike
             );
-          opConds.push({ $regex: (0, import_js_repository6.stringToRegexp)(cond.ilike, "i") });
+          opConds.push({ $regex: (0, import_js_repository3.likeToRegexp)(cond.ilike, true) });
         }
         if ("nilike" in cond) {
           if (typeof cond.nilike !== "string" && !(cond.nilike instanceof RegExp)) {
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "nilike",
               "a String or RegExp",
               cond.nilike
             );
           }
-          opConds.push({ $not: (0, import_js_repository6.stringToRegexp)(cond.nilike, "i") });
+          opConds.push({ $not: (0, import_js_repository3.likeToRegexp)(cond.nilike, true) });
         }
         if ("regexp" in cond) {
           if (typeof cond.regexp !== "string" && !(cond.regexp instanceof RegExp)) {
-            throw new import_js_repository11.InvalidOperatorValueError(
+            throw new import_js_repository3.InvalidOperatorValueError(
               "regexp",
               "a String or RegExp",
               cond.regexp
@@ -1543,11 +1583,11 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
           }
           const flags = cond.flags || void 0;
           if (flags && typeof flags !== "string")
-            throw new import_js_repository10.InvalidArgumentError(
+            throw new import_js_repository3.InvalidArgumentError(
               "RegExp flags must be a String, but %v given.",
               cond.flags
             );
-          opConds.push({ $regex: (0, import_js_repository6.stringToRegexp)(cond.regexp, flags) });
+          opConds.push({ $regex: (0, import_js_repository3.stringToRegexp)(cond.regexp, flags) });
         }
         if (opConds.length === 1) {
           query[key] = opConds[0];
@@ -1574,10 +1614,10 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     const idValue = modelData[idPropName];
     if (idValue == null || idValue === "" || idValue === 0) {
       const pkType = this._getIdType(modelName);
-      if (pkType !== import_js_repository4.DataType.STRING && pkType !== import_js_repository4.DataType.ANY)
-        throw new import_js_repository10.InvalidArgumentError(
+      if (pkType !== import_js_repository3.DataType.STRING && pkType !== import_js_repository3.DataType.ANY)
+        throw new import_js_repository3.InvalidArgumentError(
           "MongoDB unable to generate primary keys of %s. Do provide your own value for the %v property or set property type to String.",
-          (0, import_js_repository5.capitalize)(pkType),
+          (0, import_js_repository3.capitalize)(pkType),
           idPropName
         );
       delete modelData[idPropName];
@@ -1609,7 +1649,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     const table = this._getCollection(modelName);
     const { matchedCount } = await table.replaceOne({ _id: id }, tableData);
     if (matchedCount < 1)
-      throw new import_js_repository10.InvalidArgumentError("Identifier %v is not found.", String(id));
+      throw new import_js_repository3.InvalidArgumentError("Identifier %v is not found.", String(id));
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields
@@ -1631,10 +1671,10 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     idValue = this._coerceId(idValue);
     if (idValue == null || idValue === "" || idValue === 0) {
       const pkType = this._getIdType(modelName);
-      if (pkType !== import_js_repository4.DataType.STRING && pkType !== import_js_repository4.DataType.ANY)
-        throw new import_js_repository10.InvalidArgumentError(
+      if (pkType !== import_js_repository3.DataType.STRING && pkType !== import_js_repository3.DataType.ANY)
+        throw new import_js_repository3.InvalidArgumentError(
           "MongoDB unable to generate primary keys of %s. Do provide your own value for the %v property or set property type to String.",
-          (0, import_js_repository5.capitalize)(pkType),
+          (0, import_js_repository3.capitalize)(pkType),
           idPropName
         );
       delete modelData[idPropName];
@@ -1692,7 +1732,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     const table = this._getCollection(modelName);
     const { matchedCount } = await table.updateOne({ _id: id }, { $set: tableData });
     if (matchedCount < 1)
-      throw new import_js_repository10.InvalidArgumentError("Identifier %v is not found.", String(id));
+      throw new import_js_repository3.InvalidArgumentError("Identifier %v is not found.", String(id));
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields
@@ -1736,7 +1776,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     );
     const patchedData = await table.findOne({ _id: id }, { projection });
     if (!patchedData)
-      throw new import_js_repository10.InvalidArgumentError("Identifier %v is not found.", String(id));
+      throw new import_js_repository3.InvalidArgumentError("Identifier %v is not found.", String(id));
     return this._fromDatabase(modelName, patchedData);
   }
   /**

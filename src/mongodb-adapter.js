@@ -1,21 +1,28 @@
 /* eslint no-unused-vars: 0 */
 import {ObjectId} from 'mongodb';
 import {MongoClient} from 'mongodb';
-import {isIsoDate} from './utils/index.js';
-import {isObjectId} from './utils/index.js';
-import {Adapter} from '@e22m4u/js-repository';
-import {DataType} from '@e22m4u/js-repository';
-import {capitalize} from '@e22m4u/js-repository';
-import {createMongodbUrl} from './utils/index.js';
 import {ServiceContainer} from '@e22m4u/js-service';
-import {transformValuesDeep} from './utils/index.js';
-import {stringToRegexp} from '@e22m4u/js-repository';
-import {selectObjectKeys} from '@e22m4u/js-repository';
-import {DefinitionRegistry} from '@e22m4u/js-repository';
-import {ModelDefinitionUtils} from '@e22m4u/js-repository';
-import {InvalidArgumentError} from '@e22m4u/js-repository';
-import {modelNameToCollectionName} from './utils/index.js';
-import {InvalidOperatorValueError} from '@e22m4u/js-repository';
+
+import {
+  Adapter,
+  DataType,
+  likeToRegexp,
+  capitalize,
+  stringToRegexp,
+  selectObjectKeys,
+  DefinitionRegistry,
+  ModelDefinitionUtils,
+  InvalidArgumentError,
+  InvalidOperatorValueError,
+} from '@e22m4u/js-repository';
+
+import {
+  isIsoDate,
+  isObjectId,
+  createMongodbUrl,
+  transformValuesDeep,
+  modelNameToCollectionName,
+} from './utils/index.js';
 
 /**
  * Mongodb option names.
@@ -630,7 +637,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.like,
             );
-          opConds.push({$regex: stringToRegexp(cond.like)});
+          opConds.push({$regex: likeToRegexp(cond.like)});
         }
         // nlike
         if ('nlike' in cond) {
@@ -640,7 +647,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.nlike,
             );
-          opConds.push({$not: stringToRegexp(cond.nlike)});
+          opConds.push({$not: likeToRegexp(cond.nlike)});
         }
         // ilike
         if ('ilike' in cond) {
@@ -650,7 +657,7 @@ export class MongodbAdapter extends Adapter {
               'a String or RegExp',
               cond.ilike,
             );
-          opConds.push({$regex: stringToRegexp(cond.ilike, 'i')});
+          opConds.push({$regex: likeToRegexp(cond.ilike, true)});
         }
         // nilike
         if ('nilike' in cond) {
@@ -664,7 +671,7 @@ export class MongodbAdapter extends Adapter {
               cond.nilike,
             );
           }
-          opConds.push({$not: stringToRegexp(cond.nilike, 'i')});
+          opConds.push({$not: likeToRegexp(cond.nilike, true)});
         }
         // regexp and flags (optional)
         if ('regexp' in cond) {
