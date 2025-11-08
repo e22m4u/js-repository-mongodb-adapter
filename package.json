@@ -38,7 +38,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@e22m4u/js-format": "~0.2.0",
+    "@e22m4u/js-format": "~0.2.1",
     "mongodb": "6.20.0"
   },
   "peerDependencies": {
