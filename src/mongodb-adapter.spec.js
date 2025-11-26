@@ -62,26 +62,6 @@ describe('MongodbAdapter', function () {
       );
     });
 
-    // prettier-ignore
-    it('cuts off the "Model" suffix from the model name', async function () {
-      const schema = createSchema();
-      const modelNamesToCollectionNames = [
-        ['camelCaseEntityModel', 'camelCaseEntities'],
-        ['PascalCaseEntityModel', 'pascalCaseEntities'],
-        ['snake_case_entity_model', 'snakeCaseEntities'],
-        ['kebab-case-entity-model', 'kebabCaseEntities'],
-        ['UPPER_SNAKE_CASE_ENTITY_MODEL', 'upperSnakeCaseEntities'],
-        ['UPPER-KEBAB-CASE-ENTITY-MODEL', 'upperKebabCaseEntities'],
-      ];
-      modelNamesToCollectionNames.forEach(tuple =>
-        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
-      );
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      modelNamesToCollectionNames.forEach(tuple =>
-        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
-      );
-    });
-
     it('converts already pluralized model name to camel case', async function () {
       const schema = createSchema();
       const modelNamesToCollectionNames = [
@@ -91,26 +71,6 @@ describe('MongodbAdapter', function () {
         ['kebab-case-entities', 'kebabCaseEntities'],
         ['UPPER_SNAKE_CASE_ENTITIES', 'upperSnakeCaseEntities'],
         ['UPPER-KEBAB-CASE-ENTITIES', 'upperKebabCaseEntities'],
-      ];
-      modelNamesToCollectionNames.forEach(tuple =>
-        schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
-      );
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      modelNamesToCollectionNames.forEach(tuple =>
-        expect(A._getCollectionNameByModelName(tuple[0])).to.be.eq(tuple[1]),
-      );
-    });
-
-    // prettier-ignore
-    it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
-      const schema = createSchema();
-      const modelNamesToCollectionNames = [
-        ['camelCaseEntitiesModel', 'camelCaseEntities'],
-        ['PascalCaseEntitiesModel', 'pascalCaseEntities'],
-        ['snake_case_entities_model', 'snakeCaseEntities'],
-        ['kebab-case-entities-model', 'kebabCaseEntities'],
-        ['UPPER_SNAKE_CASE_ENTITIES_MODEL', 'upperSnakeCaseEntities'],
-        ['UPPER-KEBAB-CASE-ENTITIES-MODEL', 'upperKebabCaseEntities'],
       ];
       modelNamesToCollectionNames.forEach(tuple =>
         schema.defineModel({name: tuple[0], datasource: 'mongodb'}),
@@ -136,31 +96,31 @@ describe('MongodbAdapter', function () {
   describe('_getCollection', function () {
     it('should create and return a new collection object on the first call', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._collections.has('myTestModel')).to.be.false;
-      const collection = A._getCollection('myTestModel');
+      expect(A._collections.has('model')).to.be.false;
+      const collection = A._getCollection('model');
       expect(collection).to.exist;
-      expect(collection.collectionName).to.equal('myTests');
+      expect(collection.collectionName).to.equal('models');
       expect(collection.dbName).to.equal(CONFIG.database);
     });
 
     it('should cache the collection object after the first call', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      expect(A._collections.has('myTestModel')).to.be.false;
-      A._getCollection('myTestModel');
-      expect(A._collections.has('myTestModel')).to.be.true;
-      expect(A._collections.get('myTestModel')).to.exist;
+      expect(A._collections.has('model')).to.be.false;
+      A._getCollection('model');
+      expect(A._collections.has('model')).to.be.true;
+      expect(A._collections.get('model')).to.exist;
     });
 
     it('should return the cached collection instance on subsequent calls', async function () {
       const schema = createSchema();
-      schema.defineModel({name: 'myTestModel', datasource: 'mongodb'});
+      schema.defineModel({name: 'model', datasource: 'mongodb'});
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      const collection1 = A._getCollection('myTestModel');
-      const collection2 = A._getCollection('myTestModel');
+      const collection1 = A._getCollection('model');
+      const collection2 = A._getCollection('model');
       expect(collection2).to.equal(collection1);
     });
 
@@ -182,24 +142,6 @@ describe('MongodbAdapter', function () {
       });
     });
 
-    it('cuts off the "Model" suffix from the model name', async function () {
-      const schema = createSchema();
-      const modelNamesToCollectionNames = [
-        ['camelCaseEntityModel', 'camelCaseEntities'],
-        ['PascalCaseEntityModel', 'pascalCaseEntities'],
-        ['snake_case_entity_model', 'snakeCaseEntities'],
-        ['kebab-case-entity-model', 'kebabCaseEntities'],
-        ['UPPER_SNAKE_CASE_ENTITY_MODEL', 'upperSnakeCaseEntities'],
-        ['UPPER-KEBAB-CASE-ENTITY-MODEL', 'upperKebabCaseEntities'],
-      ];
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      modelNamesToCollectionNames.forEach(tuple => {
-        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
-        const collection = A._getCollection(tuple[0]);
-        expect(collection.collectionName).to.equal(tuple[1]);
-      });
-    });
-
     it('converts already pluralized model name to camel case', async function () {
       const schema = createSchema();
       const modelNamesToCollectionNames = [
@@ -209,24 +151,6 @@ describe('MongodbAdapter', function () {
         ['kebab-case-entities', 'kebabCaseEntities'],
         ['UPPER_SNAKE_CASE_ENTITIES', 'upperSnakeCaseEntities'],
         ['UPPER-KEBAB-CASE-ENTITIES', 'upperKebabCaseEntities'],
-      ];
-      const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
-      modelNamesToCollectionNames.forEach(tuple => {
-        schema.defineModel({name: tuple[0], datasource: 'mongodb'});
-        const collection = A._getCollection(tuple[0]);
-        expect(collection.collectionName).to.equal(tuple[1]);
-      });
-    });
-
-    it('converts already pluralized model name to camel case and cut off the "Model" suffix', async function () {
-      const schema = createSchema();
-      const modelNamesToCollectionNames = [
-        ['camelCaseEntitiesModel', 'camelCaseEntities'],
-        ['PascalCaseEntitiesModel', 'pascalCaseEntities'],
-        ['snake_case_entities_model', 'snakeCaseEntities'],
-        ['kebab-case-entities-model', 'kebabCaseEntities'],
-        ['UPPER_SNAKE_CASE_ENTITIES_MODEL', 'upperSnakeCaseEntities'],
-        ['UPPER-KEBAB-CASE-ENTITIES-MODEL', 'upperKebabCaseEntities'],
       ];
       const A = await schema.getService(AdapterRegistry).getAdapter('mongodb');
       modelNamesToCollectionNames.forEach(tuple => {

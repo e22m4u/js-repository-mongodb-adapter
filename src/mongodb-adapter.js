@@ -17,11 +17,12 @@ import {
 } from '@e22m4u/js-repository';
 
 import {
+  pluralize,
   isIsoDate,
   isObjectId,
+  toCamelCase,
   createMongodbUrl,
   transformValuesDeep,
-  modelNameToCollectionName,
 } from './utils/index.js';
 
 /**
@@ -314,7 +315,11 @@ export class MongodbAdapter extends Adapter {
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(DefinitionRegistry).getModel(modelName);
     if (modelDef.tableName != null) return modelDef.tableName;
-    return modelNameToCollectionName(modelDef.name);
+    // если имя коллекции не определено явно (опция "tableName"),
+    // то выполняется приведение имени модели к стандартному camelCase
+    // во множественном числе
+    // "Article" -> "articles", "AccessToken" -> "accessTokens"
+    return pluralize(toCamelCase(modelDef.name));
   }
 
   /**

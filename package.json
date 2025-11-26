@@ -42,7 +42,7 @@
     "mongodb": "6.20.0"
   },
   "peerDependencies": {
-    "@e22m4u/js-repository": "~0.6.3"
+    "@e22m4u/js-repository": "~0.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "~20.1.0",

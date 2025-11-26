@@ -991,17 +991,6 @@ function transformValuesDeep(value, transformer) {
 }
 __name(transformValuesDeep, "transformValuesDeep");
 
-// src/utils/model-name-to-collection-name.js
-function modelNameToCollectionName(modelName) {
-  const ccName = toCamelCase2(modelName);
-  const woModel = ccName.replace(/Model$/i, "");
-  if (woModel.length <= 2) {
-    return pluralize(ccName);
-  }
-  return pluralize(woModel);
-}
-__name(modelNameToCollectionName, "modelNameToCollectionName");
-
 // src/mongodb-adapter.js
 var MONGODB_OPTION_NAMES = [
   "ALPNProtocols",
@@ -1259,7 +1248,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(import_js_repository3.DefinitionRegistry).getModel(modelName);
     if (modelDef.tableName != null) return modelDef.tableName;
-    return modelNameToCollectionName(modelDef.name);
+    return pluralize(toCamelCase2(modelDef.name));
   }
   /**
    * Get collection.
