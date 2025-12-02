@@ -13,10 +13,10 @@
     "Datasource",
     "Relations"
   ],
-  "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
+  "homepage": "https://gitrepos.ru/e22m4u/js-repository-mongodb-adapter",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/e22m4u/js-repository-mongodb-adapter.git"
+    "url": "git+https://gitrepos.ru/e22m4u/js-repository-mongodb-adapter.git"
   },
   "type": "module",
   "module": "./src/index.js",
@@ -38,11 +38,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@e22m4u/js-format": "~0.2.1",
+    "@e22m4u/js-format": "~0.3.0",
     "mongodb": "6.20.0"
   },
   "peerDependencies": {
-    "@e22m4u/js-repository": "~0.7.0"
+    "@e22m4u/js-repository": "~0.8.0"
   },
   "devDependencies": {
     "@commitlint/cli": "~20.1.0",
@@ -56,11 +56,13 @@
     "eslint": "~9.39.1",
     "eslint-config-prettier": "~10.1.8",
     "eslint-plugin-chai-expect": "~3.1.0",
+    "eslint-plugin-import": "~2.32.0",
+    "eslint-plugin-jsdoc": "~61.4.1",
     "eslint-plugin-mocha": "~11.2.0",
     "globals": "~16.5.0",
     "husky": "~9.1.7",
     "mocha": "~11.7.5",
-    "prettier": "~3.6.2",
+    "prettier": "~3.7.3",
     "rimraf": "~6.1.2"
   }
 }

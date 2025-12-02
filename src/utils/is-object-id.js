@@ -3,8 +3,8 @@ import {ObjectId} from 'mongodb';
 /**
  * Is object id.
  *
- * @param value
- * @return {boolean}
+ * @param {*} value
+ * @returns {boolean}
  */
 export function isObjectId(value) {
   if (!value) return false;

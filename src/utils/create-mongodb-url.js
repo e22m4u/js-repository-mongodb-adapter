@@ -1,7 +1,23 @@
 import {InvalidArgumentError} from '@e22m4u/js-repository';
 
 /**
+ * @typedef {object} MongoDBUrlOptions
+ * @property {string} [protocol]
+ * @property {string} [hostname]
+ * @property {string} [host]
+ * @property {number|string} [port]
+ * @property {string} [database]
+ * @property {string} [db]
+ * @property {string} [username]
+ * @property {string} [password]
+ * @property {string} [pass]
+ */
+
+/**
  * Generate the mongodb URL from the options.
+ *
+ * @param {MongoDBUrlOptions} options
+ * @returns {string}
  */
 export function createMongodbUrl(options = {}) {
   if (!options || typeof options !== 'object' || Array.isArray(options))

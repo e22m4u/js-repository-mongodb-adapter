@@ -1,8 +1,8 @@
 /**
  * Is iso date.
  *
- * @param value
- * @return {boolean}
+ * @param {*} value
+ * @returns {boolean}
  */
 export function isIsoDate(value) {
   if (!value) return false;

@@ -1,14 +1,16 @@
 import {expect} from 'chai';
-import {ObjectId} from 'mongodb';
-import {MongoClient} from 'mongodb';
 import {format} from '@e22m4u/js-format';
-import {DataType} from '@e22m4u/js-repository';
+import {ObjectId, MongoClient} from 'mongodb';
 import {createMongodbUrl} from './utils/index.js';
 import {MongodbAdapter} from './mongodb-adapter.js';
-import {DatabaseSchema} from '@e22m4u/js-repository';
-import {AdapterRegistry} from '@e22m4u/js-repository';
-import {InvalidOperatorValueError} from '@e22m4u/js-repository';
-import {DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK} from '@e22m4u/js-repository';
+
+import {
+  DataType,
+  DatabaseSchema,
+  AdapterRegistry,
+  InvalidOperatorValueError,
+  DEFAULT_PRIMARY_KEY_PROPERTY_NAME as DEF_PK,
+} from '@e22m4u/js-repository';
 
 const CONFIG = {
   host: process.env.MONGODB_HOST || 'localhost',
@@ -19,6 +21,11 @@ const CONFIG = {
 const MDB_CLIENT = new MongoClient(createMongodbUrl(CONFIG));
 const ADAPTERS_STACK = [];
 
+/**
+ * Database schema factory.
+ *
+ * @returns {DatabaseSchema}
+ */
 function createSchema() {
   const schema = new DatabaseSchema();
   const adapter = new MongodbAdapter(schema.container, CONFIG);

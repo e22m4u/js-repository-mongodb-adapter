@@ -28,7 +28,6 @@ module.exports = __toCommonJS(index_exports);
 
 // src/mongodb-adapter.js
 var import_mongodb2 = require("mongodb");
-var import_mongodb3 = require("mongodb");
 
 // node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
 var import_js_format = require("@e22m4u/js-format");
@@ -1098,7 +1097,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Mongodb instance.
    *
    * @type {MongoClient}
-   * @private
    */
   _client;
   /**
@@ -1113,14 +1111,13 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Collections.
    *
    * @type {Map<any, any>}
-   * @private
    */
   _collections = /* @__PURE__ */ new Map();
   /**
    * Constructor.
    *
    * @param {ServiceContainer} container
-   * @param settings
+   * @param {object} settings
    */
   constructor(container, settings) {
     settings = Object.assign({}, DEFAULT_SETTINGS, settings || {});
@@ -1131,13 +1128,13 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
     super(container, settings);
     const options = (0, import_js_repository3.selectObjectKeys)(this.settings, MONGODB_OPTION_NAMES);
     const url = createMongodbUrl(this.settings);
-    this._client = new import_mongodb3.MongoClient(url, options);
+    this._client = new import_mongodb2.MongoClient(url, options);
   }
   /**
    * Get id prop name.
    *
-   * @param modelName
-   * @private
+   * @param {string} modelName
+   * @returns {string}
    */
   _getIdPropName(modelName) {
     return this.getService(import_js_repository3.ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
@@ -1147,8 +1144,8 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   /**
    * Get id col name.
    *
-   * @param modelName
-   * @private
+   * @param {string} modelName
+   * @returns {string}
    */
   _getIdColName(modelName) {
     return this.getService(import_js_repository3.ModelDefinitionUtils).getPrimaryKeyAsColumnName(
@@ -1158,9 +1155,8 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   /**
    * Coerce id.
    *
-   * @param value
+   * @param {*} value
    * @returns {ObjectId|*}
-   * @private
    */
   _coerceId(value) {
     if (value == null) return value;
@@ -1170,9 +1166,8 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   /**
    * Coerce date.
    *
-   * @param value
+   * @param {Date|string|*} value
    * @returns {Date|*}
-   * @private
    */
   _coerceDate(value) {
     if (value == null) return value;
@@ -1186,7 +1181,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {object} modelData
    * @returns {object}
-   * @private
    */
   _toDatabase(modelName, modelData) {
     const tableData = this.getService(
@@ -1216,7 +1210,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {object} tableData
    * @returns {object}
-   * @private
    */
   _fromDatabase(modelName, tableData) {
     if ("_id" in tableData) {
@@ -1244,6 +1237,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * Get collection name by model name.
    *
    * @param {string} modelName
+   * @returns {string}
    */
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(import_js_repository3.DefinitionRegistry).getModel(modelName);
@@ -1255,7 +1249,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @returns {*}
-   * @private
    */
   _getCollection(modelName) {
     let collection = this._collections.get(modelName);
@@ -1268,9 +1261,8 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
   /**
    * Get id type.
    *
-   * @param modelName
+   * @param {string} modelName
    * @returns {string|*}
-   * @private
    */
   _getIdType(modelName) {
     const utils = this.getService(import_js_repository3.ModelDefinitionUtils);
@@ -1283,7 +1275,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {string} propName
    * @returns {string}
-   * @private
    */
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== "string")
@@ -1308,7 +1299,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {string} propsChain
    * @returns {string}
-   * @private
    */
   _convertPropNamesChainToColNamesChain(modelName, propsChain) {
     if (!modelName || typeof modelName !== "string")
@@ -1341,7 +1331,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {string|string[]} fields
    * @returns {Record<string, number>|undefined}
-   * @private
    */
   _buildProjection(modelName, fields) {
     if (fields == null) return;
@@ -1368,7 +1357,6 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    * @param {string} modelName
    * @param {string|string[]} clause
    * @returns {object|undefined}
-   * @private
    */
   _buildSort(modelName, clause) {
     if (clause == null) return;
@@ -1403,8 +1391,7 @@ var _MongodbAdapter = class _MongodbAdapter extends import_js_repository3.Adapte
    *
    * @param {string} modelName
    * @param {object} clause
-   * @returns {object}
-   * @private
+   * @returns {object|undefined}
    */
   _buildQuery(modelName, clause) {
     if (clause == null) return;

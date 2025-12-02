@@ -1,6 +1,5 @@
 /* eslint no-unused-vars: 0 */
-import {ObjectId} from 'mongodb';
-import {MongoClient} from 'mongodb';
+import {ObjectId, MongoClient} from 'mongodb';
 import {ServiceContainer} from '@e22m4u/js-service';
 
 import {
@@ -149,7 +148,6 @@ export class MongodbAdapter extends Adapter {
    * Mongodb instance.
    *
    * @type {MongoClient}
-   * @private
    */
   _client;
 
@@ -166,7 +164,6 @@ export class MongodbAdapter extends Adapter {
    * Collections.
    *
    * @type {Map<any, any>}
-   * @private
    */
   _collections = new Map();
 
@@ -174,7 +171,7 @@ export class MongodbAdapter extends Adapter {
    * Constructor.
    *
    * @param {ServiceContainer} container
-   * @param settings
+   * @param {object} settings
    */
   constructor(container, settings) {
     settings = Object.assign({}, DEFAULT_SETTINGS, settings || {});
@@ -191,8 +188,8 @@ export class MongodbAdapter extends Adapter {
   /**
    * Get id prop name.
    *
-   * @param modelName
-   * @private
+   * @param {string} modelName
+   * @returns {string}
    */
   _getIdPropName(modelName) {
     return this.getService(ModelDefinitionUtils).getPrimaryKeyAsPropertyName(
@@ -203,8 +200,8 @@ export class MongodbAdapter extends Adapter {
   /**
    * Get id col name.
    *
-   * @param modelName
-   * @private
+   * @param {string} modelName
+   * @returns {string}
    */
   _getIdColName(modelName) {
     return this.getService(ModelDefinitionUtils).getPrimaryKeyAsColumnName(
@@ -215,9 +212,8 @@ export class MongodbAdapter extends Adapter {
   /**
    * Coerce id.
    *
-   * @param value
+   * @param {*} value
    * @returns {ObjectId|*}
-   * @private
    */
   _coerceId(value) {
     if (value == null) return value;
@@ -228,9 +224,8 @@ export class MongodbAdapter extends Adapter {
   /**
    * Coerce date.
    *
-   * @param value
+   * @param {Date|string|*} value
    * @returns {Date|*}
-   * @private
    */
   _coerceDate(value) {
     if (value == null) return value;
@@ -245,7 +240,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {object} modelData
    * @returns {object}
-   * @private
    */
   _toDatabase(modelName, modelData) {
     const tableData = this.getService(
@@ -279,7 +273,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {object} tableData
    * @returns {object}
-   * @private
    */
   _fromDatabase(modelName, tableData) {
     if ('_id' in tableData) {
@@ -311,6 +304,7 @@ export class MongodbAdapter extends Adapter {
    * Get collection name by model name.
    *
    * @param {string} modelName
+   * @returns {string}
    */
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(DefinitionRegistry).getModel(modelName);
@@ -327,7 +321,6 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @returns {*}
-   * @private
    */
   _getCollection(modelName) {
     let collection = this._collections.get(modelName);
@@ -343,9 +336,8 @@ export class MongodbAdapter extends Adapter {
   /**
    * Get id type.
    *
-   * @param modelName
+   * @param {string} modelName
    * @returns {string|*}
-   * @private
    */
   _getIdType(modelName) {
     const utils = this.getService(ModelDefinitionUtils);
@@ -359,7 +351,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {string} propName
    * @returns {string}
-   * @private
    */
   _getColName(modelName, propName) {
     if (!propName || typeof propName !== 'string')
@@ -388,7 +379,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {string} propsChain
    * @returns {string}
-   * @private
    */
   _convertPropNamesChainToColNamesChain(modelName, propsChain) {
     if (!modelName || typeof modelName !== 'string')
@@ -429,7 +419,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {string|string[]} fields
    * @returns {Record<string, number>|undefined}
-   * @private
    */
   _buildProjection(modelName, fields) {
     if (fields == null) return;
@@ -458,7 +447,6 @@ export class MongodbAdapter extends Adapter {
    * @param {string} modelName
    * @param {string|string[]} clause
    * @returns {object|undefined}
-   * @private
    */
   _buildSort(modelName, clause) {
     if (clause == null) return;
@@ -498,8 +486,7 @@ export class MongodbAdapter extends Adapter {
    *
    * @param {string} modelName
    * @param {object} clause
-   * @returns {object}
-   * @private
+   * @returns {object|undefined}
    */
   _buildQuery(modelName, clause) {
     if (clause == null) return;

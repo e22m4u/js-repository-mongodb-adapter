@@ -1,11 +1,17 @@
 import {InvalidArgumentError} from '@e22m4u/js-repository';
 
 /**
+ * @callback Transformer
+ * @param {*} value
+ * @returns {*}
+ */
+
+/**
  * Transform values deep.
  *
- * @param value
- * @param transformer
- * @return {*}
+ * @param {*} value
+ * @param {Transformer} transformer
+ * @returns {*}
  */
 export function transformValuesDeep(value, transformer) {
   if (!transformer || typeof transformer !== 'function')
