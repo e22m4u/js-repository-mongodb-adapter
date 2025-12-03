@@ -28,6 +28,7 @@ export default [{
     ...eslintChaiExpectPlugin.configs['recommended-flat'].rules,
     ...eslintJsdocPlugin.configs['flat/recommended-error'].rules,
     'no-duplicate-imports': 'error',
+    'import/export': 0,
     'jsdoc/reject-any-type': 0,
     'jsdoc/reject-function-type': 0,
     'jsdoc/require-param-description': 0,

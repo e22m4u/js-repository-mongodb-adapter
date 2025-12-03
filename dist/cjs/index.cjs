@@ -385,65 +385,8 @@ function generateRandomHex(length = 4) {
 }
 __name(generateRandomHex, "generateRandomHex");
 
-// node_modules/@e22m4u/js-debug/src/debuggable.js
-var _Debuggable = class _Debuggable {
-  /**
-   * Debug.
-   *
-   * @type {Function}
-   */
-  debug;
-  /**
-   * Ctor Debug.
-   *
-   * @type {Function}
-   */
-  ctorDebug;
-  /**
-   * Возвращает функцию-отладчик с сегментом пространства имен
-   * указанного в параметре метода.
-   *
-   * @param {Function} method
-   * @returns {Function}
-   */
-  getDebuggerFor(method) {
-    const name = method.name || "anonymous";
-    return this.debug.withHash().withNs(name);
-  }
-  /**
-   * Constructor.
-   *
-   * @param {DebuggableOptions|undefined} options
-   */
-  constructor(options = void 0) {
-    const className = toCamelCase(this.constructor.name);
-    options = typeof options === "object" && options || {};
-    const namespace = options.namespace && String(options.namespace) || void 0;
-    if (namespace) {
-      this.debug = createDebugger(namespace, className);
-    } else {
-      this.debug = createDebugger(className);
-    }
-    const noEnvironmentNamespace = Boolean(options.noEnvironmentNamespace);
-    if (noEnvironmentNamespace) this.debug = this.debug.withoutEnvNs();
-    this.ctorDebug = this.debug.withNs("constructor").withHash();
-    const noInstantiationMessage = Boolean(options.noInstantiationMessage);
-    if (!noInstantiationMessage)
-      this.ctorDebug(_Debuggable.INSTANTIATION_MESSAGE);
-  }
-};
-__name(_Debuggable, "Debuggable");
-/**
- * Instantiation message;
- *
- * @type {string}
- */
-__publicField(_Debuggable, "INSTANTIATION_MESSAGE", "Instantiated.");
-var Debuggable = _Debuggable;
-
 // node_modules/@e22m4u/js-debug/src/create-debugger.js
 var import_js_format2 = require("@e22m4u/js-format");
-var import_js_format3 = require("@e22m4u/js-format");
 
 // node_modules/@e22m4u/js-debug/src/create-colorized-dump.js
 var import_util = require("util");
@@ -649,7 +592,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   function debugFn(messageOrData, ...args) {
     if (!isDebuggerEnabled()) return;
     const prefix = getPrefix();
-    const multiString = (0, import_js_format3.format)(messageOrData, ...args);
+    const multiString = (0, import_js_format2.format)(messageOrData, ...args);
     const rows = multiString.split("\n");
     rows.forEach((message) => {
       prefix ? console.log(`${prefix} ${message}`) : console.log(message);
@@ -717,6 +660,62 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   return debugFn;
 }
 __name(createDebugger, "createDebugger");
+
+// node_modules/@e22m4u/js-debug/src/debuggable.js
+var _Debuggable = class _Debuggable {
+  /**
+   * Debug.
+   *
+   * @type {*}
+   */
+  debug;
+  /**
+   * Ctor Debug.
+   *
+   * @type {Function}
+   */
+  ctorDebug;
+  /**
+   * Возвращает функцию-отладчик с сегментом пространства имен
+   * указанного в параметре метода.
+   *
+   * @param {Function} method
+   * @returns {Function}
+   */
+  getDebuggerFor(method) {
+    const name = method.name || "anonymous";
+    return this.debug.withHash().withNs(name);
+  }
+  /**
+   * Constructor.
+   *
+   * @param {DebuggableOptions} [options]
+   */
+  constructor(options = void 0) {
+    const className = toCamelCase(this.constructor.name);
+    options = typeof options === "object" && options || {};
+    const namespace = options.namespace && String(options.namespace) || void 0;
+    if (namespace) {
+      this.debug = createDebugger(namespace, className);
+    } else {
+      this.debug = createDebugger(className);
+    }
+    const noEnvironmentNamespace = Boolean(options.noEnvironmentNamespace);
+    if (noEnvironmentNamespace) this.debug = this.debug.withoutEnvNs();
+    this.ctorDebug = this.debug.withNs("constructor").withHash();
+    const noInstantiationMessage = Boolean(options.noInstantiationMessage);
+    if (!noInstantiationMessage)
+      this.ctorDebug(_Debuggable.INSTANTIATION_MESSAGE);
+  }
+};
+__name(_Debuggable, "Debuggable");
+/**
+ * Instantiation message.
+ *
+ * @type {string}
+ */
+__publicField(_Debuggable, "INSTANTIATION_MESSAGE", "Instantiated.");
+var Debuggable = _Debuggable;
 
 // node_modules/@e22m4u/js-service/src/debuggable-service.js
 var _DebuggableService = class _DebuggableService extends Debuggable {
