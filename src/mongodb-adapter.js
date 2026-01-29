@@ -216,8 +216,12 @@ export class MongodbAdapter extends Adapter {
    * @returns {ObjectId|*}
    */
   _coerceId(value) {
-    if (value == null) return value;
-    if (isObjectId(value)) return new ObjectId(value);
+    if (value == null) {
+      return value;
+    }
+    if (isObjectId(value)) {
+      return new ObjectId(value);
+    }
     return value;
   }
 
@@ -228,9 +232,15 @@ export class MongodbAdapter extends Adapter {
    * @returns {Date|*}
    */
   _coerceDate(value) {
-    if (value == null) return value;
-    if (value instanceof Date) return value;
-    if (isIsoDate(value)) return new Date(value);
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof Date) {
+      return value;
+    }
+    if (isIsoDate(value)) {
+      return new Date(value);
+    }
     return value;
   }
 
@@ -247,22 +257,31 @@ export class MongodbAdapter extends Adapter {
     ).convertPropertyNamesToColumnNames(modelName, modelData);
 
     const idColName = this._getIdColName(modelName);
-    if (idColName !== 'id' && idColName !== '_id')
+    if (idColName !== 'id' && idColName !== '_id') {
       throw new InvalidArgumentError(
         'MongoDB is not supporting custom names of the primary key. ' +
           'Do use "id" as a primary key instead of %v.',
         idColName,
       );
+    }
     if (idColName in tableData && idColName !== '_id') {
       tableData._id = tableData[idColName];
       delete tableData[idColName];
     }
 
     return transformValuesDeep(tableData, value => {
-      if (value instanceof ObjectId) return value;
-      if (value instanceof Date) return value;
-      if (isObjectId(value)) return new ObjectId(value);
-      if (isIsoDate(value)) return new Date(value);
+      if (value instanceof ObjectId) {
+        return value;
+      }
+      if (value instanceof Date) {
+        return value;
+      }
+      if (isObjectId(value)) {
+        return new ObjectId(value);
+      }
+      if (isIsoDate(value)) {
+        return new Date(value);
+      }
       return value;
     });
   }
@@ -277,12 +296,13 @@ export class MongodbAdapter extends Adapter {
   _fromDatabase(modelName, tableData) {
     if ('_id' in tableData) {
       const idColName = this._getIdColName(modelName);
-      if (idColName !== 'id' && idColName !== '_id')
+      if (idColName !== 'id' && idColName !== '_id') {
         throw new InvalidArgumentError(
           'MongoDB is not supporting custom names of the primary key. ' +
             'Do use "id" as a primary key instead of %v.',
           idColName,
         );
+      }
       if (idColName !== '_id') {
         tableData[idColName] = tableData._id;
         delete tableData._id;
@@ -294,8 +314,12 @@ export class MongodbAdapter extends Adapter {
     ).convertColumnNamesToPropertyNames(modelName, tableData);
 
     return transformValuesDeep(modelData, value => {
-      if (value instanceof ObjectId) return String(value);
-      if (value instanceof Date) return value.toISOString();
+      if (value instanceof ObjectId) {
+        return String(value);
+      }
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
       return value;
     });
   }
@@ -308,7 +332,9 @@ export class MongodbAdapter extends Adapter {
    */
   _getCollectionNameByModelName(modelName) {
     const modelDef = this.getService(DefinitionRegistry).getModel(modelName);
-    if (modelDef.tableName != null) return modelDef.tableName;
+    if (modelDef.tableName != null) {
+      return modelDef.tableName;
+    }
     // если имя коллекции не определено явно (опция "tableName"),
     // то выполняется приведение имени модели к стандартному camelCase
     // во множественном числе
@@ -324,7 +350,9 @@ export class MongodbAdapter extends Adapter {
    */
   _getCollection(modelName) {
     let collection = this._collections.get(modelName);
-    if (collection) return collection;
+    if (collection) {
+      return collection;
+    }
     const collectionName = this._getCollectionNameByModelName(modelName);
     collection = this.client
       .db(this.settings.database)
@@ -353,11 +381,12 @@ export class MongodbAdapter extends Adapter {
    * @returns {string}
    */
   _getColName(modelName, propName) {
-    if (!propName || typeof propName !== 'string')
+    if (!propName || typeof propName !== 'string') {
       throw new InvalidArgumentError(
         'Property name must be a non-empty String, but %v given.',
         propName,
       );
+    }
     const utils = this.getService(ModelDefinitionUtils);
     let colName = propName;
     try {
@@ -381,16 +410,18 @@ export class MongodbAdapter extends Adapter {
    * @returns {string}
    */
   _convertPropNamesChainToColNamesChain(modelName, propsChain) {
-    if (!modelName || typeof modelName !== 'string')
+    if (!modelName || typeof modelName !== 'string') {
       throw new InvalidArgumentError(
         'Model name must be a non-empty String, but %v given.',
         modelName,
       );
-    if (!propsChain || typeof propsChain !== 'string')
+    }
+    if (!propsChain || typeof propsChain !== 'string') {
       throw new InvalidArgumentError(
         'Properties chain must be a non-empty String, but %v given.',
         propsChain,
       );
+    }
     // удаление повторяющихся точек,
     // где строка "foo..bar.baz...qux"
     // будет преобразована к "foo.bar.baz.qux"
@@ -402,7 +433,9 @@ export class MongodbAdapter extends Adapter {
     let currModelName = modelName;
     return propNames
       .map(currPropName => {
-        if (!currModelName) return currPropName;
+        if (!currModelName) {
+          return currPropName;
+        }
         const colName = this._getColName(currModelName, currPropName);
         currModelName = utils.getModelNameOfPropertyValueIfDefined(
           currModelName,
@@ -421,17 +454,26 @@ export class MongodbAdapter extends Adapter {
    * @returns {Record<string, number>|undefined}
    */
   _buildProjection(modelName, fields) {
-    if (fields == null) return;
-    if (Array.isArray(fields) === false) fields = [fields];
-    if (!fields.length) return;
-    if (fields.indexOf('_id') === -1) fields.push('_id');
+    if (fields == null) {
+      return;
+    }
+    if (Array.isArray(fields) === false) {
+      fields = [fields];
+    }
+    if (!fields.length) {
+      return;
+    }
+    if (fields.indexOf('_id') === -1) {
+      fields.push('_id');
+    }
     return fields.reduce((acc, field) => {
-      if (!field || typeof field !== 'string')
+      if (!field || typeof field !== 'string') {
         throw new InvalidArgumentError(
           'The provided option "fields" should be a non-empty String ' +
             'or an Array of non-empty String, but %v given.',
           field,
         );
+      }
       let colName = this._convertPropNamesChainToColNamesChain(
         modelName,
         field,
@@ -449,17 +491,24 @@ export class MongodbAdapter extends Adapter {
    * @returns {object|undefined}
    */
   _buildSort(modelName, clause) {
-    if (clause == null) return;
-    if (Array.isArray(clause) === false) clause = [clause];
-    if (!clause.length) return;
+    if (clause == null) {
+      return;
+    }
+    if (Array.isArray(clause) === false) {
+      clause = [clause];
+    }
+    if (!clause.length) {
+      return;
+    }
     const idPropName = this._getIdPropName(modelName);
     return clause.reduce((acc, order) => {
-      if (!order || typeof order !== 'string')
+      if (!order || typeof order !== 'string') {
         throw new InvalidArgumentError(
           'The provided option "order" should be a non-empty String ' +
             'or an Array of non-empty String, but %v given.',
           order,
         );
+      }
       const direction = order.match(/\s+(A|DE)SC$/);
       let field = order.replace(/\s+(A|DE)SC$/, '').trim();
       if (field === idPropName) {
@@ -489,27 +538,36 @@ export class MongodbAdapter extends Adapter {
    * @returns {object|undefined}
    */
   _buildQuery(modelName, clause) {
-    if (clause == null) return;
-    if (typeof clause !== 'object' || Array.isArray(clause))
+    if (clause == null) {
+      return;
+    }
+    if (typeof clause !== 'object' || Array.isArray(clause)) {
       throw new InvalidArgumentError(
         'The provided option "where" should be an Object, but %v given.',
         clause,
       );
+    }
     const query = {};
     const idPropName = this._getIdPropName(modelName);
     Object.keys(clause).forEach(key => {
-      if (String(key).indexOf('$') !== -1)
+      if (String(key).indexOf('$') !== -1) {
         throw new InvalidArgumentError(
           'The symbol "$" is not supported, but %v given.',
           key,
         );
+      }
       let cond = clause[key];
       // and/or/nor clause
       if (key === 'and' || key === 'or' || key === 'nor') {
-        if (cond == null) return;
-        if (!Array.isArray(cond))
+        if (cond == null) {
+          return;
+        }
+        if (!Array.isArray(cond)) {
           throw new InvalidOperatorValueError(key, 'an Array', cond);
-        if (cond.length === 0) return;
+        }
+        if (cond.length === 0) {
+          return;
+        }
         cond = cond.map(c => this._buildQuery(modelName, c));
         cond = cond.filter(c => c != null);
         const opKey = '$' + key;
@@ -571,12 +629,13 @@ export class MongodbAdapter extends Adapter {
         }
         // inq
         if ('inq' in cond) {
-          if (!cond.inq || !Array.isArray(cond.inq))
+          if (!cond.inq || !Array.isArray(cond.inq)) {
             throw new InvalidOperatorValueError(
               'inq',
               'an Array of possible values',
               cond.inq,
             );
+          }
           const inq = cond.inq.map(v => {
             v = this._coerceId(v);
             v = this._coerceDate(v);
@@ -586,12 +645,13 @@ export class MongodbAdapter extends Adapter {
         }
         // nin
         if ('nin' in cond) {
-          if (!cond.nin || !Array.isArray(cond.nin))
+          if (!cond.nin || !Array.isArray(cond.nin)) {
             throw new InvalidOperatorValueError(
               'nin',
               'an Array of possible values',
               cond,
             );
+          }
           const nin = cond.nin.map(v => {
             v = this._coerceId(v);
             v = this._coerceDate(v);
@@ -601,54 +661,65 @@ export class MongodbAdapter extends Adapter {
         }
         // between
         if ('between' in cond) {
-          if (!Array.isArray(cond.between) || cond.between.length !== 2)
+          if (!Array.isArray(cond.between) || cond.between.length !== 2) {
             throw new InvalidOperatorValueError(
               'between',
               'an Array of 2 elements',
               cond.between,
             );
+          }
           const gte = this._coerceDate(cond.between[0]);
           const lte = this._coerceDate(cond.between[1]);
           opConds.push({$gte: gte, $lte: lte});
         }
         // exists
         if ('exists' in cond) {
-          if (typeof cond.exists !== 'boolean')
+          if (typeof cond.exists !== 'boolean') {
             throw new InvalidOperatorValueError(
               'exists',
               'a Boolean',
               cond.exists,
             );
+          }
           opConds.push({$exists: cond.exists});
         }
         // like
         if ('like' in cond) {
-          if (typeof cond.like !== 'string' && !(cond.like instanceof RegExp))
+          if (typeof cond.like !== 'string' && !(cond.like instanceof RegExp)) {
             throw new InvalidOperatorValueError(
               'like',
               'a String or RegExp',
               cond.like,
             );
+          }
           opConds.push({$regex: likeToRegexp(cond.like)});
         }
         // nlike
         if ('nlike' in cond) {
-          if (typeof cond.nlike !== 'string' && !(cond.nlike instanceof RegExp))
+          if (
+            typeof cond.nlike !== 'string' &&
+            !(cond.nlike instanceof RegExp)
+          ) {
             throw new InvalidOperatorValueError(
               'nlike',
               'a String or RegExp',
               cond.nlike,
             );
+          }
           opConds.push({$not: likeToRegexp(cond.nlike)});
         }
         // ilike
         if ('ilike' in cond) {
-          if (typeof cond.ilike !== 'string' && !(cond.ilike instanceof RegExp))
+          if (
+            typeof cond.ilike !== 'string' &&
+            !(cond.ilike instanceof RegExp)
+          ) {
             throw new InvalidOperatorValueError(
               'ilike',
               'a String or RegExp',
               cond.ilike,
             );
+          }
           opConds.push({$regex: likeToRegexp(cond.ilike, true)});
         }
         // nilike
@@ -678,11 +749,12 @@ export class MongodbAdapter extends Adapter {
             );
           }
           const flags = cond.flags || undefined;
-          if (flags && typeof flags !== 'string')
+          if (flags && typeof flags !== 'string') {
             throw new InvalidArgumentError(
               'RegExp flags must be a String, but %v given.',
               cond.flags,
             );
+          }
           opConds.push({$regex: stringToRegexp(cond.regexp, flags)});
         }
         // adds a single operator condition
@@ -714,7 +786,7 @@ export class MongodbAdapter extends Adapter {
     const idValue = modelData[idPropName];
     if (idValue == null || idValue === '' || idValue === 0) {
       const pkType = this._getIdType(modelName);
-      if (pkType !== DataType.STRING && pkType !== DataType.ANY)
+      if (pkType !== DataType.STRING && pkType !== DataType.ANY) {
         throw new InvalidArgumentError(
           'MongoDB unable to generate primary keys of %s. ' +
             'Do provide your own value for the %v property ' +
@@ -722,6 +794,7 @@ export class MongodbAdapter extends Adapter {
           capitalize(pkType),
           idPropName,
         );
+      }
       delete modelData[idPropName];
     }
     const tableData = this._toDatabase(modelName, modelData);
@@ -751,8 +824,9 @@ export class MongodbAdapter extends Adapter {
     const tableData = this._toDatabase(modelName, modelData);
     const table = this._getCollection(modelName);
     const {matchedCount} = await table.replaceOne({_id: id}, tableData);
-    if (matchedCount < 1)
+    if (matchedCount < 1) {
       throw new InvalidArgumentError('Identifier %v is not found.', String(id));
+    }
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields,
@@ -775,7 +849,7 @@ export class MongodbAdapter extends Adapter {
     idValue = this._coerceId(idValue);
     if (idValue == null || idValue === '' || idValue === 0) {
       const pkType = this._getIdType(modelName);
-      if (pkType !== DataType.STRING && pkType !== DataType.ANY)
+      if (pkType !== DataType.STRING && pkType !== DataType.ANY) {
         throw new InvalidArgumentError(
           'MongoDB unable to generate primary keys of %s. ' +
             'Do provide your own value for the %v property ' +
@@ -783,6 +857,7 @@ export class MongodbAdapter extends Adapter {
           capitalize(pkType),
           idPropName,
         );
+      }
       delete modelData[idPropName];
       idValue = undefined;
     }
@@ -795,7 +870,9 @@ export class MongodbAdapter extends Adapter {
       const {upsertedId} = await table.replaceOne({_id: idValue}, tableData, {
         upsert: true,
       });
-      if (upsertedId) idValue = upsertedId;
+      if (upsertedId) {
+        idValue = upsertedId;
+      }
     }
     const projection = this._buildProjection(
       modelName,
@@ -839,8 +916,9 @@ export class MongodbAdapter extends Adapter {
     const tableData = this._toDatabase(modelName, modelData);
     const table = this._getCollection(modelName);
     const {matchedCount} = await table.updateOne({_id: id}, {$set: tableData});
-    if (matchedCount < 1)
+    if (matchedCount < 1) {
       throw new InvalidArgumentError('Identifier %v is not found.', String(id));
+    }
     const projection = this._buildProjection(
       modelName,
       filter && filter.fields,
@@ -885,8 +963,9 @@ export class MongodbAdapter extends Adapter {
       filter && filter.fields,
     );
     const patchedData = await table.findOne({_id: id}, {projection});
-    if (!patchedData)
+    if (!patchedData) {
       throw new InvalidArgumentError('Identifier %v is not found.', String(id));
+    }
     return this._fromDatabase(modelName, patchedData);
   }
 

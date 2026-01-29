@@ -14,12 +14,13 @@ import {InvalidArgumentError} from '@e22m4u/js-repository';
  * @returns {*}
  */
 export function transformValuesDeep(value, transformer) {
-  if (!transformer || typeof transformer !== 'function')
+  if (!transformer || typeof transformer !== 'function') {
     throw new InvalidArgumentError(
       'The second argument of "transformValuesDeep" ' +
         'must be a Function, but %v given.',
       transformer,
     );
+  }
   if (Array.isArray(value)) {
     value.forEach((v, i) => (value[i] = transformValuesDeep(v, transformer)));
     return value;
@@ -30,8 +31,9 @@ export function transformValuesDeep(value, transformer) {
       (value.constructor && value.constructor.name === 'Object')
     ) {
       Object.keys(value).forEach(key => {
-        if (Object.prototype.hasOwnProperty.call(value, key))
+        if (Object.prototype.hasOwnProperty.call(value, key)) {
           value[key] = transformValuesDeep(value[key], transformer);
+        }
       });
       return value;
       // Date, ObjectId etc..

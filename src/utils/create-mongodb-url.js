@@ -20,26 +20,30 @@ import {InvalidArgumentError} from '@e22m4u/js-repository';
  * @returns {string}
  */
 export function createMongodbUrl(options = {}) {
-  if (!options || typeof options !== 'object' || Array.isArray(options))
+  if (!options || typeof options !== 'object' || Array.isArray(options)) {
     throw new InvalidArgumentError(
       'The first argument of "createMongodbUrl" must be an Object, but %v given.',
       options,
     );
-  if (options.protocol && typeof options.protocol !== 'string')
+  }
+  if (options.protocol && typeof options.protocol !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "protocol" must be a String, but %v given.',
       options.protocol,
     );
-  if (options.hostname && typeof options.hostname !== 'string')
+  }
+  if (options.hostname && typeof options.hostname !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "hostname" must be a String, but %v given.',
       options.hostname,
     );
-  if (options.host && typeof options.host !== 'string')
+  }
+  if (options.host && typeof options.host !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "host" must be a String, but %v given.',
       options.host,
     );
+  }
   if (
     options.port &&
     typeof options.port !== 'number' &&
@@ -50,21 +54,24 @@ export function createMongodbUrl(options = {}) {
       options.port,
     );
   }
-  if (options.database && typeof options.database !== 'string')
+  if (options.database && typeof options.database !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "database" must be a String, but %v given.',
       options.database,
     );
-  if (options.db && typeof options.db !== 'string')
+  }
+  if (options.db && typeof options.db !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "db" must be a String, but %v given.',
       options.db,
     );
-  if (options.username && typeof options.username !== 'string')
+  }
+  if (options.username && typeof options.username !== 'string') {
     throw new InvalidArgumentError(
       'MongoDB option "username" must be a String, but %v given.',
       options.username,
     );
+  }
   if (
     options.password &&
     typeof options.password !== 'string' &&
