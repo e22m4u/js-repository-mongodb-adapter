@@ -45,8 +45,8 @@
     "@e22m4u/js-repository": "~0.8.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "~20.2.0",
-    "@commitlint/config-conventional": "~20.2.0",
+    "@commitlint/cli": "~20.3.1",
+    "@commitlint/config-conventional": "~20.3.1",
     "@eslint/js": "~9.39.2",
     "@types/chai": "~5.2.3",
     "@types/mocha": "~10.0.10",
@@ -59,12 +59,12 @@
     "eslint-config-prettier": "~10.1.8",
     "eslint-plugin-chai-expect": "~3.1.0",
     "eslint-plugin-import": "~2.32.0",
-    "eslint-plugin-jsdoc": "~61.5.0",
+    "eslint-plugin-jsdoc": "~62.4.1",
     "eslint-plugin-mocha": "~11.2.0",
-    "globals": "~16.5.0",
+    "globals": "~17.2.0",
     "husky": "~9.1.7",
     "mocha": "~11.7.5",
-    "prettier": "~3.7.4",
+    "prettier": "~3.8.1",
     "rimraf": "~6.1.2"
   }
 }
