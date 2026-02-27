@@ -13,10 +13,10 @@
     "Datasource",
     "Relations"
   ],
-  "homepage": "https://gitrepos.ru/e22m4u/js-repository-mongodb-adapter",
+  "homepage": "https://gitverse.ru/e22m4u/js-repository-mongodb-adapter",
   "repository": {
     "type": "git",
-    "url": "git+https://gitrepos.ru/e22m4u/js-repository-mongodb-adapter.git"
+    "url": "git+https://gitverse.ru/e22m4u/js-repository-mongodb-adapter.git"
   },
   "type": "module",
   "module": "./src/index.js",
