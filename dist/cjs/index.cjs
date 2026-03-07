@@ -29,14 +29,8 @@ module.exports = __toCommonJS(index_exports);
 // src/mongodb-adapter.js
 var import_mongodb2 = require("mongodb");
 
-// node_modules/@e22m4u/js-service/src/errors/invalid-argument-error.js
-var import_js_format = require("@e22m4u/js-format");
-var _InvalidArgumentError = class _InvalidArgumentError extends import_js_format.Errorf {
-};
-__name(_InvalidArgumentError, "InvalidArgumentError");
-var InvalidArgumentError = _InvalidArgumentError;
-
 // node_modules/@e22m4u/js-service/src/service-container.js
+var import_js_format = require("@e22m4u/js-format");
 var SERVICE_CONTAINER_CLASS_NAME = "ServiceContainer";
 var _ServiceContainer = class _ServiceContainer {
   /**
@@ -60,11 +54,12 @@ var _ServiceContainer = class _ServiceContainer {
    */
   constructor(parent = void 0) {
     if (parent != null) {
-      if (!(parent instanceof _ServiceContainer))
-        throw new InvalidArgumentError(
-          'The provided parameter "parent" of ServicesContainer.constructor must be an instance ServiceContainer, but %v given.',
+      if (!(parent instanceof _ServiceContainer)) {
+        throw new import_js_format.InvalidArgumentError(
+          'Parameter "parent" must be an instance of ServiceContainer, but %v given.',
           parent
         );
+      }
       this._parent = parent;
     }
   }
@@ -74,8 +69,9 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {ServiceContainer}
    */
   getParent() {
-    if (!this._parent)
-      throw new InvalidArgumentError("The service container has no parent.");
+    if (!this._parent) {
+      throw new import_js_format.InvalidArgumentError("Service container has no parent.");
+    }
     return this._parent;
   }
   /**
@@ -94,24 +90,16 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {*}
    */
   get(ctor, ...args) {
-    if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError(
-        "The first argument of ServicesContainer.get must be a class constructor, but %v given.",
+    if (!ctor || typeof ctor !== "function") {
+      throw new import_js_format.InvalidArgumentError(
+        'Parameter "ctor" must be a class constructor, but %v given.',
         ctor
       );
+    }
     const isCtorRegistered = this._services.has(ctor);
     let service = this._services.get(ctor);
-    let inheritedCtor = void 0;
-    if (!service) {
-      const ctors = Array.from(this._services.keys());
-      inheritedCtor = ctors.find((v) => v.prototype instanceof ctor);
-      if (inheritedCtor) service = this._services.get(inheritedCtor);
-    }
-    if (!service && !isCtorRegistered && !inheritedCtor && this._parent && this._parent.has(ctor)) {
+    if (!service && !isCtorRegistered && this._parent && this._parent.has(ctor)) {
       return this._parent.get(ctor, ...args);
-    }
-    if (!isCtorRegistered && inheritedCtor) {
-      ctor = inheritedCtor;
     }
     if (!service || args.length) {
       service = Array.isArray(ctor.kinds) && ctor.kinds.includes(SERVICE_CLASS_NAME) ? new ctor(this, ...args) : new ctor(...args);
@@ -131,11 +119,9 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {*}
    */
   getRegistered(ctor, ...args) {
-    if (!this.has(ctor))
-      throw new InvalidArgumentError(
-        "The constructor %v is not registered.",
-        ctor
-      );
+    if (!this.has(ctor)) {
+      throw new import_js_format.InvalidArgumentError("Constructor %v is not registered.", ctor);
+    }
     return this.get(ctor, ...args);
   }
   /**
@@ -145,11 +131,12 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {boolean}
    */
   has(ctor) {
-    if (this._services.has(ctor)) return true;
-    const ctors = Array.from(this._services.keys());
-    const inheritedCtor = ctors.find((v) => v.prototype instanceof ctor);
-    if (inheritedCtor) return true;
-    if (this._parent) return this._parent.has(ctor);
+    if (this._services.has(ctor)) {
+      return true;
+    }
+    if (this._parent) {
+      return this._parent.has(ctor);
+    }
     return false;
   }
   /**
@@ -160,11 +147,12 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {this}
    */
   add(ctor, ...args) {
-    if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError(
-        "The first argument of ServicesContainer.add must be a class constructor, but %v given.",
+    if (!ctor || typeof ctor !== "function") {
+      throw new import_js_format.InvalidArgumentError(
+        'Parameter "ctor" must be a class constructor, but %v given.',
         ctor
       );
+    }
     const factory = /* @__PURE__ */ __name(() => Array.isArray(ctor.kinds) && ctor.kinds.includes(SERVICE_CLASS_NAME) ? new ctor(this, ...args) : new ctor(...args), "factory");
     this._services.set(ctor, factory);
     return this;
@@ -177,11 +165,12 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {this}
    */
   use(ctor, ...args) {
-    if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError(
-        "The first argument of ServicesContainer.use must be a class constructor, but %v given.",
+    if (!ctor || typeof ctor !== "function") {
+      throw new import_js_format.InvalidArgumentError(
+        'Parameter "ctor" must be a class constructor, but %v given.',
         ctor
       );
+    }
     const service = Array.isArray(ctor.kinds) && ctor.kinds.includes(SERVICE_CLASS_NAME) ? new ctor(this, ...args) : new ctor(...args);
     this._services.set(ctor, service);
     return this;
@@ -194,48 +183,20 @@ var _ServiceContainer = class _ServiceContainer {
    * @returns {this}
    */
   set(ctor, service) {
-    if (!ctor || typeof ctor !== "function")
-      throw new InvalidArgumentError(
-        "The first argument of ServicesContainer.set must be a class constructor, but %v given.",
+    if (!ctor || typeof ctor !== "function") {
+      throw new import_js_format.InvalidArgumentError(
+        'Parameter "ctor" must be a class constructor, but %v given.',
         ctor
       );
-    if (!service || typeof service !== "object" || Array.isArray(service))
-      throw new InvalidArgumentError(
-        "The second argument of ServicesContainer.set must be an Object, but %v given.",
+    }
+    if (!service || typeof service !== "object" || Array.isArray(service)) {
+      throw new import_js_format.InvalidArgumentError(
+        'Parameter "service" must be an Object, but %v given.',
         service
       );
+    }
     this._services.set(ctor, service);
     return this;
-  }
-  /**
-   * Найти сервис удовлетворяющий условию.
-   *
-   * @param {function(Function, ServiceContainer): boolean} predicate
-   * @param {boolean} noParent
-   * @returns {*}
-   */
-  find(predicate, noParent = false) {
-    if (typeof predicate !== "function") {
-      throw new InvalidArgumentError(
-        "The first argument of ServiceContainer.find must be a function, but %v given.",
-        predicate
-      );
-    }
-    const isRecursive = !noParent;
-    let currentContainer = this;
-    do {
-      for (const ctor of currentContainer._services.keys()) {
-        if (predicate(ctor, currentContainer) === true) {
-          return this.get(ctor);
-        }
-      }
-      if (isRecursive && currentContainer.hasParent()) {
-        currentContainer = currentContainer.getParent();
-      } else {
-        currentContainer = null;
-      }
-    } while (currentContainer);
-    return void 0;
   }
 };
 __name(_ServiceContainer, "ServiceContainer");
@@ -256,21 +217,43 @@ function isServiceContainer(container) {
 __name(isServiceContainer, "isServiceContainer");
 
 // node_modules/@e22m4u/js-service/src/service.js
+var import_js_format2 = require("@e22m4u/js-format");
 var SERVICE_CLASS_NAME = "Service";
 var _Service = class _Service {
   /**
    * Container.
    *
+   * @protected
    * @type {ServiceContainer}
    */
-  container;
+  _container;
+  /**
+   * Container.
+   *
+   * @type {ServiceContainer}
+   */
+  get container() {
+    return this._container;
+  }
   /**
    * Constructor.
    *
-   * @param {ServiceContainer|undefined} container
+   * @param {ServiceContainer} [container]
    */
   constructor(container = void 0) {
-    this.container = isServiceContainer(container) ? container : new ServiceContainer();
+    if (isServiceContainer(container)) {
+      this._container = container;
+    } else if (container !== void 0) {
+      throw new import_js_format2.InvalidArgumentError(
+        'Parameter "container" must be an instance of ServiceContainer, but %v was given.',
+        container
+      );
+    } else {
+      this._container = new ServiceContainer();
+      if (this.constructor !== _Service) {
+        this._container.set(this.constructor, this);
+      }
+    }
   }
   /**
    * Получить существующий или новый экземпляр.
@@ -280,7 +263,7 @@ var _Service = class _Service {
    * @returns {*}
    */
   getService(ctor, ...args) {
-    return this.container.get(ctor, ...args);
+    return this._container.get(ctor, ...args);
   }
   /**
    * Получить существующий или новый экземпляр,
@@ -291,7 +274,7 @@ var _Service = class _Service {
    * @returns {*}
    */
   getRegisteredService(ctor, ...args) {
-    return this.container.getRegistered(ctor, ...args);
+    return this._container.getRegistered(ctor, ...args);
   }
   /**
    * Проверка существования конструктора в контейнере.
@@ -300,7 +283,7 @@ var _Service = class _Service {
    * @returns {boolean}
    */
   hasService(ctor) {
-    return this.container.has(ctor);
+    return this._container.has(ctor);
   }
   /**
    * Добавить конструктор в контейнер.
@@ -310,7 +293,7 @@ var _Service = class _Service {
    * @returns {this}
    */
   addService(ctor, ...args) {
-    this.container.add(ctor, ...args);
+    this._container.add(ctor, ...args);
     return this;
   }
   /**
@@ -321,7 +304,7 @@ var _Service = class _Service {
    * @returns {this}
    */
   useService(ctor, ...args) {
-    this.container.use(ctor, ...args);
+    this._container.use(ctor, ...args);
     return this;
   }
   /**
@@ -332,18 +315,8 @@ var _Service = class _Service {
    * @returns {this}
    */
   setService(ctor, service) {
-    this.container.set(ctor, service);
+    this._container.set(ctor, service);
     return this;
-  }
-  /**
-   * Найти сервис удовлетворяющий условию.
-   *
-   * @param {function(Function, ServiceContainer): boolean} predicate
-   * @param {boolean} noParent
-   * @returns {*}
-   */
-  findService(predicate, noParent = false) {
-    return this.container.find(predicate, noParent);
   }
 };
 __name(_Service, "Service");
@@ -386,7 +359,7 @@ function generateRandomHex(length = 4) {
 __name(generateRandomHex, "generateRandomHex");
 
 // node_modules/@e22m4u/js-debug/src/create-debugger.js
-var import_js_format2 = require("@e22m4u/js-format");
+var import_js_format3 = require("@e22m4u/js-format");
 
 // node_modules/@e22m4u/js-debug/src/create-colorized-dump.js
 var import_util = require("util");
@@ -483,7 +456,7 @@ var AVAILABLE_COLORS = [
 var DEFAULT_OFFSET_STEP_SPACES = 2;
 function pickColorCode(input) {
   if (typeof input !== "string")
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "input" of the function pickColorCode must be a String, but %v given.',
       input
     );
@@ -497,12 +470,12 @@ function pickColorCode(input) {
 __name(pickColorCode, "pickColorCode");
 function wrapStringByColorCode(input, color) {
   if (typeof input !== "string")
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "input" of the function wrapStringByColorCode must be a String, but %v given.',
       input
     );
   if (typeof color !== "number")
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "color" of the function wrapStringByColorCode must be a Number, but %v given.',
       color
     );
@@ -512,12 +485,12 @@ function wrapStringByColorCode(input, color) {
 __name(wrapStringByColorCode, "wrapStringByColorCode");
 function matchPattern(pattern, input) {
   if (typeof pattern !== "string")
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "pattern" of the function matchPattern must be a String, but %v given.',
       pattern
     );
   if (typeof input !== "string")
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "input" of the function matchPattern must be a String, but %v given.',
       input
     );
@@ -528,7 +501,7 @@ function matchPattern(pattern, input) {
 __name(matchPattern, "matchPattern");
 function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   if (namespaceOrOptions && typeof namespaceOrOptions !== "string" && !isNonArrayObject(namespaceOrOptions)) {
-    throw new import_js_format2.Errorf(
+    throw new import_js_format3.Errorf(
       'The parameter "namespace" of the function createDebugger must be a String or an Object, but %v given.',
       namespaceOrOptions
     );
@@ -551,7 +524,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   }
   namespaceSegments.forEach((segment) => {
     if (!segment || typeof segment !== "string")
-      throw new import_js_format2.Errorf(
+      throw new import_js_format3.Errorf(
         "Namespace segment must be a non-empty String, but %v given.",
         segment
       );
@@ -592,7 +565,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   function debugFn(messageOrData, ...args) {
     if (!isDebuggerEnabled()) return;
     const prefix = getPrefix();
-    const multiString = (0, import_js_format2.format)(messageOrData, ...args);
+    const multiString = (0, import_js_format3.format)(messageOrData, ...args);
     const rows = multiString.split("\n");
     rows.forEach((message) => {
       prefix ? console.log(`${prefix} ${message}`) : console.log(message);
@@ -603,7 +576,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
     const stateCopy = JSON.parse(JSON.stringify(state));
     [namespace, ...args].forEach((ns) => {
       if (!ns || typeof ns !== "string")
-        throw new import_js_format2.Errorf(
+        throw new import_js_format3.Errorf(
           "Debugger namespace must be a non-empty String, but %v given.",
           ns
         );
@@ -614,7 +587,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   debugFn.withHash = function(hashLength = 4) {
     const stateCopy = JSON.parse(JSON.stringify(state));
     if (!hashLength || typeof hashLength !== "number" || hashLength < 1) {
-      throw new import_js_format2.Errorf(
+      throw new import_js_format3.Errorf(
         "Debugger hash must be a positive Number, but %v given.",
         hashLength
       );
@@ -625,7 +598,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   debugFn.withOffset = function(offsetSize) {
     const stateCopy = JSON.parse(JSON.stringify(state));
     if (!offsetSize || typeof offsetSize !== "number" || offsetSize < 1) {
-      throw new import_js_format2.Errorf(
+      throw new import_js_format3.Errorf(
         "Debugger offset must be a positive Number, but %v given.",
         offsetSize
       );
@@ -718,10 +691,12 @@ __publicField(_Debuggable, "INSTANTIATION_MESSAGE", "Instantiated.");
 var Debuggable = _Debuggable;
 
 // node_modules/@e22m4u/js-service/src/debuggable-service.js
+var import_js_format4 = require("@e22m4u/js-format");
 var _DebuggableService = class _DebuggableService extends Debuggable {
   /**
    * Service.
    *
+   * @protected
    * @type {Service}
    */
   _service;
@@ -736,69 +711,106 @@ var _DebuggableService = class _DebuggableService extends Debuggable {
   /**
    * Получить существующий или новый экземпляр.
    *
-   * @type {Service['getService']}
+   * @param {*} ctor
+   * @param {*} args
+   * @returns {*}
    */
-  get getService() {
-    return this._service.getService;
+  getService(ctor, ...args) {
+    return this._service.getService(ctor, ...args);
   }
   /**
    * Получить существующий или новый экземпляр,
    * только если конструктор зарегистрирован.
    *
-   * @type {Service['getRegisteredService']}
+   * @param {*} ctor
+   * @param {*} args
+   * @returns {*}
    */
-  get getRegisteredService() {
-    return this._service.getRegisteredService;
+  getRegisteredService(ctor, ...args) {
+    return this._service.getRegisteredService(ctor, ...args);
   }
   /**
    * Проверка существования конструктора в контейнере.
    *
-   * @type {Service['hasService']}
+   * @param {*} ctor
+   * @returns {boolean}
    */
-  get hasService() {
-    return this._service.hasService;
+  hasService(ctor) {
+    return this._service.hasService(ctor);
   }
   /**
    * Добавить конструктор в контейнер.
    *
-   * @type {Service['addService']}
+   * @param {*} ctor
+   * @param {*} args
+   * @returns {this}
    */
-  get addService() {
-    return this._service.addService;
+  addService(ctor, ...args) {
+    this._service.addService(ctor, ...args);
+    return this;
   }
   /**
    * Добавить конструктор и создать экземпляр.
    *
-   * @type {Service['useService']}
+   * @param {*} ctor
+   * @param {*} args
+   * @returns {this}
    */
-  get useService() {
-    return this._service.useService;
+  useService(ctor, ...args) {
+    this._service.useService(ctor, ...args);
+    return this;
   }
   /**
    * Добавить конструктор и связанный экземпляр.
    *
-   * @type {Service['setService']}
+   * @param {*} ctor
+   * @param {*} service
+   * @returns {this}
    */
-  get setService() {
-    return this._service.setService;
-  }
-  /**
-   * Найти сервис удовлетворяющий условию.
-   *
-   * @type {Service['findService']}
-   */
-  get findService() {
-    return this._service.findService;
+  setService(ctor, service) {
+    this._service.setService(ctor, service);
+    return this;
   }
   /**
    * Constructor.
    *
-   * @param {ServiceContainer|undefined} container
-   * @param {import('@e22m4u/js-debug').DebuggableOptions|undefined} options
+   * @param {ServiceContainer|import('@e22m4u/js-debug').DebuggableOptions} [containerOrOptions]
+   * @param {import('@e22m4u/js-debug').DebuggableOptions} [options]
    */
-  constructor(container = void 0, options = void 0) {
+  constructor(containerOrOptions, options) {
+    let container;
+    if (isServiceContainer(containerOrOptions)) {
+      container = containerOrOptions;
+    } else if (containerOrOptions !== void 0) {
+      if (!containerOrOptions || typeof containerOrOptions !== "object" || Array.isArray(containerOrOptions)) {
+        throw new import_js_format4.InvalidArgumentError(
+          "First parameter must be an Object or an instance of ServiceContainer, but %v was given.",
+          containerOrOptions
+        );
+      }
+      if (options === void 0) {
+        options = containerOrOptions;
+      } else {
+        throw new import_js_format4.InvalidArgumentError("Constructor signature mismatch.");
+      }
+    } else if (options !== void 0) {
+      if (!options || typeof options !== "object" || Array.isArray(options)) {
+        throw new import_js_format4.InvalidArgumentError(
+          "Second parameter must be an Object, but %v was given.",
+          options
+        );
+      }
+    }
     super(options);
-    this._service = new Service(container);
+    if (container === void 0) {
+      container = new ServiceContainer();
+      this._service = new Service(container);
+      if (this.constructor !== _DebuggableService) {
+        container.set(this.constructor, this);
+      }
+    } else {
+      this._service = new Service(container);
+    }
   }
 };
 __name(_DebuggableService, "DebuggableService");
@@ -807,7 +819,7 @@ __name(_DebuggableService, "DebuggableService");
  *
  * @type {string[]}
  */
-__publicField(_DebuggableService, "kinds", Service.kinds);
+__publicField(_DebuggableService, "kinds", [...Service.kinds]);
 var DebuggableService = _DebuggableService;
 
 // src/mongodb-adapter.js
