@@ -455,11 +455,12 @@ var AVAILABLE_COLORS = [
 ];
 var DEFAULT_OFFSET_STEP_SPACES = 2;
 function pickColorCode(input) {
-  if (typeof input !== "string")
+  if (typeof input !== "string") {
     throw new import_js_format3.Errorf(
       'The parameter "input" of the function pickColorCode must be a String, but %v given.',
       input
     );
+  }
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     hash = (hash << 5) - hash + input.charCodeAt(i);
@@ -469,31 +470,35 @@ function pickColorCode(input) {
 }
 __name(pickColorCode, "pickColorCode");
 function wrapStringByColorCode(input, color) {
-  if (typeof input !== "string")
+  if (typeof input !== "string") {
     throw new import_js_format3.Errorf(
       'The parameter "input" of the function wrapStringByColorCode must be a String, but %v given.',
       input
     );
-  if (typeof color !== "number")
+  }
+  if (typeof color !== "number") {
     throw new import_js_format3.Errorf(
       'The parameter "color" of the function wrapStringByColorCode must be a Number, but %v given.',
       color
     );
+  }
   const colorCode = "\x1B[3" + (Number(color) < 8 ? color : "8;5;" + color);
   return `${colorCode};1m${input}\x1B[0m`;
 }
 __name(wrapStringByColorCode, "wrapStringByColorCode");
 function matchPattern(pattern, input) {
-  if (typeof pattern !== "string")
+  if (typeof pattern !== "string") {
     throw new import_js_format3.Errorf(
       'The parameter "pattern" of the function matchPattern must be a String, but %v given.',
       pattern
     );
-  if (typeof input !== "string")
+  }
+  if (typeof input !== "string") {
     throw new import_js_format3.Errorf(
       'The parameter "input" of the function matchPattern must be a String, but %v given.',
       input
     );
+  }
   const regexpStr = pattern.replace(/\*/g, ".*?");
   const regexp = new RegExp("^" + regexpStr + "$");
   return regexp.test(input);
@@ -508,7 +513,7 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   }
   const withCustomState = isNonArrayObject(namespaceOrOptions);
   const state = withCustomState ? namespaceOrOptions : {};
-  state.envNsSegments = Array.isArray(state.envNsSegments) ? state.envNsSegments : [];
+  state.globalNsSegments = Array.isArray(state.globalNsSegments) ? state.globalNsSegments : [];
   state.nsSegments = Array.isArray(state.nsSegments) ? state.nsSegments : [];
   state.pattern = typeof state.pattern === "string" ? state.pattern : "";
   state.hash = typeof state.hash === "string" ? state.hash : "";
@@ -517,17 +522,22 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   state.delimiter = state.delimiter && typeof state.delimiter === "string" ? state.delimiter : ":";
   if (!withCustomState) {
     if (typeof process !== "undefined" && process.env && process.env["DEBUGGER_NAMESPACE"]) {
-      state.envNsSegments.push(process.env.DEBUGGER_NAMESPACE);
+      state.globalNsSegments.push(process.env.DEBUGGER_NAMESPACE);
     }
-    if (typeof namespaceOrOptions === "string")
+    if (typeof localStorage !== "undefined" && localStorage.getItem("debuggerNamespace")) {
+      state.globalNsSegments.push(localStorage.getItem("debuggerNamespace"));
+    }
+    if (typeof namespaceOrOptions === "string") {
       state.nsSegments.push(namespaceOrOptions);
+    }
   }
   namespaceSegments.forEach((segment) => {
-    if (!segment || typeof segment !== "string")
+    if (!segment || typeof segment !== "string") {
       throw new import_js_format3.Errorf(
         "Namespace segment must be a non-empty String, but %v given.",
         segment
       );
+    }
     state.nsSegments.push(segment);
   });
   if (typeof process !== "undefined" && process.env && process.env["DEBUG"]) {
@@ -536,19 +546,23 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
     state.pattern = localStorage.getItem("debug");
   }
   const isDebuggerEnabled = /* @__PURE__ */ __name(() => {
-    const nsStr = [...state.envNsSegments, ...state.nsSegments].join(
+    const nsStr = [...state.globalNsSegments, ...state.nsSegments].join(
       state.delimiter
     );
     const patterns = state.pattern.split(/[\s,]+/).filter((p) => p.length > 0);
-    if (patterns.length === 0 && state.pattern !== "*") return false;
+    if (patterns.length === 0 && state.pattern !== "*") {
+      return false;
+    }
     for (const singlePattern of patterns) {
-      if (matchPattern(singlePattern, nsStr)) return true;
+      if (matchPattern(singlePattern, nsStr)) {
+        return true;
+      }
     }
     return false;
   }, "isDebuggerEnabled");
   const getPrefix = /* @__PURE__ */ __name(() => {
     let tokens = [];
-    [...state.envNsSegments, ...state.nsSegments, state.hash].filter(Boolean).forEach((token) => {
+    [...state.globalNsSegments, ...state.nsSegments, state.hash].filter(Boolean).forEach((token) => {
       const extractedTokens = token.split(state.delimiter).filter(Boolean);
       tokens = [...tokens, ...extractedTokens];
     });
@@ -556,14 +570,20 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
       const isLast = tokens.length - 1 === index;
       const tokenColor = pickColorCode(token);
       acc += wrapStringByColorCode(token, tokenColor);
-      if (!isLast) acc += state.delimiter;
+      if (!isLast) {
+        acc += state.delimiter;
+      }
       return acc;
     }, "");
-    if (state.offsetSize > 0) res += state.offsetStep.repeat(state.offsetSize);
+    if (state.offsetSize > 0) {
+      res += state.offsetStep.repeat(state.offsetSize);
+    }
     return res;
   }, "getPrefix");
   function debugFn(messageOrData, ...args) {
-    if (!isDebuggerEnabled()) return;
+    if (!isDebuggerEnabled()) {
+      return;
+    }
     const prefix = getPrefix();
     const multiString = (0, import_js_format3.format)(messageOrData, ...args);
     const rows = multiString.split("\n");
@@ -575,11 +595,12 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
   debugFn.withNs = function(namespace, ...args) {
     const stateCopy = JSON.parse(JSON.stringify(state));
     [namespace, ...args].forEach((ns) => {
-      if (!ns || typeof ns !== "string")
+      if (!ns || typeof ns !== "string") {
         throw new import_js_format3.Errorf(
           "Debugger namespace must be a non-empty String, but %v given.",
           ns
         );
+      }
       stateCopy.nsSegments.push(ns);
     });
     return createDebugger(stateCopy);
@@ -606,13 +627,15 @@ function createDebugger(namespaceOrOptions = void 0, ...namespaceSegments) {
     stateCopy.offsetSize = offsetSize;
     return createDebugger(stateCopy);
   };
-  debugFn.withoutEnvNs = function() {
+  debugFn.withoutGlobalNs = function() {
     const stateCopy = JSON.parse(JSON.stringify(state));
-    stateCopy.envNsSegments = [];
+    stateCopy.globalNsSegments = [];
     return createDebugger(stateCopy);
   };
   debugFn.inspect = function(valueOrDesc, ...args) {
-    if (!isDebuggerEnabled()) return;
+    if (!isDebuggerEnabled()) {
+      return;
+    }
     const prefix = getPrefix();
     let multiString = "";
     if (typeof valueOrDesc === "string" && args.length) {
@@ -673,12 +696,15 @@ var _Debuggable = class _Debuggable {
     } else {
       this.debug = createDebugger(className);
     }
-    const noEnvironmentNamespace = Boolean(options.noEnvironmentNamespace);
-    if (noEnvironmentNamespace) this.debug = this.debug.withoutEnvNs();
+    const noGlobalNamespace = Boolean(options.noGlobalNamespace);
+    if (noGlobalNamespace) {
+      this.debug = this.debug.withoutGlobalNs();
+    }
     this.ctorDebug = this.debug.withNs("constructor").withHash();
     const noInstantiationMessage = Boolean(options.noInstantiationMessage);
-    if (!noInstantiationMessage)
+    if (!noInstantiationMessage) {
       this.ctorDebug(_Debuggable.INSTANTIATION_MESSAGE);
+    }
   }
 };
 __name(_Debuggable, "Debuggable");
