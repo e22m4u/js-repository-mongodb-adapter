@@ -5,13 +5,13 @@
   "author": "Mikhail Evstropov <e22m4u@yandex.ru>",
   "license": "MIT",
   "keywords": [
-    "MongoDB",
-    "Repository",
-    "ORM",
-    "ODM",
-    "Database",
-    "Datasource",
-    "Relations"
+    "js-repository",
+    "mongodb",
+    "orm",
+    "odm",
+    "database",
+    "datasource",
+    "relations"
   ],
   "homepage": "https://github.com/e22m4u/js-repository-mongodb-adapter",
   "repository": {
